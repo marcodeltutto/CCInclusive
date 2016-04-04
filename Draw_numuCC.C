@@ -2,6 +2,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include <TCanvas.h>
 #include <TFile.h>
@@ -63,8 +64,8 @@ void Draw_numuCC()
     if(!FileNumber)
     {
       XVtxHist = (TH1F*)File->Get("X Vertex Distribution");
-      YVtxHist = (TH1F*)File->Get("X Vertex Distribution");
-      ZVtxHist = (TH1F*)File->Get("X Vertex Distribution");
+      YVtxHist = (TH1F*)File->Get("Y Vertex Distribution");
+      ZVtxHist = (TH1F*)File->Get("Z Vertex Distribution");
       FlashTimeHist = (TH1F*)File->Get("Flash Time");
       FlashPEHist = (TH1F*)File->Get("Flash Intensity in PE");
     }
@@ -123,8 +124,6 @@ void Draw_numuCC()
   Canvas9->cd();
   TrackMultipHistVec.front()->SetMaximum(1.1*GetMaximum(TrackMultipHistVec));
   TrackMultipHistVec.front()->Draw();
-  
-  std::cout << "Hello" << std::endl;
   
   for(unsigned int no_entries = 1; no_entries < FileNameVec.size(); no_entries++)
   {

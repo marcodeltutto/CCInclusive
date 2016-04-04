@@ -1,3 +1,5 @@
+#include <vector>
+
 using namespace std;
 
 //This defines our current settings for the fiducial volume
@@ -30,15 +32,15 @@ int runOnMCC7_numuCC_QE_wnumuvtx() {
   
    string Version = "v05_06_00";
    
-//    string ProductName = "pandoraNuKHit";
+   string ProductName = "pandoraNuKHit";
 //    string ProductName = "pandoraCosmic";
 //    string ProductName = "pandoraNu";
-   string ProductName = "pmtrack";
+//    string ProductName = "pmtrack";
    
    cout << ProductName << endl;
 
    TChain *treenc = new TChain("analysistree/anatree");
-   treenc -> Add( ("/lheppc46/data/uBData/anatrees/prodgenie_bnb_nu_uboone_ana_"+Version+".root").c_str() );
+   treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/prodgenie_bnb_nu_uboone_ana_"+Version+".root").c_str() );
 
    //maximum array sizes
    const int maxentries = 35000;
@@ -329,105 +331,172 @@ int runOnMCC7_numuCC_QE_wnumuvtx() {
    unsigned int EventsTracksInFV = 0;
    unsigned int EventsLengthCut = 0;
    unsigned int EventsNearVtx = 0;
+   unsigned int EventsTrackLong = 0;
    
    unsigned int NumberOfContainedMCTracks = 0;
+   
+//    vector<float> TrackCandidates;
 
    //Event Loop
-   for(int i = 0; i < Size; i++) {
+   for(int i = 0; i < Size; i++) 
+   {
       if(i%1000 == 0) cout << "\t... " << i << endl;
 
       treenc -> GetEntry(i);
       
       bool ContainedMCTrackFlag = true;
+      
+      // Loop over all MC particles
       for(int track_no = 0; track_no < NumberOfMCTracks; track_no++)
       {
-	if( abs(PDG_truth[track_no])==13 && ContainedMCTrackFlag && (!inFV(XMCTrackStart[track_no],YMCTrackStart[track_no],ZMCTrackStart[track_no]) || !inFV(XMCTrackEnd[track_no],YMCTrackEnd[track_no],ZMCTrackEnd[track_no])) )
+	// If the a muon is not contained in a singel neutrino event, set mc-track contained flag to false
+	if( abs(PDG_truth[track_no])==13 && ContainedMCTrackFlag && mcevts_truth == 1
+	  && (!inFV(XMCTrackStart[track_no],YMCTrackStart[track_no],ZMCTrackStart[track_no]) || !inFV(XMCTrackEnd[track_no],YMCTrackEnd[track_no],ZMCTrackEnd[track_no])) )
 	{
-// 	  cout << XMCTrackStart[track_no]  << " " <<  YMCTrackStart[track_no] << " " << ZMCTrackStart[track_no] << " " << 
-// 	          XMCTrackEnd[track_no] << " " << YMCTrackEnd[track_no] << " " << ZMCTrackEnd[track_no] << endl;
 	  ContainedMCTrackFlag = false;
 	}
-      }
+      } // MC particle loop
       
+      // Count up the number of contained mc-tracks if the flag is true
       if(ContainedMCTrackFlag)
       {
 	NumberOfContainedMCTracks++;
       }
-            
+      
       flashtag = false;
       flashmax = 0;
       
+      // Loop over all flashes
       for(int f = 0; f < no_flashes; f++) 
       {
+	// Fill flash related histograms
 	hFlashTime->Fill(flash_time[f]);
 	hIntesityPE->Fill(flash_pe[f]);
 	
+	// If the flash is in the beam window and above threshold set flashtag to true
 	if( (flash_time[f] > beammin && flash_time[f] < beammax) && flash_pe[f] > PEthresh ) 
 	{
 	  flashtag = true; //the event does have a flash inside the beam window
           
+          // If the new flash has more PE than the current maximum, replace the maximum
           if(flash_pe[f] > flashmax) 
 	  {
 	    theflash = f;
 	    flashmax = flash_pe[f];
 	  }
 	}
-      }
+      } // flash loop
       
-      for(int j = 0; j < ntracks_reco; j++) 
+      // If the flash tag is ture
+      if(flashtag)
       {
+	// Prepare flags
+	bool VertexInFVFlag = true;
+	bool TrackDistanceFlag = true;
 	
-	hTrackLength->Fill( pow(trkstartx[j] - trkendx[j],2) + pow(trkstarty[j] - trkendy[j],2) + pow(trkstartz[j] - trkendz[j],2) );
-	if(flashtag)
-	{
-	  hFlashTrackDist->Fill(FlashTrackDist(flash_zcenter[theflash], trkstartz[j], trkendz[j]));
-	}
-      }
-      
-      for(int v = 0; v < nvtx; v++) 
-      {
-	hXVertexPosition->Fill(vtxx[v]);
-	hYVertexPosition->Fill(vtxy[v]);
-	hZVertexPosition->Fill(vtxz[v]);
+	// Increase events with flash > 50 PE and within beam window
+	EventsWithFlash++;
 	
-	candlength[v] = 0;
-	candtrack[v] = -1;
-	
-	unsigned int TrackCountAtVertex = 0;
-	
+	// Loop over all reconstructed tracks
 	for(int j = 0; j < ntracks_reco; j++) 
 	{
-	  diststart = sqrt((vtxx[v] - trkstartx[j])*(vtxx[v] - trkstartx[j]) + (vtxy[v] - trkstarty[j])*(vtxy[v] - trkstarty[j]) + (vtxz[v] - trkstartz[j])*(vtxz[v] - trkstartz[j]));
-	  distend = sqrt((vtxx[v] - trkendx[j])*(vtxx[v] - trkendx[j]) + (vtxy[v] - trkendy[j])*(vtxy[v] - trkendy[j]) + (vtxz[v] - trkendz[j])*(vtxz[v] - trkendz[j]));
-	  length = sqrt(pow(trkstartx[j] - trkendx[j],2) + pow(trkstarty[j] - trkendy[j],2) + pow(trkstartz[j] - trkendz[j],2));
-	  
-	  if(diststart < distend) 
-	  {
-	    hVertexTrackDist->Fill(diststart);
-	  }
-	  else
-	  {
-	    hVertexTrackDist->Fill(distend);
-	  }
-	  if(diststart < distcut || distend < distcut) // If the Track vertex distance is within cut
-	  {
-	    TrackCountAtVertex++; // Increase Track count at vertex
-	    
-	    if(length > candlength[v])//find the longest track from this vertex 
-	    {
-	      candlength[v] = length;
-	      candtrack[v] = j;
-	    }
-	  }
-	}
-	hTrackMultip->Fill(TrackCountAtVertex);
-	hFlashVertexDist->Fill(fabs(flash_zcenter[theflash]-vtxz[v]));
+	  // Fill track length histogram and the flash track histogram
+	  hTrackLength->Fill( pow(trkstartx[j] - trkendx[j],2) + pow(trkstarty[j] - trkendy[j],2) + pow(trkstartz[j] - trkendz[j],2) );  
+	  hFlashTrackDist->Fill(FlashTrackDist(flash_zcenter[theflash], trkstartz[j], trkendz[j]));
+	} // reco track loop
 	
-// 	if(candlength[v])
-// 	{
-// 	  
-// 	}
-      }
+	// Loop over all vertices
+	for(int v = 0; v < nvtx; v++) 
+	{
+	  // Fill vertex position to histogram
+	  hXVertexPosition->Fill(vtxx[v]);
+	  hYVertexPosition->Fill(vtxy[v]);
+	  hZVertexPosition->Fill(vtxz[v]);
+
+	  float TrackCandLength = 0;
+	  int TrackCandidate = -1;
+	  
+	  // If the vertex is contained
+	  if(inFV(vtxx[v], vtxy[v], vtxz[v]))
+	  {
+	    // Increase count of events with a vertex in FV
+	    if(VertexInFVFlag)
+	    {
+	      EventsVtxInFV++;
+	      VertexInFVFlag = false;
+	    }
+	    
+	    unsigned int TrackCountAtVertex = 0;
+	    
+	    // Loop over all reconstructed tracks
+	    for(int j = 0; j < ntracks_reco; j++) 
+	    {
+	      // Calculate distances from track start/end to vertex and calculate track lenth
+	      diststart = sqrt((vtxx[v] - trkstartx[j])*(vtxx[v] - trkstartx[j]) + (vtxy[v] - trkstarty[j])*(vtxy[v] - trkstarty[j]) + (vtxz[v] - trkstartz[j])*(vtxz[v] - trkstartz[j]));
+	      distend = sqrt((vtxx[v] - trkendx[j])*(vtxx[v] - trkendx[j]) + (vtxy[v] - trkendy[j])*(vtxy[v] - trkendy[j]) + (vtxz[v] - trkendz[j])*(vtxz[v] - trkendz[j]));
+	      length = sqrt(pow(trkstartx[j] - trkendx[j],2) + pow(trkstarty[j] - trkendy[j],2) + pow(trkstartz[j] - trkendz[j],2));
+	
+	      // Figure out if the end or the start of the track was closer to the vertex
+	      if(diststart < distend) 
+	      {
+		hVertexTrackDist->Fill(diststart);
+	      }
+	      else
+	      {
+		hVertexTrackDist->Fill(distend);
+	      }
+	      
+	      // If the track vertex distance is within cut, increase track count
+	      if(diststart < distcut || distend < distcut) 
+	      {
+		// Increase count of events with a distance to vertex < 5 cm
+		if(TrackDistanceFlag) 
+		{
+		  EventsTrackNearVertex++;
+		  TrackDistanceFlag = false;
+		}
+		
+		// Increase track at vertex count
+		TrackCountAtVertex++;
+	
+		// Find the longest track from this vertex 
+		if(length > TrackCandLength)
+		{
+		  TrackCandLength = length;
+		  TrackCandidate = j;
+		}
+	      } // if track vertex distance is within cut distance 
+	    } // reco track loop
+	    
+	    // Fill vertex related histograms
+	    hTrackMultip->Fill(TrackCountAtVertex);
+	    hFlashVertexDist->Fill(fabs(flash_zcenter[theflash]-vtxz[v]));
+	    
+	    // If the longest track length is filled
+	    if(TrackCandLength)
+	    {
+	      // If the longest track is flash matched
+	      if( FlashTrackDist(flash_zcenter[theflash], trkstartz[TrackCandidate], trkendz[TrackCandidate]) < flashwidth ) 
+	      {
+		EventsFlashMatched++;
+		
+		// If the longest track is fully contained
+		if( inFV(trkstartx[TrackCandidate], trkstarty[TrackCandidate], trkstartz[TrackCandidate]) && inFV(trkendx[TrackCandidate], trkendy[TrackCandidate], trkendz[TrackCandidate]) )
+		{
+		  EventsTracksInFV++;
+		  
+		  // If longest track is longer than 75 cm
+		  if(TrackCandLength > lengthcut)
+		  {
+		    EventsTrackLong++;
+		  }
+		}
+	      }
+	    } // If there is a longest track
+
+	  } // if vertex is contained
+	} // vertex loop
+      } // if flashtag
       
       ntracks5 = 0;
       ntracks10 = 0;
@@ -437,19 +506,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx() {
 //             if(nuPDG_truth[0] == 14) { //require that it was a numu primary
 //                if(ccnc_truth[0] == 0 && mode_truth[0] == 0) { //require CC QE interaction
                   ntrue++; //cout number of neutrinos that fulfill this requirement
-                  flashtag = false;
-                  flashmax = 0;
 
-                  //loop over all flashes, find the brightest flash > 50 PE inside the beam window
-                  for(int f = 0; f < no_flashes; f++) {
-                     if((flash_time[f] > beammin && flash_time[f] < beammax) && flash_pe[f] > PEthresh) {
-                        flashtag = true; //the event does have a flash inside the beam window
-                        if(flash_pe[f] > flashmax) {
-                           theflash = f;
-                           flashmax = flash_pe[f];
-                        }
-                     }
-                  }
                   diststart = 0;
                   distend = 0;
 
@@ -459,23 +516,18 @@ int runOnMCC7_numuCC_QE_wnumuvtx() {
 
                   if(true) {
                      if(flashtag == true) { //only for events with a flash in the beam window
-		       EventsWithFlash++; // Increase events with flash > 50 PE count
 		       
-		       bool VertexInFVFlag = true;
-		       bool TrackDistanceFlag = true;
-		       bool FlashMatchedFlag = false;
+		       
+		       
 		       bool TracksInFVFlag = false;
+		       bool FlashMatchedFlag = false;
+		       
 		       
                         for(int v = 0; v < nvtx; v++) { //loop over all reconstructed vertices
                            candvertex[v] = true;
                            candtrack[v] = -1;
                            candlength[v] = 0;
                            if(inFV(vtxx[v], vtxy[v], vtxz[v])) { //check if reco vertex is in fiducial volume
-			     if(VertexInFVFlag) // increase count of events with a vertex in FV 
-			     {
-			       EventsVtxInFV++;
-			       VertexInFVFlag = false;
-			     }
 			     if(ntracks_reco)
 			     {
 			       FlashMatchedFlag = true;
@@ -498,11 +550,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx() {
                                  }
 
                                  if(diststart < distcut || distend < distcut) { //check if the tracks start within distance x of vertex
-				   if(TrackDistanceFlag) // increase count of events with a distance to vertex < 5 cm
-				   {
-				     EventsTrackNearVertex++;
-				     TrackDistanceFlag = false;
-				   }
+				   
                                     if(FlashTrackDist(flash_zcenter[theflash], trkstartz[j], trkendz[j]) < flashwidth) { //check if the tracks fulfill flash matching
                                        if(inFV(trkstartx[j], trkstarty[j], trkstartz[j]) && inFV(trkendx[j], trkendy[j], trkendz[j])) { //check if the track is fully contained
                                           length = sqrt(pow(trkstartx[j] - trkendx[j],2) + pow(trkstarty[j] - trkendy[j],2) + pow(trkstartz[j] - trkendz[j],2));
@@ -544,14 +592,9 @@ int runOnMCC7_numuCC_QE_wnumuvtx() {
                            }
                            if(FlashMatchedFlag) // increase Flash matching in position count
 			   {
-			     EventsFlashMatched++;
 			     FlashMatchedFlag = false;
 			   }
-			   if(TracksInFVFlag) // increase Track in FV count
-			   {
-			     EventsTracksInFV++;
-			     TracksInFVFlag = false;
-			   }
+			   
                         }
 		     }
                   }
@@ -794,12 +837,13 @@ int runOnMCC7_numuCC_QE_wnumuvtx() {
 //    htwotrackangle -> SetLineWidth(2);
 //    htwotrackangle -> Draw();
    
-   cout << "number of CC events with vertex in FV: " << ntrue << endl;
-   cout << "number of events with flash > 50 PE: " << EventsWithFlash << endl;
+   cout << "number of CC events with vertex in FV : " << ntrue << endl;
+   cout << "number of events with flash > 50 PE : " << EventsWithFlash << endl;
    cout << "number of events with vtx in FV : " << EventsVtxInFV << endl;
    cout << "number of events with track start/end within 5cm to vtx : " << EventsTrackNearVertex << endl;
    cout << "number of events with tracks matched within 80cm to flash : " << EventsFlashMatched << endl;
    cout << "number of events with contained tracks : " << EventsTracksInFV << endl;
+   cout << "number of events with longest track > 75cm : " << EventsTrackLong << endl;
    cout << "number of events with contained MC tracks : " << NumberOfContainedMCTracks << endl;
 //    cout << "number of selected events: " << hnc_theta -> Integral() << endl;
 //    cout << "number of neutrino origin events (backtracker): " << hn_theta -> Integral() << endl;
