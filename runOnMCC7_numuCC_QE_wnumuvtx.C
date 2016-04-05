@@ -327,16 +327,21 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
             treenc -> GetEntry(i);
 
-            bool ContainedMCTrackFlag = true;
+            bool ContainedMCTrackFlag = false;
 
             // Loop over all MC particles
             for(int track_no = 0; track_no < NumberOfMCTracks; track_no++)
             {
                 // If the a muon is not contained in a singel neutrino event, set mc-track contained flag to false
-                if( abs(PDG_truth[track_no])==13 && ContainedMCTrackFlag && mcevts_truth == 1 
-                   && (!inFV(XMCTrackStart[track_no],YMCTrackStart[track_no],ZMCTrackStart[track_no]) || !inFV(XMCTrackEnd[track_no],YMCTrackEnd[track_no],ZMCTrackEnd[track_no])) )
+                if( abs(PDG_truth[track_no])==13 
+                    && !ContainedMCTrackFlag 
+                    && mcevts_truth == 1 
+                    && inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0])
+                    && inFV(XMCTrackStart[track_no],YMCTrackStart[track_no],ZMCTrackStart[track_no]) 
+                    && inFV(XMCTrackEnd[track_no],YMCTrackEnd[track_no],ZMCTrackEnd[track_no]) 
+                    && sqrt(pow(XMCTrackStart[track_no] - XMCTrackEnd[track_no],2) + pow(YMCTrackStart[track_no] - YMCTrackEnd[track_no],2) + pow(ZMCTrackStart[track_no] - ZMCTrackEnd[track_no],2)) > lengthcut)
                 {
-                    ContainedMCTrackFlag = false;
+                    ContainedMCTrackFlag = true;
                 }
             } // MC particle loop
 
@@ -369,6 +374,15 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                     }
                 }
             } // flash loop
+            
+            // If the product name is not pandoraNuKHit use other vertices
+            if(ProductName != "pandoraNuKHit")
+	    {
+	      nvtx = nProdvtx;
+	      copy(begin(Prodvtxx), end(Prodvtxx), begin(vtxx));
+	      copy(begin(Prodvtxy), end(Prodvtxy), begin(vtxy));
+	      copy(begin(Prodvtxz), end(Prodvtxz), begin(vtxz));
+	    }
 
             // If the flash tag is ture
             if(flashtag && mcevts_truth == 1)
@@ -376,6 +390,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                 // Prepare flags
                 bool VertexInFVFlag = true;
                 bool TrackDistanceFlag = true;
+		bool FlashMatchFlag = true;
+                bool TrackContainedFlag = false;
 
                 // Increase events with flash > 50 PE and within beam window
                 EventsWithFlash++;
@@ -456,15 +472,23 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                         hFlashVertexDist->Fill(fabs(flash_zcenter[theflash]-vtxz[v]));
 
                         // If the longest track length is filled
-                        if(TrackCandLength)
+                        if(TrackCandidate > -1)
                         {
                             // If the longest track is flash matched
                             if( FlashTrackDist(flash_zcenter[theflash], trkstartz[TrackCandidate], trkendz[TrackCandidate]) < flashwidth )
                             {
-                                EventsFlashMatched++;
+                                if(FlashMatchFlag)
+                                {
+                                    EventsFlashMatched++;
+                                    FlashMatchFlag = false;
+                                    // Set track contained flag true, so the other cuts can be applied on this vertex
+                                    TrackContainedFlag = true;
+                                }
 
                                 // If the longest track is fully contained
-                                if( inFV(trkstartx[TrackCandidate], trkstarty[TrackCandidate], trkstartz[TrackCandidate]) && inFV(trkendx[TrackCandidate], trkendy[TrackCandidate], trkendz[TrackCandidate]) )
+                                if( inFV(trkstartx[TrackCandidate], trkstarty[TrackCandidate], trkstartz[TrackCandidate]) 
+                                    && inFV(trkendx[TrackCandidate], trkendy[TrackCandidate], trkendz[TrackCandidate]) 
+                                    && TrackContainedFlag)
                                 {
                                     EventsTracksInFV++;
 
@@ -474,6 +498,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                                         EventsTrackLong++;
                                     }
                                 }
+                                // Set track contained flag false
+                                TrackContainedFlag = false;
                             }
                         } // If there is a longest track
                     } // if vertex is contained

@@ -63,16 +63,16 @@ void Draw_numuCC()
     
     if(!FileNumber)
     {
-      XVtxHist = (TH1F*)File->Get("X Vertex Distribution");
-      YVtxHist = (TH1F*)File->Get("Y Vertex Distribution");
-      ZVtxHist = (TH1F*)File->Get("Z Vertex Distribution");
+//       XVtxHist = (TH1F*)File->Get("X Vertex Distribution");
+//       YVtxHist = (TH1F*)File->Get("Y Vertex Distribution");
+//       ZVtxHist = (TH1F*)File->Get("Z Vertex Distribution");
       FlashTimeHist = (TH1F*)File->Get("Flash Time");
       FlashPEHist = (TH1F*)File->Get("Flash Intensity in PE");
     }
     
-//     XVtxHistVec.push_back((TH1F*)File->Get("X Vertex Distribution"));
-//     YVtxHistVec.push_back((TH1F*)File->Get("Y Vertex Distribution"));
-//     ZVtxHistVec.push_back((TH1F*)File->Get("Z Vertex Distribution"));
+    XVtxHistVec.push_back((TH1F*)File->Get("X Vertex Distribution"));
+    YVtxHistVec.push_back((TH1F*)File->Get("Y Vertex Distribution"));
+    ZVtxHistVec.push_back((TH1F*)File->Get("Z Vertex Distribution"));
     FlashTrackHistVec.push_back((TH1F*)File->Get("Distance from Flash to Track"));
     VertexTrackHistVec.push_back((TH1F*)File->Get("Distance from Vertex to Track"));
     TrackLengthHistVec.push_back((TH1F*)File->Get("Track Length Distribution"));
@@ -83,15 +83,18 @@ void Draw_numuCC()
   
   TCanvas *Canvas1 = new TCanvas("X Vertex Position", "X Vertex Position", 1400, 1000);
   Canvas1->cd();
-  XVtxHist->Draw();
+  XVtxHistVec.front()->SetMaximum(1.1*GetMaximum(XVtxHistVec));
+  XVtxHistVec.front()->Draw();
   
   TCanvas *Canvas2 = new TCanvas("Y Vertex Position", "Y Vertex Position", 1400, 1000);
   Canvas2->cd();
-  YVtxHist->Draw();
+  YVtxHistVec.front()->SetMaximum(1.1*GetMaximum(YVtxHistVec));
+  YVtxHistVec.front()->Draw();
   
   TCanvas *Canvas3 = new TCanvas("Z Vertex Position", "Z Vertex Position", 1400, 1000);
   Canvas3->cd();
-  ZVtxHist->Draw();
+  ZVtxHistVec.front()->SetMaximum(1.1*GetMaximum(ZVtxHistVec));
+  ZVtxHistVec.front()->Draw();
 
   TCanvas *Canvas4 = new TCanvas("Flash Time Distribution", "Flash Time Distribution", 1400, 1000);
   Canvas4->cd();
@@ -122,22 +125,23 @@ void Draw_numuCC()
   
   TCanvas *Canvas9 = new TCanvas("Track Multiplicity", "Track Multiplicity", 1400, 1000);
   Canvas9->cd();
+  Canvas9->SetLogy();
   TrackMultipHistVec.front()->SetMaximum(1.1*GetMaximum(TrackMultipHistVec));
   TrackMultipHistVec.front()->Draw();
   
   for(unsigned int no_entries = 1; no_entries < FileNameVec.size(); no_entries++)
   {
-//     Canvas1->cd();
-//     XVtxHistVec.at(no_entries)->SetLineColor(no_entries);
-//     XVtxHistVec.at(no_entries)->Draw("same");
+    Canvas1->cd();
+    XVtxHistVec.at(no_entries)->SetLineColor(no_entries);
+    XVtxHistVec.at(no_entries)->Draw("same");
     
-//     Canvas2->cd();
-//     YVtxHistVec.at(no_entries)->SetLineColor(no_entries);
-//     YVtxHistVec.at(no_entries)->Draw("same");
+    Canvas2->cd();
+    YVtxHistVec.at(no_entries)->SetLineColor(no_entries);
+    YVtxHistVec.at(no_entries)->Draw("same");
     
-//     Canvas3->cd();
-//     ZVtxHistVec.at(no_entries)->SetLineColor(no_entries);
-//     ZVtxHistVec.at(no_entries)->Draw("same");
+    Canvas3->cd();
+    ZVtxHistVec.at(no_entries)->SetLineColor(no_entries);
+    ZVtxHistVec.at(no_entries)->Draw("same");
     
     Canvas6->cd();
     FlashTrackHistVec.at(no_entries)->SetLineColor(no_entries);
@@ -162,9 +166,18 @@ void Draw_numuCC()
     Legend->AddEntry( FlashTrackHistVec.at(no_entries), (FileNameVec.at(no_entries)).c_str(),"l" );
   }
   
+  Canvas1->cd();
+  Legend->Draw();
   Canvas1->SaveAs(("XVtxPosition_"+Version+".png").c_str());
+  
+  Canvas2->cd();
+  Legend->Draw();
   Canvas2->SaveAs(("YVtxPosition_"+Version+".png").c_str());
+  
+  Canvas3->cd();
+  Legend->Draw();
   Canvas3->SaveAs(("ZVtxPosition_"+Version+".png").c_str());
+  
   Canvas4->SaveAs(("FlashTime_"+Version+".png").c_str());
   Canvas5->SaveAs(("PECount_"+Version+".png").c_str());
   
