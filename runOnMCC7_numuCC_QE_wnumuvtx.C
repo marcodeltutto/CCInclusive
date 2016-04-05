@@ -32,6 +32,17 @@ int runOnMCC7_numuCC_QE_wnumuvtx() {
   
    string Version = "v05_06_00";
    
+   std::vector<string> ProductNameVec;
+   
+   ProductNameVec.push_back("pandoraNuKHit");
+   ProductNameVec.push_back("pandoraCosmic");
+   ProductNameVec.push_back("pandoraNu");
+   ProductNameVec.push_back("pmtrack");
+   ProductNameVec.push_back("pandoraNuPMA");
+   ProductNameVec.push_back("trackkalmanhit");
+   
+   
+   
    string ProductName = "pandoraNuKHit";
 //    string ProductName = "pandoraCosmic";
 //    string ProductName = "pandoraNu";
@@ -40,7 +51,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx() {
    cout << ProductName << endl;
 
    TChain *treenc = new TChain("analysistree/anatree");
-   treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/prodgenie_bnb_nu_uboone_ana_"+Version+".root").c_str() );
+   treenc -> Add( ("/lheppc46/data/uBData/anatrees/prodgenie_bnb_nu_uboone_ana_"+Version+".root").c_str() );
 
    //maximum array sizes
    const int maxentries = 35000;
@@ -388,7 +399,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx() {
       } // flash loop
       
       // If the flash tag is ture
-      if(flashtag)
+      if(flashtag && mcevts_truth == 1)
       {
 	// Prepare flags
 	bool VertexInFVFlag = true;
