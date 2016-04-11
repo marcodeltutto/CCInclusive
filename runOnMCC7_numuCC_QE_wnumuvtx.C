@@ -44,6 +44,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 {
 
     string Version = "v05_06_00";
+    string GeneratorName = "prodgenie_bnb_nu_";
 
     std::vector<string> TrackProdNameVec;
 
@@ -67,16 +68,16 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 //    string ProductName = "pmtrack";
 
     TChain *treenc = new TChain("analysistree/anatree");
-    treenc -> Add( ("/lheppc46/data/uBData/anatrees/prodgenie_bnb_nu_"+Version+"_anatree.root").c_str() );
+    treenc -> Add( ("/lheppc46/data/uBData/anatrees/" + GeneratorName + Version +"_anatree.root").c_str() );
     
     // Open FileStream
     ofstream FinalCutFile;
     ofstream EfficiencyFile;
     ofstream PurityFile;
     
-    FinalCutFile.open("FinalCut_"+Version+".cvs",ios::trunc);
-    EfficiencyFile.open("SelectionEfficiency_"+Version+".cvs",ios::trunc);
-    PurityFile.open("SelectionPurity_"+Version+".cvs",ios::trunc);
+    FinalCutFile.open("FinalCut_"+GeneratorName+Version+".cvs",ios::trunc);
+    EfficiencyFile.open("SelectionEfficiency_"+GeneratorName+Version+".cvs",ios::trunc);
+    PurityFile.open("SelectionPurity_"+GeneratorName+Version+".cvs",ios::trunc);
     
     // Set titles
     FinalCutFile << "Number of events which survive all cuts normalized to 20000 events\n";
@@ -622,7 +623,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             TCanvas *Canvas11 = new TCanvas("Track MCVertex Distance", "Track MCVertex Distance", 1400, 1000);
             hTrackMCVertexDist->Draw();
 
-            TFile* OutputFile = new TFile(("Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+Version+".root").c_str(),"RECREATE");
+            TFile* OutputFile = new TFile(("Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+Version+".root").c_str(),"RECREATE");
 
             Canvas1->Write();
             Canvas2->Write();
@@ -649,15 +650,15 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
             OutputFile->Close();
 
-            Canvas10->SaveAs(("FlashVertexDist"+Version+".png").c_str());
-            Canvas11->SaveAs(("TrackMCVertexDist_Track_"+ TrackingName + "_Vertex_" + VertexingName + "_" +Version+".png").c_str());
-//    Canvas2->SaveAs((TrackingName+"_YVtxPosition_"+Version+".png").c_str());
-//    Canvas3->SaveAs((TrackingName+"_ZVtxPosition_"+Version+".png").c_str());
-//    Canvas4->SaveAs((TrackingName+"_FlashTime_"+Version+".png").c_str());
-//    Canvas5->SaveAs((TrackingName+"_PECount_"+Version+".png").c_str());
-//    Canvas6->SaveAs((TrackingName+"_FlashTrackDist_"+Version+".png").c_str());
-//    Canvas7->SaveAs((TrackingName+"_VtxTrackDist_"+Version+".png").c_str());
-//    Canvas8->SaveAs((TrackingName+"_TrackLength_"+Version+".png").c_str());
+            Canvas10->SaveAs(("FlashVertexDist"+GeneratorName+Version+".png").c_str());
+            Canvas11->SaveAs(("TrackMCVertexDist_Track_"+ TrackingName + "_Vertex_" + VertexingName + "_" +GeneratorName+Version+".png").c_str());
+//    Canvas2->SaveAs((TrackingName+"_YVtxPosition_"+GeneratorName+Version+".png").c_str());
+//    Canvas3->SaveAs((TrackingName+"_ZVtxPosition_"+GeneratorName+Version+".png").c_str());
+//    Canvas4->SaveAs((TrackingName+"_FlashTime_"+GeneratorName+Version+".png").c_str());
+//    Canvas5->SaveAs((TrackingName+"_PECount_"+GeneratorName+Version+".png").c_str());
+//    Canvas6->SaveAs((TrackingName+"_FlashTrackDist_"+GeneratorName+Version+".png").c_str());
+//    Canvas7->SaveAs((TrackingName+"_VtxTrackDist_"+GeneratorName+Version+".png").c_str());
+//    Canvas8->SaveAs((TrackingName+"_TrackLength_"+GeneratorName+Version+".png").c_str());
 
             cout << "--------------------------------------------------------------------------------------------" << endl;
             cout << endl;
