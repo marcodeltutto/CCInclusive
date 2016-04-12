@@ -53,10 +53,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     TrackProdNameVec.push_back("pandoraCosmic");
     TrackProdNameVec.push_back("pandoraNu");
     TrackProdNameVec.push_back("pmtrack");
-    TrackProdNameVec.push_back();
-//     TrackProdNameVec.push_back("pandoraNuKHit");
-//     TrackProdNameVec.push_back("pandoraNuPMA");
-//     TrackProdNameVec.push_back("trackkalmanhit");
+    TrackProdNameVec.push_back("pandoraNuPMA");
+    TrackProdNameVec.push_back("trackkalmanhit");
 
     std::vector<string> VertexProdNameVec;
 
@@ -561,8 +559,6 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                                 {
                                     EventsTrackLong++;
                                     
-                                    sqrt(pow(XMCTrackStart[track_no] - XMCTrackEnd[track_no],2) + pow(YMCTrackStart[track_no] - YMCTrackEnd[track_no],2) + pow(ZMCTrackStart[track_no] - ZMCTrackEnd[track_no],2));
-
                                     double TrkStartMCStartDist = sqrt(pow(XMCTrackStart[MCTrackCandidate] - trkstartx[TrackCandidate],2) + pow(YMCTrackStart[MCTrackCandidate] - trkstarty[TrackCandidate],2) + pow(ZMCTrackStart[MCTrackCandidate] - trkstartz[TrackCandidate],2));
                                     double TrkEndMCEndDist = sqrt(pow(XMCTrackEnd[MCTrackCandidate] - trkendx[TrackCandidate],2) + pow(YMCTrackEnd[MCTrackCandidate] - trkendy[TrackCandidate],2) + pow(ZMCTrackEnd[MCTrackCandidate] - trkendz[TrackCandidate],2));
                                     double TrkStartMCEndDist = sqrt(pow(XMCTrackEnd[MCTrackCandidate] - trkstartx[TrackCandidate],2) + pow(YMCTrackEnd[MCTrackCandidate] - trkstarty[TrackCandidate],2) + pow(ZMCTrackEnd[MCTrackCandidate] - trkstartz[TrackCandidate],2));
