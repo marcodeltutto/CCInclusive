@@ -75,23 +75,23 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     SelectionNames.push_back("SelectionPurity_");
     
     // Initialize table file vector
-    std::vector<ofstream> EventSelectionCuts;
+    std::vector<ofstream*> EventSelectionCuts;
     
     // Create files and write first line
     for(const auto& SelName : SelectionNames)
     {
-        ofstream Temp(SelName+GeneratorName+Version+".cvs",ios::trunc);
+//         ofstream Temp(SelName+GeneratorName+Version+".cvs",ios::trunc);
         cout << "FUCK" << endl;
-        EventSelectionCuts.emplace_back(Temp/*ofstream(SelName+GeneratorName+Version+".cvs",ios::trunc)*/);
+        EventSelectionCuts.push_back(new ofstream(SelName+GeneratorName+Version+".cvs",ios::trunc));
         cout << "FUCK" << endl;
-        EventSelectionCuts.back() << "track\\vertex";
+        *EventSelectionCuts.back() << "track\\vertex";
         // Fill vertexing column labels
         for(const auto& VertexingName : VertexProdNameVec)
         {
-            EventSelectionCuts.back() << "," + VertexingName;
+            *EventSelectionCuts.back() << "," + VertexingName;
         }
         // Jump to next line
-        EventSelectionCuts.back() << "\n";
+        *EventSelectionCuts.back() << "\n";
     } // Table file loop
     cout << "FUCK" << endl;
 
@@ -187,7 +187,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
         // Write tracking methode to files, first column
         for(auto& SelectionCut : EventSelectionCuts)
         {
-            SelectionCut << TrackingName;
+            *SelectionCut << TrackingName;
         }
 
         for(const auto& VertexingName : VertexProdNameVec)
@@ -738,9 +738,9 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             cout << "--------------------------------------------------------------------------------------------" << endl;
 
             // Write numbers to cvs File
-            EventSelectionCuts.at(0) << "," << (float)EventsTrackLong/(float)Size*20000.;
-            EventSelectionCuts.at(1) << "," << (float)EventsTrackLong/(float)NumberOfContainedMCTracks;
-            EventSelectionCuts.at(2) << "," << (float)EventsTruelyReco/(float)EventsTrackLong;
+            *EventSelectionCuts.at(0) << "," << (float)EventsTrackLong/(float)Size*20000.;
+            *EventSelectionCuts.at(1) << "," << (float)EventsTrackLong/(float)NumberOfContainedMCTracks;
+            *EventSelectionCuts.at(2) << "," << (float)EventsTruelyReco/(float)EventsTrackLong;
 
             // Garbage collection
             delete Canvas1;
@@ -787,14 +787,14 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
         // Go to next line in files
         for(auto& SelectionCut : EventSelectionCuts)
         {
-            SelectionCut << "\n";
+            *SelectionCut << "\n";
         }
     } // Loop over all tracking data products
     
     // Close selection table files
     for(auto& SelectionCut : EventSelectionCuts)
     {
-        SelectionCut.close();
+        SelectionCut->close();
     }
 
     return 0;
