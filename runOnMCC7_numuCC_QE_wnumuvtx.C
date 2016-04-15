@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cstring>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <TCanvas.h>
@@ -46,64 +47,61 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     string Version = "v05_08_00";
 //     string GeneratorName = "prodgenie_bnb_nu_cosmic_";
     string GeneratorName = "prodgenie_bnb_nu_";
+//     string GeneratorName = "data_bnb_";
+//     string GeneratorName = "data_bnb_external_";
 
+    // Initialize and fill track reco product names
     std::vector<string> TrackProdNameVec;
 
-    TrackProdNameVec.push_back("pandoraNuKHit");
-    TrackProdNameVec.push_back("pandoraCosmic");
+//     TrackProdNameVec.push_back("pandoraNuKHit");
+//     TrackProdNameVec.push_back("pandoraCosmic");
     TrackProdNameVec.push_back("pandoraNu");
-    TrackProdNameVec.push_back("pmtrack");
-    TrackProdNameVec.push_back("pandoraNuPMA");
-    TrackProdNameVec.push_back("trackkalmanhit");
+//     TrackProdNameVec.push_back("pmtrack");
+//     TrackProdNameVec.push_back("pandoraNuPMA");
+//     TrackProdNameVec.push_back("trackkalmanhit");
 
+    // Initialize and fill vertex reco product names
     std::vector<string> VertexProdNameVec;
 
-    VertexProdNameVec.push_back("nuvtx");
-    VertexProdNameVec.push_back("pandoraCosmic");
+//     VertexProdNameVec.push_back("nuvtx");
+//     VertexProdNameVec.push_back("pandoraCosmic");
     VertexProdNameVec.push_back("pandoraNu");
-    VertexProdNameVec.push_back("pmtrack");
+//     VertexProdNameVec.push_back("pmtrack");
+    
+    std::vector<string> SelectionNames;
+    
+    SelectionNames.push_back("FinalCut_");
+    SelectionNames.push_back("SelectionEfficiency_");
+    SelectionNames.push_back("SelectionPurity_");
+    
+    // Initialize table file vector
+    std::vector<ofstream> EventSelectionCuts;
+    
+    // Create files and write first line
+    for(const auto& SelName : SelectionNames)
+    {
+        ofstream Temp(SelName+GeneratorName+Version+".cvs",ios::trunc);
+        cout << "FUCK" << endl;
+        EventSelectionCuts.emplace_back(Temp/*ofstream(SelName+GeneratorName+Version+".cvs",ios::trunc)*/);
+        cout << "FUCK" << endl;
+        EventSelectionCuts.back() << "track\\vertex";
+        // Fill vertexing column labels
+        for(const auto& VertexingName : VertexProdNameVec)
+        {
+            EventSelectionCuts.back() << "," + VertexingName;
+        }
+        // Jump to next line
+        EventSelectionCuts.back() << "\n";
+    } // Table file loop
+    cout << "FUCK" << endl;
 
-//    string ProductName = "pandoraNuKHit";
-//    string ProductName = "pandoraCosmic";
-//    string ProductName = "pandoraNu";
-//    string ProductName = "pmtrack";
 
     TChain *treenc = new TChain("analysistree/anatree");
     treenc -> Add( ("/lheppc46/data/uBData/anatrees/" + GeneratorName + Version +"_anatree.root").c_str() );
 
-    // Open FileStream
-    ofstream FinalCutFile;
-    ofstream EfficiencyFile;
-    ofstream PurityFile;
-
-    FinalCutFile.open("FinalCut_"+GeneratorName+Version+".cvs",ios::trunc);
-    EfficiencyFile.open("SelectionEfficiency_"+GeneratorName+Version+".cvs",ios::trunc);
-    PurityFile.open("SelectionPurity_"+GeneratorName+Version+".cvs",ios::trunc);
-
-    // Set titles
-    FinalCutFile << "Number of events which survive all cuts normalized to 20000 events\n";
-    EfficiencyFile << "Selection Efficiency\n" ;
-    PurityFile << "Selection Purity\n" ;
-
-    // First legend entry
-    FinalCutFile << "track\\vertex";
-    EfficiencyFile << "track\\vertex";
-    PurityFile << "track\\vertex";
-
-    // Fill all other column legends
-    for(const auto& VertexingName : VertexProdNameVec)
-    {
-        FinalCutFile << "," + VertexingName;
-        EfficiencyFile << "," + VertexingName;
-        PurityFile << "," + VertexingName;
-    }
-    FinalCutFile << "\n";
-    EfficiencyFile << "\n";
-    PurityFile << "\n";
-
     //maximum array sizes
     const int maxentries = 35000;
-    const int maxtracks = 5000;
+    const int maxtracks = 10000;
     const int maxvtx = 500;
     const int maxnu = 10;
     const int maxmc = 10;
@@ -181,15 +179,16 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     double beammax = 5.15; //us. Beam window end
     double PEthresh = 50; //PE
     double MCTrackToMCVtxDist = 1; //cm. distance between mc track start and mc vertex
-    double TrackToMCDist = 3; //cm. Distance track start/end to mcvertex
+    double TrackToMCDist = 5; //cm. Distance track start/end to mcvertex
 
     // Loop over all product names
     for(const auto& TrackingName : TrackProdNameVec)
     {
-        // Write tracking methode to files first column
-        FinalCutFile << TrackingName;
-        EfficiencyFile << TrackingName;
-        PurityFile << TrackingName;
+        // Write tracking methode to files, first column
+        for(auto& SelectionCut : EventSelectionCuts)
+        {
+            SelectionCut << TrackingName;
+        }
 
         for(const auto& VertexingName : VertexProdNameVec)
         {
@@ -322,11 +321,29 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             hFlashVertexDist->GetXaxis()->SetTitle("Distance [cm]");
             hFlashVertexDist->GetYaxis()->SetTitle("Number of Vertices [ ]");
 
-            // Track True Vertex Distance
-            TH1F *hTrackMCVertexDist = new TH1F("Track To MC-Vertex Distance","Track To MC-Vertex Distance",100,0,50);
-            hFlashVertexDist->SetStats(0);
-            hFlashVertexDist->GetXaxis()->SetTitle("Distance [cm]");
-            hFlashVertexDist->GetYaxis()->SetTitle("Number of Tracks [ ]");
+            // Track True Track Distance
+            TH1F *hTrackStartDist = new TH1F("Track To MC-Track Start Distance","Track To MC-Track Start Distance",100,0,50);
+            hTrackStartDist->SetStats(0);
+            hTrackStartDist->GetXaxis()->SetTitle("Distance [cm]");
+            hTrackStartDist->GetYaxis()->SetTitle("Number of Tracks [ ]");
+            
+            // Track True Track Distance
+            TH1F *hTrackEndDist = new TH1F("Track To MC-Track End Distance","Track To MC-Track End Distance",100,0,50);
+            hTrackEndDist->SetStats(0);
+            hTrackEndDist->GetXaxis()->SetTitle("Distance [cm]");
+            hTrackEndDist->GetYaxis()->SetTitle("Number of Tracks [ ]");
+            
+            // Theta angle distirbution for selected events
+            TH1F *hSelectionTheta = new TH1F("#theta-Angle of Selected Track","#theta-Angle of Selected Track",90,0,90);
+            hSelectionTheta->SetStats(0);
+            hSelectionTheta->GetXaxis()->SetTitle("Angle [rad]");
+            hSelectionTheta->GetYaxis()->SetTitle("Number of Tracks [ ]");
+            
+            // Track Range distirbution for selected events
+            TH1F *hSelectionTrackRange = new TH1F("Track Range of Selected Track","Track Range of Selected Track",100,0,1000);
+            hSelectionTrackRange->SetStats(0);
+            hSelectionTrackRange->GetXaxis()->SetTitle("Track Range [cm]");
+            hSelectionTrackRange->GetYaxis()->SetTitle("Number of Tracks [ ]");
 
             // Track Start and End postion
             TH1F *hXTrackStart = new TH1F("X Track Start Position","X Track Start Position",256,0,FVx);
@@ -383,42 +400,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             {
 //                 if(i%1000 == 0) cout << "\t... " << i << endl;
 
+                // Get tree entries
                 treenc -> GetEntry(i);
-
-                int MCTrackCandidate = -1;
-                float MCTrackCandLength = 0;
-
-                // Loop over all MC neutrino vertices
-                for(unsigned vertex_no = 0; vertex_no < mcevts_truth; vertex_no++)
-                {
-                    // Loop over all MC particles
-                    for(unsigned track_no = 0; track_no < NumberOfMCTracks; track_no++)
-                    {
-                        // Calculate MCTrack length
-                        float MCTrackLength = sqrt(pow(XMCTrackStart[track_no] - XMCTrackEnd[track_no],2) + pow(YMCTrackStart[track_no] - YMCTrackEnd[track_no],2) + pow(ZMCTrackStart[track_no] - ZMCTrackEnd[track_no],2));
-
-                        // If the a muon is not contained in a singel neutrino event, set mc-track contained flag to false
-                        if( abs(PDG_truth[track_no]) == 13 // Track has to be a muon
-                                && inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]) // true vertex has to be in FV
-                                && inFV(XMCTrackStart[track_no],YMCTrackStart[track_no],ZMCTrackStart[track_no]) // Track start has to be in FV
-                                && inFV(XMCTrackEnd[track_no],YMCTrackEnd[track_no],ZMCTrackEnd[track_no]) // Track end has to be in FV
-                                && sqrt(pow(XMCTrackStart[track_no] - nuvtxx_truth[vertex_no],2) + pow(YMCTrackStart[track_no] - nuvtxy_truth[vertex_no],2) + pow(ZMCTrackStart[track_no] - nuvtxz_truth[vertex_no],2)) < MCTrackToMCVtxDist // Track has to start at vertex
-                                && MCTrackLength > lengthcut // Track has to be long
-                                && MCTrackLength > MCTrackCandLength // If the current candidate length is shorter than the new length
-                          )
-                        {
-                            // Fill new length and candidate index
-                            MCTrackCandLength = MCTrackLength;
-                            MCTrackCandidate = track_no;
-                        }
-                    } // MC particle loop
-                } // MC vertex loop
-
-                // Count up the number of contained mc-tracks if there are mc candidates
-                if(MCTrackCandidate > -1)
-                {
-                    NumberOfContainedMCTracks++;
-                }
 
                 bool flashtag = false;
                 float flashmax = 0;
@@ -443,6 +426,42 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                         }
                     }
                 } // flash loop
+                
+                int MCTrackCandidate = -1;
+                float MCTrackCandLength = 0;
+
+                // Loop over all MC neutrino vertices
+                for(unsigned vertex_no = 0; vertex_no < mcevts_truth; vertex_no++)
+                {
+                    // Loop over all MC particles
+                    for(unsigned track_no = 0; track_no < NumberOfMCTracks; track_no++)
+                    {
+                        // Calculate MCTrack length
+                        float MCTrackLength = sqrt(pow(XMCTrackStart[track_no] - XMCTrackEnd[track_no],2) + pow(YMCTrackStart[track_no] - YMCTrackEnd[track_no],2) + pow(ZMCTrackStart[track_no] - ZMCTrackEnd[track_no],2));
+
+                        // If the a muon is not contained in a singel neutrino event, set mc-track contained flag to false
+                        if( abs(PDG_truth[track_no]) == 13 // Track has to be a muon
+//                                 && flashtag
+                                && inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]) // true vertex has to be in FV
+                                && inFV(XMCTrackStart[track_no],YMCTrackStart[track_no],ZMCTrackStart[track_no]) // Track start has to be in FV
+                                && inFV(XMCTrackEnd[track_no],YMCTrackEnd[track_no],ZMCTrackEnd[track_no]) // Track end has to be in FV
+                                && sqrt(pow(XMCTrackStart[track_no] - nuvtxx_truth[vertex_no],2) + pow(YMCTrackStart[track_no] - nuvtxy_truth[vertex_no],2) + pow(ZMCTrackStart[track_no] - nuvtxz_truth[vertex_no],2)) < MCTrackToMCVtxDist // Track has to start at vertex
+//                                 && MCTrackLength > lengthcut // Track has to be long
+                                && MCTrackLength > MCTrackCandLength // If the current candidate length is shorter than the new length
+                          )
+                        {
+                            // Fill new length and candidate index
+                            MCTrackCandLength = MCTrackLength;
+                            MCTrackCandidate = track_no;
+                        }
+                    } // MC particle loop
+                } // MC vertex loop
+                
+                // Count up the number of contained mc-tracks if there are mc candidates
+                if(MCTrackCandidate > -1)
+                {
+                    NumberOfContainedMCTracks++;
+                }
 
                 // If the flash tag is ture
                 if(flashtag)
@@ -559,20 +578,27 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                                 {
                                     EventsTrackLong++;
                                     
+                                    // Fill Selection Plots
+                                    hSelectionTheta->Fill(trktheta[TrackCandidate]);
+                                    hSelectionTrackRange->Fill(TrackCandLength);
+                                    
                                     double TrkStartMCStartDist = sqrt(pow(XMCTrackStart[MCTrackCandidate] - trkstartx[TrackCandidate],2) + pow(YMCTrackStart[MCTrackCandidate] - trkstarty[TrackCandidate],2) + pow(ZMCTrackStart[MCTrackCandidate] - trkstartz[TrackCandidate],2));
                                     double TrkEndMCEndDist = sqrt(pow(XMCTrackEnd[MCTrackCandidate] - trkendx[TrackCandidate],2) + pow(YMCTrackEnd[MCTrackCandidate] - trkendy[TrackCandidate],2) + pow(ZMCTrackEnd[MCTrackCandidate] - trkendz[TrackCandidate],2));
                                     double TrkStartMCEndDist = sqrt(pow(XMCTrackEnd[MCTrackCandidate] - trkstartx[TrackCandidate],2) + pow(YMCTrackEnd[MCTrackCandidate] - trkstarty[TrackCandidate],2) + pow(ZMCTrackEnd[MCTrackCandidate] - trkstartz[TrackCandidate],2));
-                                    double TrkEndMCStartDist = sqrt(pow(XMCTrackStart[MCTrackCandidate] - trkstartx[TrackCandidate],2) + pow(YMCTrackStart[MCTrackCandidate] - trkstarty[TrackCandidate],2) + pow(ZMCTrackStart[MCTrackCandidate] - trkstartz[TrackCandidate],2));
+                                    double TrkEndMCStartDist = sqrt(pow(XMCTrackStart[MCTrackCandidate] - trkendx[TrackCandidate],2) + pow(YMCTrackStart[MCTrackCandidate] - trkendy[TrackCandidate],2) + pow(ZMCTrackStart[MCTrackCandidate] - trkendz[TrackCandidate],2));
 
-//                                     if(TrkStartMCDist < TrkEndMCDist)
-//                                     {
-//                                         hTrackMCVertexDist->Fill(TrkStartMCDist);
-//                                     }
-//                                     else
-//                                     {
-//                                         hTrackMCVertexDist->Fill(TrkEndMCDist);
-//                                     }
-
+                                    // Find if Track start or end ar closer to true track start
+                                    if(TrkStartMCStartDist < TrkEndMCStartDist)
+                                    {
+                                        hTrackStartDist->Fill(TrkStartMCStartDist);
+                                        hTrackEndDist->Fill(TrkEndMCEndDist);
+                                    }
+                                    else
+                                    {
+                                        hTrackStartDist->Fill(TrkEndMCStartDist);
+                                        hTrackEndDist->Fill(TrkStartMCEndDist);
+                                    }
+                                    
                                     // If track end or start are close to montecarlo vertex
                                     if(   (TrkStartMCStartDist < TrackToMCDist && TrkEndMCEndDist < TrackToMCDist)
                                         ||(TrkStartMCEndDist < TrackToMCDist && TrkEndMCStartDist < TrackToMCDist)
@@ -637,8 +663,17 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             TCanvas *Canvas10 = new TCanvas("Flash Vertex Distance", "Flash Vertex Distance", 1400, 1000);
             hFlashVertexDist->Draw();
 
-            TCanvas *Canvas11 = new TCanvas("Track MCVertex Distance", "Track MCVertex Distance", 1400, 1000);
-            hTrackMCVertexDist->Draw();
+            TCanvas *Canvas11 = new TCanvas("Track Start MCTrack Start Distance", "Track Start MCTrack Start Distance", 1400, 1000);
+            hTrackStartDist->Draw();
+            
+            TCanvas *Canvas12 = new TCanvas("Track End MCTrack End Distance", "Track End MCTrack End Distance", 1400, 1000);
+            hTrackEndDist->Draw();
+            
+            TCanvas *Canvas13 = new TCanvas("Theta Angle of Selected Tracks", "Theta Angle of Selected Tracks", 1400, 1000);
+            hSelectionTheta->Draw();
+            
+            TCanvas *Canvas14 = new TCanvas("Range of Selected Tracks", "Range of Selected Tracks", 1400, 1000);
+            hSelectionTrackRange->Draw();
 
             TFile* OutputFile = new TFile(("Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+Version+".root").c_str(),"RECREATE");
 
@@ -652,6 +687,9 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             Canvas8->Write();
             Canvas10->Write();
             Canvas11->Write();
+            Canvas12->Write();
+            Canvas13->Write();
+            Canvas14->Write();
 
             hXVertexPosition->Write();
             hYVertexPosition->Write();
@@ -663,12 +701,16 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             hTrackLength->Write();
             hTrackMultip->Write();
             hFlashVertexDist->Write();
-            hTrackMCVertexDist->Write();
+            hTrackStartDist->Write();
+            hTrackEndDist->Write();
+            hSelectionTheta->Write();
+            hSelectionTrackRange->Write();
 
             OutputFile->Close();
 
             Canvas10->SaveAs(("FlashVertexDist"+GeneratorName+Version+".png").c_str());
-            Canvas11->SaveAs(("TrackMCVertexDist_Track_"+ TrackingName + "_Vertex_" + VertexingName + "_" +GeneratorName+Version+".png").c_str());
+//             Canvas11->SaveAs(("TrackStartMCTrackDist_Track_"+ TrackingName + "_Vertex_" + VertexingName + "_" +GeneratorName+Version+".png").c_str());
+//             Canvas12->SaveAs(("TrackEndMCTrackDist_Track_"+ TrackingName + "_Vertex_" + VertexingName + "_" +GeneratorName+Version+".png").c_str());
 //    Canvas2->SaveAs((TrackingName+"_YVtxPosition_"+GeneratorName+Version+".png").c_str());
 //    Canvas3->SaveAs((TrackingName+"_ZVtxPosition_"+GeneratorName+Version+".png").c_str());
 //    Canvas4->SaveAs((TrackingName+"_FlashTime_"+GeneratorName+Version+".png").c_str());
@@ -689,16 +731,16 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             cout << "number of events with longest track > 75cm : " << EventsTrackLong << endl;
             cout << "number of events with track start end within 3cm to mc-vtx : " << EventsTruelyReco << endl;
             cout << "number of events with contained MC tracks : " << NumberOfContainedMCTracks << endl;
-            cout << "event selection efficiency : " <<  (float)EventsTruelyReco/(float)NumberOfContainedMCTracks << endl;
+            cout << "event selection efficiency : " <<  (float)EventsTrackLong/(float)NumberOfContainedMCTracks << endl;
             cout << "event selection purity : " <<  (float)EventsTruelyReco/(float)EventsTrackLong << endl;
 //             cout << "event selection missid rate : " <<  fabs((float)EventsTruelyReco-(float)NumberOfContainedMCTracks)/(float)NumberOfContainedMCTracks << endl;
             cout << endl;
             cout << "--------------------------------------------------------------------------------------------" << endl;
 
             // Write numbers to cvs File
-            FinalCutFile << "," << (float)EventsTrackLong/(float)Size*20000.;
-            EfficiencyFile << "," << (float)EventsTruelyReco/(float)NumberOfContainedMCTracks;
-            PurityFile << "," << (float)EventsTruelyReco/(float)EventsTrackLong;
+            EventSelectionCuts.at(0) << "," << (float)EventsTrackLong/(float)Size*20000.;
+            EventSelectionCuts.at(1) << "," << (float)EventsTrackLong/(float)NumberOfContainedMCTracks;
+            EventSelectionCuts.at(2) << "," << (float)EventsTruelyReco/(float)EventsTrackLong;
 
             // Garbage collection
             delete Canvas1;
@@ -712,6 +754,9 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             delete Canvas9;
             delete Canvas10;
             delete Canvas11;
+            delete Canvas12;
+            delete Canvas13;
+            delete Canvas14;
 
             delete hXVertexPosition;
             delete hYVertexPosition;
@@ -723,7 +768,10 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             delete hTrackLength;
             delete hTrackMultip;
             delete hFlashVertexDist;
-            delete hTrackMCVertexDist;
+            delete hTrackStartDist;
+            delete hTrackEndDist;
+            delete hSelectionTheta;
+            delete hSelectionTrackRange;
             delete hXTrackStart;
             delete hYTrackStart;
             delete hZTrackStart;
@@ -736,15 +784,18 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
         } // Loop over all vertexing data products
 
-        // Get to next line in file
-        FinalCutFile << "\n";
-        EfficiencyFile << "\n";
-        PurityFile << "\n";
+        // Go to next line in files
+        for(auto& SelectionCut : EventSelectionCuts)
+        {
+            SelectionCut << "\n";
+        }
     } // Loop over all tracking data products
-
-    FinalCutFile.close();
-    EfficiencyFile.close();
-    PurityFile.close();
+    
+    // Close selection table files
+    for(auto& SelectionCut : EventSelectionCuts)
+    {
+        SelectionCut.close();
+    }
 
     return 0;
 
