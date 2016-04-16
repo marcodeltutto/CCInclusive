@@ -45,11 +45,14 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 {
 
     string Version = "v05_08_00";
+    
 //     string GeneratorName = "prodgenie_bnb_nu_cosmic_";
-    string GeneratorName = "prodgenie_bnb_nu_";
+//     string GeneratorName = "prodgenie_bnb_nu_";
 //     string GeneratorName = "data_bnb_";
 //     string GeneratorName = "data_bnb_external_";
-
+    string GeneratorName = "data_onbeam_bnb_";
+    string GeneratorName = "data_offbeam_bnbext_";
+    
     // Initialize and fill track reco product names
     std::vector<string> TrackProdNameVec;
 
@@ -80,12 +83,13 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     // Create files and write first line
     for(const auto& SelName : SelectionNames)
     {
-//         ofstream Temp(SelName+GeneratorName+Version+".cvs",ios::trunc);
-        cout << "FUCK" << endl;
+        // Fill vector of fstreams
         EventSelectionCuts.push_back(new ofstream(SelName+GeneratorName+Version+".cvs",ios::trunc));
-        cout << "FUCK" << endl;
+        
+        // Fill corner entry
         *EventSelectionCuts.back() << "track\\vertex";
-        // Fill vertexing column labels
+        
+	// Fill vertexing column labels
         for(const auto& VertexingName : VertexProdNameVec)
         {
             *EventSelectionCuts.back() << "," + VertexingName;
@@ -93,11 +97,13 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
         // Jump to next line
         *EventSelectionCuts.back() << "\n";
     } // Table file loop
-    cout << "FUCK" << endl;
 
 
     TChain *treenc = new TChain("analysistree/anatree");
-    treenc -> Add( ("/lheppc46/data/uBData/anatrees/" + GeneratorName + Version +"_anatree.root").c_str() );
+//     treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+Version+"_anatree.root").c_str() );
+//     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+Version+"_anatree.root").c_str() );
+    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
+    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
 
     //maximum array sizes
     const int maxentries = 35000;
@@ -334,7 +340,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             hTrackEndDist->GetYaxis()->SetTitle("Number of Tracks [ ]");
             
             // Theta angle distirbution for selected events
-            TH1F *hSelectionTheta = new TH1F("#theta-Angle of Selected Track","#theta-Angle of Selected Track",90,0,90);
+            TH1F *hSelectionTheta = new TH1F("#theta-Angle of Selected Track","#theta-Angle of Selected Track",90,0,3.142);
             hSelectionTheta->SetStats(0);
             hSelectionTheta->GetXaxis()->SetTitle("Angle [rad]");
             hSelectionTheta->GetYaxis()->SetTitle("Number of Tracks [ ]");
@@ -371,7 +377,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             hZTrackEnd->GetYaxis()->SetTitle("Number of Tracks [ ]");
 
             int Size = treenc -> GetEntries();
-            if(Size > 20000) Size = 20000;
+//             if(Size > 20000) Size = 20000;
 
             cout << "number of events used is: " << Size << endl;
 
@@ -398,7 +404,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             //Event Loop
             for(int i = 0; i < Size; i++)
             {
-//                 if(i%1000 == 0) cout << "\t... " << i << endl;
+                if(i%1000 == 0) cout << "\t... " << i << endl;
 
                 // Get tree entries
                 treenc -> GetEntry(i);
