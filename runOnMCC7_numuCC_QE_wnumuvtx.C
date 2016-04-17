@@ -47,11 +47,11 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     string Version = "v05_08_00";
     
 //     string GeneratorName = "prodgenie_bnb_nu_cosmic_";
-//     string GeneratorName = "prodgenie_bnb_nu_";
+    string GeneratorName = "prodgenie_bnb_nu_";
 //     string GeneratorName = "data_bnb_";
 //     string GeneratorName = "data_bnb_external_";
-    string GeneratorName = "data_onbeam_bnb_";
-    string GeneratorName = "data_offbeam_bnbext_";
+//     string GeneratorName = "data_onbeam_bnb_";
+//     string GeneratorName = "data_offbeam_bnbext_";
     
     // Initialize and fill track reco product names
     std::vector<string> TrackProdNameVec;
@@ -101,9 +101,9 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
     TChain *treenc = new TChain("analysistree/anatree");
 //     treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+Version+"_anatree.root").c_str() );
-//     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+Version+"_anatree.root").c_str() );
-    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
-    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
+    treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+Version+"_anatree.root").c_str() );
+//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
+//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
 
     //maximum array sizes
     const int maxentries = 35000;
@@ -111,7 +111,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     const int maxvtx = 500;
     const int maxnu = 10;
     const int maxmc = 10;
-    const int kMaxFlashes = 2000;
+    const int kMaxFlashes = 5000;
 
     //Define variables to read from Tree
     Int_t           event;
