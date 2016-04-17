@@ -47,10 +47,10 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     string Version = "v05_08_00";
     
 //     string GeneratorName = "prodgenie_bnb_nu_cosmic_";
-    string GeneratorName = "prodgenie_bnb_nu_";
+//     string GeneratorName = "prodgenie_bnb_nu_";
 //     string GeneratorName = "data_bnb_";
 //     string GeneratorName = "data_bnb_external_";
-//     string GeneratorName = "data_onbeam_bnb_";
+    string GeneratorName = "data_onbeam_bnb_";
 //     string GeneratorName = "data_offbeam_bnbext_";
     
     // Initialize and fill track reco product names
@@ -101,8 +101,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
     TChain *treenc = new TChain("analysistree/anatree");
 //     treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+Version+"_anatree.root").c_str() );
-    treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+Version+"_anatree.root").c_str() );
-//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
+//     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+Version+"_anatree.root").c_str() );
+    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
 
     //maximum array sizes
@@ -181,8 +181,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     double flashwidth = 80; //cm. Distance flash-track
     double distcut = 5; //cm. Distance track start/end to vertex
     double lengthcut = 75; //cm. Length of longest track
-    double beammin = 3.55; //us. Beam window start
-    double beammax = 5.15; //us. Beam window end
+    double beammin = 3.55-0.36; //us. Beam window start
+    double beammax = 5.15-0.36; //us. Beam window end
     double PEthresh = 50; //PE
     double MCTrackToMCVtxDist = 1; //cm. distance between mc track start and mc vertex
     double TrackToMCDist = 5; //cm. Distance track start/end to mcvertex
@@ -400,7 +400,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             unsigned int EventsTruelyReco = 0;
 
             unsigned int NumberOfContainedMCTracks = 0;
-
+            
+            Size = 300000;
             //Event Loop
             for(int i = 0; i < Size; i++)
             {
@@ -624,78 +625,78 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                 ntrue++;
             }//loop over all events
 
-            TCanvas *Canvas1 = new TCanvas("X Vertex Position", "X Vertex Position", 1400, 1000);
-            hXVertexPosition->Draw();
-            XVertexMinCut.Draw("same");
-            XVertexMaxCut.Draw("same");
-
-            TCanvas *Canvas2 = new TCanvas("Y Vertex Position", "Y Vertex Position", 1400, 1000);
-            hYVertexPosition->Draw();
-            YVertexMinCut.Draw("same");
-            YVertexMaxCut.Draw("same");
-
-            TCanvas *Canvas3 = new TCanvas("Z Vertex Position", "Z Vertex Position", 1400, 1000);
-            hZVertexPosition->Draw();
-            ZVertexMinCut.Draw("same");
-            ZVertexMaxCut.Draw("same");
-
-            TCanvas *Canvas4 = new TCanvas("Flash Time Distribution", "Flash Time Distribution", 1400, 1000);
-            hFlashTime->Draw();
-            FlashTimeMinCut.Draw("same");
-            FlashTimeMaxCut.Draw("same");
-
-            TCanvas *Canvas5 = new TCanvas("PE Count of Flash", "PE Count of Flash", 1400, 1000);
-            Canvas5->SetLogy();
-            hIntesityPE->Draw();
-            FlashPEMinCut.Draw("same");
-
-            TCanvas *Canvas6 = new TCanvas("Flash Track Distance", "Flash Track Distance", 1400, 1000);
-            Canvas6->SetLogy();
-            hFlashTrackDist->Draw();
-            FlashTrackMinCut.Draw("same");
-
-            TCanvas *Canvas7 = new TCanvas("Vertex Track Distance", "Vertex Track Distance", 1400, 1000);
-            Canvas7->SetLogy();
-            hVertexTrackDist->Draw();
-            VertexTrackMinCut.Draw("same");
-
-            TCanvas *Canvas8 = new TCanvas("Track Length", "Track Length", 1400, 1000);
-            Canvas8->SetLogy();
-            hTrackLength->Draw();
-
-            TCanvas *Canvas9 = new TCanvas("Track Multiplicity", "Track Multiplicity", 1400, 1000);
-            hTrackMultip->Draw();
-
-            TCanvas *Canvas10 = new TCanvas("Flash Vertex Distance", "Flash Vertex Distance", 1400, 1000);
-            hFlashVertexDist->Draw();
-
-            TCanvas *Canvas11 = new TCanvas("Track Start MCTrack Start Distance", "Track Start MCTrack Start Distance", 1400, 1000);
-            hTrackStartDist->Draw();
-            
-            TCanvas *Canvas12 = new TCanvas("Track End MCTrack End Distance", "Track End MCTrack End Distance", 1400, 1000);
-            hTrackEndDist->Draw();
-            
-            TCanvas *Canvas13 = new TCanvas("Theta Angle of Selected Tracks", "Theta Angle of Selected Tracks", 1400, 1000);
-            hSelectionTheta->Draw();
-            
-            TCanvas *Canvas14 = new TCanvas("Range of Selected Tracks", "Range of Selected Tracks", 1400, 1000);
-            hSelectionTrackRange->Draw();
+//             TCanvas *Canvas1 = new TCanvas("X Vertex Position", "X Vertex Position", 1400, 1000);
+//             hXVertexPosition->Draw();
+//             XVertexMinCut.Draw("same");
+//             XVertexMaxCut.Draw("same");
+// 
+//             TCanvas *Canvas2 = new TCanvas("Y Vertex Position", "Y Vertex Position", 1400, 1000);
+//             hYVertexPosition->Draw();
+//             YVertexMinCut.Draw("same");
+//             YVertexMaxCut.Draw("same");
+// 
+//             TCanvas *Canvas3 = new TCanvas("Z Vertex Position", "Z Vertex Position", 1400, 1000);
+//             hZVertexPosition->Draw();
+//             ZVertexMinCut.Draw("same");
+//             ZVertexMaxCut.Draw("same");
+// 
+//             TCanvas *Canvas4 = new TCanvas("Flash Time Distribution", "Flash Time Distribution", 1400, 1000);
+//             hFlashTime->Draw();
+//             FlashTimeMinCut.Draw("same");
+//             FlashTimeMaxCut.Draw("same");
+// 
+//             TCanvas *Canvas5 = new TCanvas("PE Count of Flash", "PE Count of Flash", 1400, 1000);
+//             Canvas5->SetLogy();
+//             hIntesityPE->Draw();
+//             FlashPEMinCut.Draw("same");
+// 
+//             TCanvas *Canvas6 = new TCanvas("Flash Track Distance", "Flash Track Distance", 1400, 1000);
+//             Canvas6->SetLogy();
+//             hFlashTrackDist->Draw();
+//             FlashTrackMinCut.Draw("same");
+// 
+//             TCanvas *Canvas7 = new TCanvas("Vertex Track Distance", "Vertex Track Distance", 1400, 1000);
+//             Canvas7->SetLogy();
+//             hVertexTrackDist->Draw();
+//             VertexTrackMinCut.Draw("same");
+// 
+//             TCanvas *Canvas8 = new TCanvas("Track Length", "Track Length", 1400, 1000);
+//             Canvas8->SetLogy();
+//             hTrackLength->Draw();
+// 
+//             TCanvas *Canvas9 = new TCanvas("Track Multiplicity", "Track Multiplicity", 1400, 1000);
+//             hTrackMultip->Draw();
+// 
+//             TCanvas *Canvas10 = new TCanvas("Flash Vertex Distance", "Flash Vertex Distance", 1400, 1000);
+//             hFlashVertexDist->Draw();
+// 
+//             TCanvas *Canvas11 = new TCanvas("Track Start MCTrack Start Distance", "Track Start MCTrack Start Distance", 1400, 1000);
+//             hTrackStartDist->Draw();
+//             
+//             TCanvas *Canvas12 = new TCanvas("Track End MCTrack End Distance", "Track End MCTrack End Distance", 1400, 1000);
+//             hTrackEndDist->Draw();
+//             
+//             TCanvas *Canvas13 = new TCanvas("Theta Angle of Selected Tracks", "Theta Angle of Selected Tracks", 1400, 1000);
+//             hSelectionTheta->Draw();
+//             
+//             TCanvas *Canvas14 = new TCanvas("Range of Selected Tracks", "Range of Selected Tracks", 1400, 1000);
+//             hSelectionTrackRange->Draw();
 
             TFile* OutputFile = new TFile(("Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+Version+".root").c_str(),"RECREATE");
 
-            Canvas1->Write();
-            Canvas2->Write();
-            Canvas3->Write();
-            Canvas4->Write();
-            Canvas5->Write();
-            Canvas6->Write();
-            Canvas7->Write();
-            Canvas8->Write();
-            Canvas10->Write();
-            Canvas11->Write();
-            Canvas12->Write();
-            Canvas13->Write();
-            Canvas14->Write();
+//             Canvas1->Write();
+//             Canvas2->Write();
+//             Canvas3->Write();
+//             Canvas4->Write();
+//             Canvas5->Write();
+//             Canvas6->Write();
+//             Canvas7->Write();
+//             Canvas8->Write();
+//             Canvas10->Write();
+//             Canvas11->Write();
+//             Canvas12->Write();
+//             Canvas13->Write();
+//             Canvas14->Write();
 
             hXVertexPosition->Write();
             hYVertexPosition->Write();
@@ -714,7 +715,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
             OutputFile->Close();
 
-            Canvas10->SaveAs(("FlashVertexDist"+GeneratorName+Version+".png").c_str());
+//             Canvas10->SaveAs(("FlashVertexDist"+GeneratorName+Version+".png").c_str());
 //             Canvas11->SaveAs(("TrackStartMCTrackDist_Track_"+ TrackingName + "_Vertex_" + VertexingName + "_" +GeneratorName+Version+".png").c_str());
 //             Canvas12->SaveAs(("TrackEndMCTrackDist_Track_"+ TrackingName + "_Vertex_" + VertexingName + "_" +GeneratorName+Version+".png").c_str());
 //    Canvas2->SaveAs((TrackingName+"_YVtxPosition_"+GeneratorName+Version+".png").c_str());
@@ -749,20 +750,20 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             *EventSelectionCuts.at(2) << "," << (float)EventsTruelyReco/(float)EventsTrackLong;
 
             // Garbage collection
-            delete Canvas1;
-            delete Canvas2;
-            delete Canvas3;
-            delete Canvas4;
-            delete Canvas5;
-            delete Canvas6;
-            delete Canvas7;
-            delete Canvas8;
-            delete Canvas9;
-            delete Canvas10;
-            delete Canvas11;
-            delete Canvas12;
-            delete Canvas13;
-            delete Canvas14;
+//             delete Canvas1;
+//             delete Canvas2;
+//             delete Canvas3;
+//             delete Canvas4;
+//             delete Canvas5;
+//             delete Canvas6;
+//             delete Canvas7;
+//             delete Canvas8;
+//             delete Canvas9;
+//             delete Canvas10;
+//             delete Canvas11;
+//             delete Canvas12;
+//             delete Canvas13;
+//             delete Canvas14;
 
             delete hXVertexPosition;
             delete hYVertexPosition;

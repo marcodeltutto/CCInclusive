@@ -10,8 +10,8 @@
 #include <TLegend.h>
 #include <TLine.h>
 
-double beammin = 3.55; //us. Beam window start
-double beammax = 5.15; //us. Beam window end
+double beammin = 3.55-0.36; //us. Beam window start
+double beammax = 5.15-0.36; //us. Beam window end
 
 float GetMaximum(const std::vector<TH1F*>& HistVector);
 void AddFirstTwoHistograms(std::vector<TH1F*>& HistVector, float Weight);
