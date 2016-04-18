@@ -436,7 +436,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
             unsigned int NumberOfContainedMCTracks = 0;
 
-            Size = 300;
+            Size = 300000;
             //Event Loop
             for(int i = 0; i < Size; i++)
             {
