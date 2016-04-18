@@ -47,29 +47,29 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     string Version = "v05_08_00";
 
 //     string GeneratorName = "prodgenie_bnb_nu_cosmic_";
-//     string GeneratorName = "prodgenie_bnb_nu_";
+    string GeneratorName = "prodgenie_bnb_nu_";
 //     string GeneratorName = "data_bnb_";
 //     string GeneratorName = "data_bnb_external_";
 //     string GeneratorName = "data_onbeam_bnb_";
-    string GeneratorName = "data_offbeam_bnbext_";
+//     string GeneratorName = "data_offbeam_bnbext_";
 
     // Initialize and fill track reco product names
     std::vector<string> TrackProdNameVec;
 
-//     TrackProdNameVec.push_back("pandoraNuKHit");
-//     TrackProdNameVec.push_back("pandoraCosmic");
+    TrackProdNameVec.push_back("pandoraNuKHit");
+    TrackProdNameVec.push_back("pandoraCosmic");
     TrackProdNameVec.push_back("pandoraNu");
-//     TrackProdNameVec.push_back("pmtrack");
-//     TrackProdNameVec.push_back("pandoraNuPMA");
-//     TrackProdNameVec.push_back("trackkalmanhit");
+    TrackProdNameVec.push_back("pmtrack");
+    TrackProdNameVec.push_back("pandoraNuPMA");
+    TrackProdNameVec.push_back("trackkalmanhit");
 
     // Initialize and fill vertex reco product names
     std::vector<string> VertexProdNameVec;
 
-//     VertexProdNameVec.push_back("nuvtx");
-//     VertexProdNameVec.push_back("pandoraCosmic");
+    VertexProdNameVec.push_back("nuvtx");
+    VertexProdNameVec.push_back("pandoraCosmic");
     VertexProdNameVec.push_back("pandoraNu");
-//     VertexProdNameVec.push_back("pmtrack");
+    VertexProdNameVec.push_back("pmtrack");
 
     std::vector<string> SelectionNames;
 
@@ -101,9 +101,9 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
     TChain *treenc = new TChain("analysistree/anatree");
 //     treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+Version+"_anatree.root").c_str() );
-//     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+Version+"_anatree.root").c_str() );
+    treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
-    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
+//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
 
     //maximum array sizes
     const int maxentries = 35000;
@@ -181,8 +181,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     double flashwidth = 80; //cm. Distance flash-track
     double distcut = 5; //cm. Distance track start/end to vertex
     double lengthcut = 75; //cm. Length of longest track
-    double beammin = 3.55-0.36; //us. Beam window start
-    double beammax = 5.15-0.36; //us. Beam window end
+    double beammin = 3.55/*-0.36*/; //us. Beam window start
+    double beammax = 5.15/*-0.36*/; //us. Beam window end
     double PEthresh = 50; //PE
     double MCTrackToMCVtxDist = 1; //cm. distance between mc track start and mc vertex
     double TrackToMCDist = 5; //cm. Distance track start/end to mcvertex
@@ -402,12 +402,12 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             hXTrackStartEnd->GetYaxis()->SetTitle("Number of Tracks [ ]");
 
             TH1F *hYTrackStartEnd = new TH1F("Y Track Start & End Position","Y Track Start & End Position",233,-FVy/2,FVy/2);
-            hXTrackStartEnd->SetStats(0);
+            hYTrackStartEnd->SetStats(0);
             hYTrackStartEnd->GetXaxis()->SetTitle("Y position [cm]");
             hYTrackStartEnd->GetYaxis()->SetTitle("Number of Tracks [ ]");
 
             TH1F *hZTrackStartEnd = new TH1F("Z Track Start & End Position","Z Track Start & End Position",1000,0,FVz);
-            hXTrackStartEnd->SetStats(0);
+            hZTrackStartEnd->SetStats(0);
             hZTrackStartEnd->GetXaxis()->SetTitle("Z position [cm]");
             hZTrackStartEnd->GetYaxis()->SetTitle("Number of Tracks [ ]");
 
