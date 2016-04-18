@@ -47,10 +47,10 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     string Version = "v05_08_00";
 
 //     string GeneratorName = "prodgenie_bnb_nu_cosmic_";
-    string GeneratorName = "prodgenie_bnb_nu_";
+//     string GeneratorName = "prodgenie_bnb_nu_";
 //     string GeneratorName = "data_bnb_";
 //     string GeneratorName = "data_bnb_external_";
-//     string GeneratorName = "data_onbeam_bnb_";
+    string GeneratorName = "data_onbeam_bnb_";
 //     string GeneratorName = "data_offbeam_bnbext_";
 
     // Initialize and fill track reco product names
