@@ -45,14 +45,14 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 {
 
     string Version = "v05_08_00";
-    
+
 //     string GeneratorName = "prodgenie_bnb_nu_cosmic_";
-//     string GeneratorName = "prodgenie_bnb_nu_";
+    string GeneratorName = "prodgenie_bnb_nu_";
 //     string GeneratorName = "data_bnb_";
 //     string GeneratorName = "data_bnb_external_";
-    string GeneratorName = "data_onbeam_bnb_";
+//     string GeneratorName = "data_onbeam_bnb_";
 //     string GeneratorName = "data_offbeam_bnbext_";
-    
+
     // Initialize and fill track reco product names
     std::vector<string> TrackProdNameVec;
 
@@ -70,26 +70,26 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 //     VertexProdNameVec.push_back("pandoraCosmic");
     VertexProdNameVec.push_back("pandoraNu");
 //     VertexProdNameVec.push_back("pmtrack");
-    
+
     std::vector<string> SelectionNames;
-    
+
     SelectionNames.push_back("FinalCut_");
     SelectionNames.push_back("SelectionEfficiency_");
     SelectionNames.push_back("SelectionPurity_");
-    
+
     // Initialize table file vector
     std::vector<ofstream*> EventSelectionCuts;
-    
+
     // Create files and write first line
     for(const auto& SelName : SelectionNames)
     {
         // Fill vector of fstreams
         EventSelectionCuts.push_back(new ofstream(SelName+GeneratorName+Version+".cvs",ios::trunc));
-        
+
         // Fill corner entry
         *EventSelectionCuts.back() << "track\\vertex";
-        
-	// Fill vertexing column labels
+
+        // Fill vertexing column labels
         for(const auto& VertexingName : VertexProdNameVec)
         {
             *EventSelectionCuts.back() << "," + VertexingName;
@@ -100,9 +100,9 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
 
     TChain *treenc = new TChain("analysistree/anatree");
-//     treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+Version+"_anatree.root").c_str() );
+    treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+Version+"_anatree.root").c_str() );
-    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
+//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
 
     //maximum array sizes
@@ -181,8 +181,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     double flashwidth = 80; //cm. Distance flash-track
     double distcut = 5; //cm. Distance track start/end to vertex
     double lengthcut = 75; //cm. Length of longest track
-    double beammin = 3.55-0.36; //us. Beam window start
-    double beammax = 5.15-0.36; //us. Beam window end
+    double beammin = 3.55/*-0.36*/; //us. Beam window start
+    double beammax = 5.15/*-0.36*/; //us. Beam window end
     double PEthresh = 50; //PE
     double MCTrackToMCVtxDist = 1; //cm. distance between mc track start and mc vertex
     double TrackToMCDist = 5; //cm. Distance track start/end to mcvertex
@@ -309,6 +309,12 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             TLine VertexTrackMinCut(distcut, 0, distcut, 3000);
             VertexTrackMinCut.SetLineColor(kRed);
 
+            // All TrackLength
+            TH1I *hAllTrackLength = new TH1I("Track Length of Longest Tracks","Track Length of Longest Tracks",1000,0,1000);
+            hAllTrackLength->SetStats(0);
+            hAllTrackLength->GetXaxis()->SetTitle("Track Length [cm]");
+            hAllTrackLength->GetYaxis()->SetTitle("Number of Tracks [ ]");
+
             // TrackLength of longest tracks
             TH1I *hTrackLength = new TH1I("Track Length Distribution","Track Length Distribution",1000,0,1000);
             hTrackLength->SetStats(0);
@@ -332,49 +338,78 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             hTrackStartDist->SetStats(0);
             hTrackStartDist->GetXaxis()->SetTitle("Distance [cm]");
             hTrackStartDist->GetYaxis()->SetTitle("Number of Tracks [ ]");
-            
+
             // Track True Track Distance
             TH1F *hTrackEndDist = new TH1F("Track To MC-Track End Distance","Track To MC-Track End Distance",100,0,50);
             hTrackEndDist->SetStats(0);
             hTrackEndDist->GetXaxis()->SetTitle("Distance [cm]");
             hTrackEndDist->GetYaxis()->SetTitle("Number of Tracks [ ]");
-            
+
             // Theta angle distirbution for selected events
             TH1F *hSelectionTheta = new TH1F("#theta-Angle of Selected Track","#theta-Angle of Selected Track",90,0,3.142);
             hSelectionTheta->SetStats(0);
-            hSelectionTheta->GetXaxis()->SetTitle("Angle [rad]");
+            hSelectionTheta->GetXaxis()->SetTitle("#theta angle [rad]");
             hSelectionTheta->GetYaxis()->SetTitle("Number of Tracks [ ]");
             
+            // Theta angle distirbution for selected events
+            TH1F *hSelectionPhi = new TH1F("#phi-Angle of Selected Track","#phi-Angle of Selected Track",180,-3.142,3.142);
+            hSelectionPhi->SetStats(0);
+            hSelectionPhi->GetXaxis()->SetTitle("#phi angle [rad]");
+            hSelectionPhi->GetYaxis()->SetTitle("Number of Tracks [ ]");
+
             // Track Range distirbution for selected events
             TH1F *hSelectionTrackRange = new TH1F("Track Range of Selected Track","Track Range of Selected Track",100,0,1000);
             hSelectionTrackRange->SetStats(0);
             hSelectionTrackRange->GetXaxis()->SetTitle("Track Range [cm]");
             hSelectionTrackRange->GetYaxis()->SetTitle("Number of Tracks [ ]");
+            
+            // Vertex position selection
+            TH1F *hSelXVtxPosition= new TH1F("Selected X Vertices","Selected X Vertices",256,0,FVx);
+            hSelXVtxPosition->SetStats(0);
+            hSelXVtxPosition->GetXaxis()->SetTitle("X position [cm]");
+            hSelXVtxPosition->GetYaxis()->SetTitle("Number of Vertices [ ]");
+
+            TH1F *hSelYVtxPosition= new TH1F("Selected Y Vertices","Selected Y Vertices",333,-FVy/2,(FVy+100)/2);
+            hSelYVtxPosition->SetStats(0);
+            hSelYVtxPosition->GetXaxis()->SetTitle("Y position [cm]");
+            hSelYVtxPosition->GetYaxis()->SetTitle("Number of Vertices [ ]");
+
+            TH1F *hSelZVtxPosition= new TH1F("Selected Z Vertices","Selected Z Vertices",1000,0,FVz);
+            hSelZVtxPosition->SetStats(0);
+            hSelZVtxPosition->GetXaxis()->SetTitle("Z position [cm]");
+            hSelZVtxPosition->GetYaxis()->SetTitle("Number of Vertices [ ]");
+
+            // All Track Start and End postion
+            TH1F *hAllXTrackStartEnd = new TH1F("Start & End X-Position of longest Track","Start & End X-Position of longest Track",256,0,FVx);
+            hAllXTrackStartEnd->SetStats(0);
+            hAllXTrackStartEnd->GetXaxis()->SetTitle("X position [cm]");
+            hAllXTrackStartEnd->GetYaxis()->SetTitle("Number of Tracks [ ]");
+
+            TH1F *hAllYTrackStartEnd = new TH1F("Start & End Y-Position of longest Track","Start & End Y-Position of longest Track",233,-FVy/2,FVy/2);
+            hAllXTrackStartEnd->SetStats(0);
+            hAllYTrackStartEnd->GetXaxis()->SetTitle("Y position [cm]");
+            hAllYTrackStartEnd->GetYaxis()->SetTitle("Number of Tracks [ ]");
+
+            TH1F *hAllZTrackStartEnd = new TH1F("Start & End Z-Position of longest Track","Start & End Z-Position of longest Track",1000,0,FVz);
+            hAllXTrackStartEnd->SetStats(0);
+            hAllZTrackStartEnd->GetXaxis()->SetTitle("Z position [cm]");
+            hAllZTrackStartEnd->GetYaxis()->SetTitle("Number of Tracks [ ]");
 
             // Track Start and End postion
-            TH1F *hXTrackStart = new TH1F("X Track Start Position","X Track Start Position",256,0,FVx);
-            hXTrackStart->GetXaxis()->SetTitle("X position [cm]");
-            hXTrackStart->GetYaxis()->SetTitle("Number of Tracks [ ]");
+            TH1F *hXTrackStartEnd = new TH1F("X Track Start & End Position","X Track Start & End Position",256,0,FVx);
+            hXTrackStartEnd->SetStats(0);
+            hXTrackStartEnd->GetXaxis()->SetTitle("X position [cm]");
+            hXTrackStartEnd->GetYaxis()->SetTitle("Number of Tracks [ ]");
 
-            TH1F *hYTrackStart = new TH1F("Y Track Start Position","Y Track Start Position",233,-FVy/2,FVy/2);
-            hYTrackStart->GetXaxis()->SetTitle("Y position [cm]");
-            hYTrackStart->GetYaxis()->SetTitle("Number of Tracks [ ]");
+            TH1F *hYTrackStartEnd = new TH1F("Y Track Start & End Position","Y Track Start & End Position",233,-FVy/2,FVy/2);
+            hXTrackStartEnd->SetStats(0);
+            hYTrackStartEnd->GetXaxis()->SetTitle("Y position [cm]");
+            hYTrackStartEnd->GetYaxis()->SetTitle("Number of Tracks [ ]");
 
-            TH1F *hZTrackStart = new TH1F("Z Track Start Position","Z Track Start Position",1000,0,FVz);
-            hZTrackStart->GetXaxis()->SetTitle("Z position [cm]");
-            hZTrackStart->GetYaxis()->SetTitle("Number of Tracks [ ]");
-
-            TH1F *hXTrackEnd = new TH1F("X Track End Position","X Track End Position",256,0,FVx);
-            hXTrackEnd->GetXaxis()->SetTitle("X position [cm]");
-            hXTrackEnd->GetYaxis()->SetTitle("Number of Tracks [ ]");
-
-            TH1F *hYTrackEnd = new TH1F("Y Track End Position","Y Track End Position",233,-FVy/2,FVy/2);
-            hYTrackEnd->GetXaxis()->SetTitle("Y position [cm]");
-            hYTrackEnd->GetYaxis()->SetTitle("Number of Tracks [ ]");
-
-            TH1F *hZTrackEnd = new TH1F("Z Track End Position","Z Track End Position",1000,0,FVz);
-            hZTrackEnd->GetXaxis()->SetTitle("Z position [cm]");
-            hZTrackEnd->GetYaxis()->SetTitle("Number of Tracks [ ]");
+            TH1F *hZTrackStartEnd = new TH1F("Z Track Start & End Position","Z Track Start & End Position",1000,0,FVz);
+            hXTrackStartEnd->SetStats(0);
+            hZTrackStartEnd->GetXaxis()->SetTitle("Z position [cm]");
+            hZTrackStartEnd->GetYaxis()->SetTitle("Number of Tracks [ ]");
 
             int Size = treenc -> GetEntries();
 //             if(Size > 20000) Size = 20000;
@@ -400,8 +435,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             unsigned int EventsTruelyReco = 0;
 
             unsigned int NumberOfContainedMCTracks = 0;
-            
-            Size = 300000;
+
+//             Size = 300000;
             //Event Loop
             for(int i = 0; i < Size; i++)
             {
@@ -433,7 +468,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                         }
                     }
                 } // flash loop
-                
+
                 int MCTrackCandidate = -1;
                 float MCTrackCandLength = 0;
 
@@ -463,7 +498,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                         }
                     } // MC particle loop
                 } // MC vertex loop
-                
+
                 // Count up the number of contained mc-tracks if there are mc candidates
                 if(MCTrackCandidate > -1)
                 {
@@ -483,16 +518,16 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                     EventsWithFlash++;
 
                     // Loop over all reconstructed tracks
-                    for(int j = 0; j < ntracks_reco; j++)
-                    {
-                        // Fill track length histogram and the flash track histogram
-                        hTrackLength->Fill( pow(trkstartx[j] - trkendx[j],2) + pow(trkstarty[j] - trkendy[j],2) + pow(trkstartz[j] - trkendz[j],2) );
-                        hFlashTrackDist->Fill(FlashTrackDist(flash_zcenter[theflash], trkstartz[j], trkendz[j]));
-                    } // reco track loop
+//                     for(int j = 0; j < ntracks_reco; j++)
+//                     {
+
+//                     } // reco track loop
 
                     // Initialize Track Candidate properties
                     int TrackCandidate = -1;
                     float TrackCandLength = 0;
+                    
+                    int VertexCandidate = -1;
 
                     // Loop over all vertices
                     for(int v = 0; v < nvtx; v++)
@@ -549,6 +584,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                                     {
                                         TrackCandLength = length;
                                         TrackCandidate = j;
+                                        VertexCandidate = v;
                                     }
                                 } // if track vertex distance is within cut distance
                             } // reco track loop
@@ -558,10 +594,20 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                             hFlashVertexDist->Fill(fabs(flash_zcenter[theflash]-vtxz[v]));
                         } // if vertex is contained
                     } // vertex loop
-                    
+
                     // If the longest track length is filled
                     if(TrackCandidate > -1)
                     {
+                        // Fill histograms
+                        hFlashTrackDist->Fill(FlashTrackDist(flash_zcenter[theflash], trkstartz[TrackCandidate], trkendz[TrackCandidate]));
+                        hAllTrackLength->Fill(TrackCandLength);
+                        hAllXTrackStartEnd->Fill(trkstartx[TrackCandidate]);
+                        hAllXTrackStartEnd->Fill(trkendx[TrackCandidate]);
+                        hAllYTrackStartEnd->Fill(trkstarty[TrackCandidate]);
+                        hAllYTrackStartEnd->Fill(trkendy[TrackCandidate]);
+                        hAllZTrackStartEnd->Fill(trkstartz[TrackCandidate]);
+                        hAllZTrackStartEnd->Fill(trkendz[TrackCandidate]);
+
                         // If the longest track is flash matched
                         if( FlashTrackDist(flash_zcenter[theflash], trkstartz[TrackCandidate], trkendz[TrackCandidate]) < flashwidth )
                         {
@@ -573,22 +619,37 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                                 TrackContainedFlag = true;
                             }
 
+                            //Fill contained track histograms
+                            hXTrackStartEnd->Fill(trkstartx[TrackCandidate]);
+                            hXTrackStartEnd->Fill(trkendx[TrackCandidate]);
+                            hYTrackStartEnd->Fill(trkstarty[TrackCandidate]);
+                            hYTrackStartEnd->Fill(trkendy[TrackCandidate]);
+                            hZTrackStartEnd->Fill(trkstartz[TrackCandidate]);
+                            hZTrackStartEnd->Fill(trkendz[TrackCandidate]);
+
                             // If the longest track is fully contained
                             if( inFV(trkstartx[TrackCandidate], trkstarty[TrackCandidate], trkstartz[TrackCandidate])
                                     && inFV(trkendx[TrackCandidate], trkendy[TrackCandidate], trkendz[TrackCandidate])
-                                    && TrackContainedFlag)
+                                    && TrackContainedFlag )
                             {
                                 EventsTracksInFV++;
+
+                                // Fill Track length
+                                hTrackLength->Fill(TrackCandLength);
 
                                 // If longest track is longer than 75 cm
                                 if(TrackCandLength > lengthcut)
                                 {
                                     EventsTrackLong++;
-                                    
+
                                     // Fill Selection Plots
                                     hSelectionTheta->Fill(trktheta[TrackCandidate]);
+                                    hSelectionPhi->Fill(trkphi[TrackCandidate]);
                                     hSelectionTrackRange->Fill(TrackCandLength);
-                                    
+                                    hSelXVtxPosition->Fill(vtxx[VertexCandidate]);
+                                    hSelYVtxPosition->Fill(vtxy[VertexCandidate]);
+                                    hSelZVtxPosition->Fill(vtxz[VertexCandidate]);
+
                                     double TrkStartMCStartDist = sqrt(pow(XMCTrackStart[MCTrackCandidate] - trkstartx[TrackCandidate],2) + pow(YMCTrackStart[MCTrackCandidate] - trkstarty[TrackCandidate],2) + pow(ZMCTrackStart[MCTrackCandidate] - trkstartz[TrackCandidate],2));
                                     double TrkEndMCEndDist = sqrt(pow(XMCTrackEnd[MCTrackCandidate] - trkendx[TrackCandidate],2) + pow(YMCTrackEnd[MCTrackCandidate] - trkendy[TrackCandidate],2) + pow(ZMCTrackEnd[MCTrackCandidate] - trkendz[TrackCandidate],2));
                                     double TrkStartMCEndDist = sqrt(pow(XMCTrackEnd[MCTrackCandidate] - trkstartx[TrackCandidate],2) + pow(YMCTrackEnd[MCTrackCandidate] - trkstarty[TrackCandidate],2) + pow(ZMCTrackEnd[MCTrackCandidate] - trkstartz[TrackCandidate],2));
@@ -605,10 +666,10 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                                         hTrackStartDist->Fill(TrkEndMCStartDist);
                                         hTrackEndDist->Fill(TrkStartMCEndDist);
                                     }
-                                    
+
                                     // If track end or start are close to montecarlo vertex
                                     if(   (TrkStartMCStartDist < TrackToMCDist && TrkEndMCEndDist < TrackToMCDist)
-                                        ||(TrkStartMCEndDist < TrackToMCDist && TrkEndMCStartDist < TrackToMCDist)
+                                            ||(TrkStartMCEndDist < TrackToMCDist && TrkEndMCStartDist < TrackToMCDist)
                                       )
                                     {
                                         EventsTruelyReco++;
@@ -629,74 +690,60 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 //             hXVertexPosition->Draw();
 //             XVertexMinCut.Draw("same");
 //             XVertexMaxCut.Draw("same");
-// 
+//
 //             TCanvas *Canvas2 = new TCanvas("Y Vertex Position", "Y Vertex Position", 1400, 1000);
 //             hYVertexPosition->Draw();
 //             YVertexMinCut.Draw("same");
 //             YVertexMaxCut.Draw("same");
-// 
+//
 //             TCanvas *Canvas3 = new TCanvas("Z Vertex Position", "Z Vertex Position", 1400, 1000);
 //             hZVertexPosition->Draw();
 //             ZVertexMinCut.Draw("same");
 //             ZVertexMaxCut.Draw("same");
-// 
+//
 //             TCanvas *Canvas4 = new TCanvas("Flash Time Distribution", "Flash Time Distribution", 1400, 1000);
 //             hFlashTime->Draw();
 //             FlashTimeMinCut.Draw("same");
 //             FlashTimeMaxCut.Draw("same");
-// 
+//
 //             TCanvas *Canvas5 = new TCanvas("PE Count of Flash", "PE Count of Flash", 1400, 1000);
 //             Canvas5->SetLogy();
 //             hIntesityPE->Draw();
 //             FlashPEMinCut.Draw("same");
-// 
+//
 //             TCanvas *Canvas6 = new TCanvas("Flash Track Distance", "Flash Track Distance", 1400, 1000);
 //             Canvas6->SetLogy();
 //             hFlashTrackDist->Draw();
 //             FlashTrackMinCut.Draw("same");
-// 
+//
 //             TCanvas *Canvas7 = new TCanvas("Vertex Track Distance", "Vertex Track Distance", 1400, 1000);
 //             Canvas7->SetLogy();
 //             hVertexTrackDist->Draw();
 //             VertexTrackMinCut.Draw("same");
-// 
+//
 //             TCanvas *Canvas8 = new TCanvas("Track Length", "Track Length", 1400, 1000);
 //             Canvas8->SetLogy();
 //             hTrackLength->Draw();
-// 
+//
 //             TCanvas *Canvas9 = new TCanvas("Track Multiplicity", "Track Multiplicity", 1400, 1000);
 //             hTrackMultip->Draw();
-// 
+//
 //             TCanvas *Canvas10 = new TCanvas("Flash Vertex Distance", "Flash Vertex Distance", 1400, 1000);
 //             hFlashVertexDist->Draw();
-// 
+//
 //             TCanvas *Canvas11 = new TCanvas("Track Start MCTrack Start Distance", "Track Start MCTrack Start Distance", 1400, 1000);
 //             hTrackStartDist->Draw();
-//             
+//
 //             TCanvas *Canvas12 = new TCanvas("Track End MCTrack End Distance", "Track End MCTrack End Distance", 1400, 1000);
 //             hTrackEndDist->Draw();
-//             
+//
 //             TCanvas *Canvas13 = new TCanvas("Theta Angle of Selected Tracks", "Theta Angle of Selected Tracks", 1400, 1000);
 //             hSelectionTheta->Draw();
-//             
+//
 //             TCanvas *Canvas14 = new TCanvas("Range of Selected Tracks", "Range of Selected Tracks", 1400, 1000);
 //             hSelectionTrackRange->Draw();
 
-            TFile* OutputFile = new TFile(("Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+Version+".root").c_str(),"RECREATE");
-
-//             Canvas1->Write();
-//             Canvas2->Write();
-//             Canvas3->Write();
-//             Canvas4->Write();
-//             Canvas5->Write();
-//             Canvas6->Write();
-//             Canvas7->Write();
-//             Canvas8->Write();
-//             Canvas10->Write();
-//             Canvas11->Write();
-//             Canvas12->Write();
-//             Canvas13->Write();
-//             Canvas14->Write();
+            TFile* OutputFile = new TFile(("rootfiles/Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+Version+".root").c_str(),"RECREATE");
 
             hXVertexPosition->Write();
             hYVertexPosition->Write();
@@ -705,26 +752,26 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             hIntesityPE->Write();
             hFlashTrackDist->Write();
             hVertexTrackDist->Write();
+            hAllTrackLength->Write();
             hTrackLength->Write();
             hTrackMultip->Write();
             hFlashVertexDist->Write();
             hTrackStartDist->Write();
             hTrackEndDist->Write();
             hSelectionTheta->Write();
+            hSelectionPhi->Write();
             hSelectionTrackRange->Write();
+            hSelXVtxPosition->Write();
+            hSelYVtxPosition->Write();
+            hSelZVtxPosition->Write();
+            hXTrackStartEnd->Write();
+            hYTrackStartEnd->Write();
+            hZTrackStartEnd->Write();
+            hAllXTrackStartEnd->Write();
+            hAllYTrackStartEnd->Write();
+            hAllZTrackStartEnd->Write();
 
             OutputFile->Close();
-
-//             Canvas10->SaveAs(("FlashVertexDist"+GeneratorName+Version+".png").c_str());
-//             Canvas11->SaveAs(("TrackStartMCTrackDist_Track_"+ TrackingName + "_Vertex_" + VertexingName + "_" +GeneratorName+Version+".png").c_str());
-//             Canvas12->SaveAs(("TrackEndMCTrackDist_Track_"+ TrackingName + "_Vertex_" + VertexingName + "_" +GeneratorName+Version+".png").c_str());
-//    Canvas2->SaveAs((TrackingName+"_YVtxPosition_"+GeneratorName+Version+".png").c_str());
-//    Canvas3->SaveAs((TrackingName+"_ZVtxPosition_"+GeneratorName+Version+".png").c_str());
-//    Canvas4->SaveAs((TrackingName+"_FlashTime_"+GeneratorName+Version+".png").c_str());
-//    Canvas5->SaveAs((TrackingName+"_PECount_"+GeneratorName+Version+".png").c_str());
-//    Canvas6->SaveAs((TrackingName+"_FlashTrackDist_"+GeneratorName+Version+".png").c_str());
-//    Canvas7->SaveAs((TrackingName+"_VtxTrackDist_"+GeneratorName+Version+".png").c_str());
-//    Canvas8->SaveAs((TrackingName+"_TrackLength_"+GeneratorName+Version+".png").c_str());
 
             cout << "--------------------------------------------------------------------------------------------" << endl;
             cout << endl;
@@ -749,21 +796,6 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             *EventSelectionCuts.at(1) << "," << (float)EventsTrackLong/(float)NumberOfContainedMCTracks;
             *EventSelectionCuts.at(2) << "," << (float)EventsTruelyReco/(float)EventsTrackLong;
 
-            // Garbage collection
-//             delete Canvas1;
-//             delete Canvas2;
-//             delete Canvas3;
-//             delete Canvas4;
-//             delete Canvas5;
-//             delete Canvas6;
-//             delete Canvas7;
-//             delete Canvas8;
-//             delete Canvas9;
-//             delete Canvas10;
-//             delete Canvas11;
-//             delete Canvas12;
-//             delete Canvas13;
-//             delete Canvas14;
 
             delete hXVertexPosition;
             delete hYVertexPosition;
@@ -772,19 +804,24 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             delete hIntesityPE;
             delete hFlashTrackDist;
             delete hVertexTrackDist;
+            delete hAllTrackLength;
             delete hTrackLength;
             delete hTrackMultip;
             delete hFlashVertexDist;
             delete hTrackStartDist;
             delete hTrackEndDist;
             delete hSelectionTheta;
+            delete hSelectionPhi;
             delete hSelectionTrackRange;
-            delete hXTrackStart;
-            delete hYTrackStart;
-            delete hZTrackStart;
-            delete hXTrackEnd;
-            delete hYTrackEnd;
-            delete hZTrackEnd;
+            delete hSelXVtxPosition;
+            delete hSelYVtxPosition;
+            delete hSelZVtxPosition;
+            delete hXTrackStartEnd;
+            delete hYTrackStartEnd;
+            delete hZTrackStartEnd;
+            delete hAllXTrackStartEnd;
+            delete hAllYTrackStartEnd;
+            delete hAllZTrackStartEnd;
 
             // Erase all branch addresses for the next iteration
             treenc -> ResetBranchAddresses();
@@ -797,7 +834,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             *SelectionCut << "\n";
         }
     } // Loop over all tracking data products
-    
+
     // Close selection table files
     for(auto& SelectionCut : EventSelectionCuts)
     {

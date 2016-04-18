@@ -38,10 +38,10 @@ void HistoSubtractor()
     MCLabel.push_back("On- Minus Off-Beam");
     MCLabel.push_back("MC BNB Only");
 
-    FileNameVec.push_back("Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
-    FileNameVec.push_back("Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
-    FileNameVec.push_back("Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00.root");
-    FileNameVec.push_back("Hist_Track_pandoraNu_Vertex_pandoraNu_prodgenie_bnb_nu_v05_08_00.root");
+    FileNameVec.push_back("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
+    FileNameVec.push_back("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
+    FileNameVec.push_back("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00.root");
+    FileNameVec.push_back("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_prodgenie_bnb_nu_v05_08_00.root");
 
     TLine FlashTimeMinCut(beammin, 0, beammin, 0.1);
     TLine FlashTimeMaxCut(beammax, 0, beammax, 0.1);
@@ -58,6 +58,12 @@ void HistoSubtractor()
         SelectionTrackRange.push_back((TH1F*)File->Get("Track Range of Selected Track"));
         SelectionTheta.push_back((TH1F*)File->Get("#theta-Angle of Selected Track"));
     }
+    
+    for(unsigned int hist_no = 0; hist_no < SelectionTrackRange.size(); hist_no++)
+    {
+        SelectionTrackRange.at(hist_no)->Sumw2();
+        SelectionTheta.at(hist_no)->Sumw2();
+    }
 
     AddFirstTwoHistograms(FlashTime,1.);
     AddFirstTwoHistograms(SelectionTrackRange,1.);
@@ -65,18 +71,20 @@ void HistoSubtractor()
 
     for(unsigned int hist_no = 0; hist_no < FlashTime.size(); hist_no++)
     {
-        FlashTime.at(hist_no)->Rebin(3);
-        SelectionTrackRange.at(hist_no)->Rebin(3);
-        SelectionTheta.at(hist_no)->Rebin(3);
+        FlashTime.at(hist_no)->Rebin(5);
+        SelectionTrackRange.at(hist_no)->Rebin(5);
+        SelectionTheta.at(hist_no)->Rebin(5);
         if(hist_no < DataLabel.size())
         {
             LegendData->AddEntry( FlashTime.at(hist_no), (DataLabel.at(hist_no)).c_str(),"l" );
         }
     }
+    
+    FlashTime.pop_back();
 
     FlashTime.front()->Scale(1./567157.);
     FlashTime.at(1)->Scale(1./130967.);
-    FlashTime.at(2)->Scale(1./10880./7);
+//     FlashTime.at(2)->Scale(1./10880./7);
     SelectionTrackRange.front()->Scale(1./567157.);
     SelectionTrackRange.at(1)->Scale(1./130967);
     SelectionTrackRange.at(2)->Scale(1./10880./7);
@@ -93,7 +101,7 @@ void HistoSubtractor()
     FlashTimeMinCut.Draw("same");
     FlashTimeMaxCut.Draw("same");
     LegendData->Draw();
-    Canvas1->SaveAs("DataFlashTime.png");
+    Canvas1->SaveAs("DataFlashTime.pdf");
 
     TCanvas *Canvas2 = new TCanvas("Track Range of Selected Track", "Track Range of Selected Track", 1400, 1000);
     Canvas2->cd();
@@ -102,7 +110,7 @@ void HistoSubtractor()
     SelectionTrackRange.at(1)->SetLineColor(2);
     SelectionTrackRange.at(1)->Draw("SAME");
     LegendData->Draw();
-    Canvas2->SaveAs("DataSelRange.png");
+    Canvas2->SaveAs("DataSelRange.pdf");
 
     TCanvas *Canvas3 = new TCanvas("Theta-Angle of Selected Track", "Theta-Angle of Selected Track", 1400, 1000);
     Canvas3->cd();
@@ -111,34 +119,38 @@ void HistoSubtractor()
     SelectionTheta.at(1)->SetLineColor(2);
     SelectionTheta.at(1)->Draw("SAME");
     LegendData->Draw();
-    Canvas3->SaveAs("DataSelTheta.png");
+    Canvas3->SaveAs("DataSelTheta.pdf");
 
     AddFirstTwoHistograms(SelectionTrackRange,-1.);
     AddFirstTwoHistograms(SelectionTheta,-1.);
 
-    for(unsigned int hist_no = 0; hist_no < SelectionTrackRange.size(); hist_no++)
-    {
-        LegendMC->AddEntry( SelectionTrackRange.at(hist_no), (MCLabel.at(hist_no)).c_str(),"l" );
-    }
+    LegendMC->AddEntry( SelectionTrackRange.at(0), (MCLabel.at(0)).c_str(),"lep" );
+    LegendMC->AddEntry( SelectionTrackRange.at(1), (MCLabel.at(1)).c_str(),"f" );
 
     TCanvas *Canvas4 = new TCanvas("MC and On-Off Beam Track Length", "MC and On-Off Beam Track Length", 1400, 1000);
     Canvas4->cd();
-    SelectionTrackRange.front()->SetMaximum(1.1*GetMaximum(SelectionTrackRange));
-    SelectionTrackRange.front()->Draw();
-    SelectionTrackRange.at(1)->SetLineColor(2);
-    SelectionTrackRange.at(1)->Draw("SAME");
+    SelectionTrackRange.front()->SetMaximum(1.2*GetMaximum(SelectionTrackRange));
+    SelectionTrackRange.at(1)->SetFillColorAlpha(46,0.5);
+    SelectionTrackRange.at(1)->GetYaxis()->SetTitle("# Events normalized to Area");
+    SelectionTrackRange.at(1)->DrawNormalized("E3");
+    SelectionTrackRange.front()->SetLineColor(1);
+    SelectionTrackRange.front()->SetLineWidth(2);
+    SelectionTrackRange.front()->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas4->SaveAs("OffBeam-OnBeamRange.png");
+    Canvas4->SaveAs("OffBeam-OnBeamRange.pdf");
 
     TCanvas *Canvas5 = new TCanvas("MC and On-Off Beam Theta", "MC and On-Off Beam Theta", 1400, 1000);
     Canvas5->cd();
-    SelectionTheta.front()->SetMaximum(1.1*GetMaximum(SelectionTheta));
-    SelectionTheta.front()->Draw();
-    SelectionTheta.at(1)->SetLineColor(2);
-    SelectionTheta.at(1)->Draw("SAME");
+    SelectionTheta.at(1)->SetMaximum(1.2*GetMaximum(SelectionTheta));
+    SelectionTheta.at(1)->SetFillColorAlpha(46,0.5);
+    SelectionTheta.at(1)->GetYaxis()->SetTitle("# Events normalized to Area");
+    SelectionTheta.at(1)->DrawNormalized("E3");
+    SelectionTheta.front()->SetLineColor(1);
+    SelectionTheta.front()->SetLineWidth(2);
+    SelectionTheta.front()->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas5->SaveAs("OffBeam-OnBeamTheta.png");
-
+    Canvas5->SaveAs("OffBeam-OnBeamTheta.pdf");
+    
 //
 //     TCanvas *Canvas6 = new TCanvas("Flash Track Distance", "Flash Track Distance", 1400, 1000);
 //     Canvas6->cd();
