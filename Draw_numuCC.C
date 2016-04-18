@@ -80,12 +80,21 @@ void Draw_numuCC()
 
         TCanvas *Canvas1 = new TCanvas("Flash Time Distribution", "Flash Time Distribution", 1400, 1000);
         Canvas1->cd();
+        TLine FlashTimeMinCut(beammin, 0, beammin, 1200);
+        TLine FlashTimeMaxCut(beammax, 0, beammax, 1200);
+        FlashTimeMinCut.SetLineColor(kRed);
+        FlashTimeMaxCut.SetLineColor(kRed);
         FlashTimeHist->Draw();
+        FlashTimeMinCut.Draw("same");
+        FlashTimeMaxCut.Draw("same");
 
         TCanvas *Canvas2 = new TCanvas("PE Count of Flash", "PE Count of Flash", 1400, 1000);
         Canvas2->cd();
         Canvas2->SetLogy();
+        TLine FlashPEMinCut(PEthresh, 0, PEthresh, 20000);
+        FlashPEMinCut.SetLineColor(kRed);
         FlashPEHist->Draw();
+        FlashPEMinCut.Draw("same");
 
         Canvas1->SaveAs(("FlashTime_Vertex_"+DataName+"_"+Version+".png").c_str());
         Canvas2->SaveAs(("PECount_Vertex_"+DataName+"_"+Version+".png").c_str());
