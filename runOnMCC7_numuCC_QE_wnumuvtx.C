@@ -50,8 +50,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 //     string GeneratorName = "prodgenie_bnb_nu_";
 //     string GeneratorName = "data_bnb_";
 //     string GeneratorName = "data_bnb_external_";
-    string GeneratorName = "data_onbeam_bnb_";
-//     string GeneratorName = "data_offbeam_bnbext_";
+//     string GeneratorName = "data_onbeam_bnb_";
+    string GeneratorName = "data_offbeam_bnbext_";
 
     // Initialize and fill track reco product names
     std::vector<string> TrackProdNameVec;
@@ -102,8 +102,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     TChain *treenc = new TChain("analysistree/anatree");
 //     treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+Version+"_anatree.root").c_str() );
-    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
-//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
+//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
+    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+Version+"_anatree.root").c_str() );
 
     //maximum array sizes
     const int maxentries = 35000;
@@ -438,7 +438,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
 //             Size = 300000;
             //Event Loop
-            for(int i = 300000; i < Size; i++)
+            for(int i = 0; i < Size; i++)
             {
                 if(i%1000 == 0) cout << "\t... " << i << endl;
 
