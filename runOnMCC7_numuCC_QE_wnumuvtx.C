@@ -49,10 +49,10 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 //     string GeneratorName = "prodgenie_bnb_nu_cosmic";
 //     string GeneratorName = "prodgenie_bnb_nu";
 //     string GeneratorName = "prodcosmics_corsika_inTime";
-    string GeneratorName = "data_bnb";
+//     string GeneratorName = "data_bnb";
 //     string GeneratorName = "data_bnb_external";
 //     string GeneratorName = "data_onbeam_bnb";
-//     string GeneratorName = "data_offbeam_bnbext";
+    string GeneratorName = "data_offbeam_bnbext";
 
     // Initialize and fill track reco product names
     std::vector<string> TrackProdNameVec;
@@ -110,10 +110,10 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
 
     TChain *treenc = new TChain("analysistree/anatree");
-    treenc -> Add( ("/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+//     treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
-//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
     
     //maximum array sizes
     const int maxentries = 35000;
@@ -196,6 +196,13 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     double PEthresh = 50; //PE
     double MCTrackToMCVtxDist = 1; //cm. distance between mc track start and mc vertex
     double TrackToMCDist = 5; //cm. Distance track start/end to mcvertex
+    
+    if(GeneratorName == "data_bnb" || GeneratorName == "data_onbeam_bnb")
+    {
+        std::cout << "Changed beam gate widow for on-beam data" << std::endl;
+        beammin -= 0.36;
+        beammax -= 0.36;
+    }
 
     // Loop over all product names
     for(const auto& TrackingName : TrackProdNameVec)
@@ -208,6 +215,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
         for(const auto& VertexingName : VertexProdNameVec)
         {
+            // Open output file
+            TFile* OutputFile = new TFile(("rootfiles/Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+"_"+Version+".root").c_str(),"RECREATE");
             // Make a clone tree which gets filled
             TTree *SelectionTree = treenc->CloneTree(0);
             
@@ -764,15 +773,11 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                 ntrue++;
             }//loop over all events
 
-            TFile* OutputFile = new TFile(("rootfiles/Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+"_"+Version+".root").c_str(),"RECREATE");
+            OutputFile->cd();
             
-            std::cout << "First" << std::endl;
-            
-            SelectionTree->Print();
+//             SelectionTree->Print();
             SelectionTree->Write();
             
-            std::cout << "Second" << std::endl;
-
             hXVertexPosition->Write();
             hYVertexPosition->Write();
             hZVertexPosition->Write();
@@ -805,12 +810,6 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             hAllYTrackStartEnd->Write();
             hAllZTrackStartEnd->Write();
             
-            std::cout << "Third" << std::endl;
-
-            OutputFile->Close();
-            
-            std::cout << "Fourth" << std::endl;
-
             cout << "--------------------------------------------------------------------------------------------" << endl;
             cout << endl;
             cout << "Track Reco Product Name : " << TrackingName << "  Vertex Reco Product Name : " << VertexingName << endl;
@@ -839,7 +838,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             *EventSelectionCuts.at(6) << "," << EventsTrackLong;
             *EventSelectionCuts.at(7) << "," << (float)EventsTrackLong/(float)NumberOfContainedMCTracks;
             *EventSelectionCuts.at(8) << "," << (float)EventsTruelyReco/(float)EventsTrackLong;
-            
+
             delete hXVertexPosition;
             delete hYVertexPosition;
             delete hZVertexPosition;
@@ -871,11 +870,13 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             delete hAllXTrackStartEnd;
             delete hAllYTrackStartEnd;
             delete hAllZTrackStartEnd;
-            
             delete BrMCTrackCand;
             delete BrTrackCand;
             delete BrVtxCand;
+            
             delete SelectionTree;
+            
+            OutputFile->Close();
 
             // Erase all branch addresses for the next iteration
             treenc -> ResetBranchAddresses();
