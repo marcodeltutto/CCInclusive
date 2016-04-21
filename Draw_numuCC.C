@@ -53,26 +53,29 @@ void Draw_numuCC()
 
     std::string Version = "v05_08_00";
 
-    DataSampleNameVec.push_back("prodgenie_bnb_nu");
-
-    VertexingNameVec.push_back("nuvtx");
-    VertexingNameVec.push_back("pandoraCosmic");
+//     DataSampleNameVec.push_back("prodgenie_bnb_nu");
+    DataSampleNameVec.push_back("data_onbeam_bnb");
+    DataSampleNameVec.push_back("data_offbeam_bnbext");
+    
+//     VertexingNameVec.push_back("nuvtx");
+//     VertexingNameVec.push_back("pandoraCosmic");
     VertexingNameVec.push_back("pandoraNu");
-    VertexingNameVec.push_back("pmtrack");
+//     VertexingNameVec.push_back("pmtrack");
 
-    TrackingNameVec.push_back("pandoraNuKHit");
+//     TrackingNameVec.push_back("pandoraNuKHit");
     TrackingNameVec.push_back("pandoraNu");
-    TrackingNameVec.push_back("pandoraCosmic");
-    TrackingNameVec.push_back("pmtrack");
-    TrackingNameVec.push_back("pandoraNuPMA");
-    TrackingNameVec.push_back("trackkalmanhit");
+//     TrackingNameVec.push_back("pandoraCosmic");
+//     TrackingNameVec.push_back("pmtrack");
+//     TrackingNameVec.push_back("pandoraNuPMA");
+//     TrackingNameVec.push_back("trackkalmanhit");
 
     // Loop over data sample names
     for(const auto& DataName : DataSampleNameVec)
     {
+        int ColorCode;
 
-        // Vertex and track independent variables
-        FileVec.push_back( new TFile(("Hist_Track_"+TrackingNameVec.front()+"_Vertex_"+VertexingNameVec.front()+"_"+DataName+"_"+Version+".root").c_str(),"READ") );
+        // Vertex and track independent variables.
+        FileVec.push_back( new TFile(("rootfiles/Hist_Track_"+TrackingNameVec.front()+"_Vertex_"+VertexingNameVec.front()+"_"+DataName+"_"+Version+".root").c_str(),"READ") );
         FileVec.back()->cd();
 
         FlashTimeHist = (TH1F*)FileVec.back()->Get("Flash Time");
@@ -110,7 +113,7 @@ void Draw_numuCC()
         // Only vertex dependent variables
         for(const auto& VertexName : VertexingNameVec)
         {
-            FileVec.push_back( new TFile(("Hist_Track_"+TrackingNameVec.front()+"_Vertex_"+VertexName+"_"+DataName+"_"+Version+".root").c_str(),"READ") );
+            FileVec.push_back( new TFile(("rootfiles/Hist_Track_"+TrackingNameVec.front()+"_Vertex_"+VertexName+"_"+DataName+"_"+Version+".root").c_str(),"READ") );
             FileVec.back()->cd();
 
             XVtxHistVec.push_back((TH1F*)FileVec.back()->Get("X Vertex Distribution"));
@@ -141,20 +144,29 @@ void Draw_numuCC()
 
         for(unsigned int no_entries = 1; no_entries < VertexingNameVec.size(); no_entries++)
         {
+            if(no_entries < 4)
+            {
+                ColorCode = no_entries;
+            }
+            else
+            {
+                ColorCode = no_entries+2;
+            }
+
             Canvas3->cd();
-            XVtxHistVec.at(no_entries)->SetLineColor(no_entries);
+            XVtxHistVec.at(no_entries)->SetLineColor(ColorCode);
             XVtxHistVec.at(no_entries)->Draw("same");
 
             Canvas4->cd();
-            YVtxHistVec.at(no_entries)->SetLineColor(no_entries);
+            YVtxHistVec.at(no_entries)->SetLineColor(ColorCode);
             YVtxHistVec.at(no_entries)->Draw("same");
 
             Canvas5->cd();
-            ZVtxHistVec.at(no_entries)->SetLineColor(no_entries);
+            ZVtxHistVec.at(no_entries)->SetLineColor(ColorCode);
             ZVtxHistVec.at(no_entries)->Draw("same");
 
             Canvas6->cd();
-            FlashVertexDistVec.at(no_entries)->SetLineColor(no_entries);
+            FlashVertexDistVec.at(no_entries)->SetLineColor(ColorCode);
             FlashVertexDistVec.at(no_entries)->Draw("same");
         }
 
@@ -233,7 +245,7 @@ void Draw_numuCC()
             // Loop over track reco method names
             for(const auto& TrackName : TrackingNameVec)
             {
-                FileVec.push_back( new TFile(("Hist_Track_"+TrackName+"_Vertex_"+VertexName+"_"+DataName+"_"+Version+".root").c_str(),"READ") );
+                FileVec.push_back( new TFile(("rootfiles/Hist_Track_"+TrackName+"_Vertex_"+VertexName+"_"+DataName+"_"+Version+".root").c_str(),"READ") );
                 FileVec.back()->cd();
 
                 FlashTrackHistVec.push_back((TH1F*)FileVec.back()->Get("Distance from Flash to Track"));
@@ -288,32 +300,40 @@ void Draw_numuCC()
 
             for(unsigned int no_entries = 1; no_entries < TrackingNameVec.size(); no_entries++)
             {
+                if(no_entries < 4)
+                {
+                    ColorCode = no_entries;
+                }
+                else
+                {
+                    ColorCode = no_entries+2;
+                }
                 Canvas7->cd();
-                FlashTrackHistVec.at(no_entries)->SetLineColor(no_entries);
+                FlashTrackHistVec.at(no_entries)->SetLineColor(ColorCode);
                 FlashTrackHistVec.at(no_entries)->Draw("same");
 
                 Canvas8->cd();
-                VertexTrackHistVec.at(no_entries)->SetLineColor(no_entries);
+                VertexTrackHistVec.at(no_entries)->SetLineColor(ColorCode);
                 VertexTrackHistVec.at(no_entries)->Draw("same");
 
                 Canvas9->cd();
-                TrackLengthHistVec.at(no_entries)->SetLineColor(no_entries);
+                TrackLengthHistVec.at(no_entries)->SetLineColor(ColorCode);
                 TrackLengthHistVec.at(no_entries)->Draw("same");
 
                 Canvas10->cd();
-                TrackMultipHistVec.at(no_entries)->SetLineColor(no_entries);
+                TrackMultipHistVec.at(no_entries)->SetLineColor(ColorCode);
                 TrackMultipHistVec.at(no_entries)->Draw("same");
 
                 Canvas11->cd();
-                XTrackStartEndVec.at(no_entries)->SetLineColor(no_entries);
+                XTrackStartEndVec.at(no_entries)->SetLineColor(ColorCode);
                 XTrackStartEndVec.at(no_entries)->Draw("same");
 
                 Canvas12->cd();
-                YTrackStartEndVec.at(no_entries)->SetLineColor(no_entries);
+                YTrackStartEndVec.at(no_entries)->SetLineColor(ColorCode);
                 YTrackStartEndVec.at(no_entries)->Draw("same");
 
                 Canvas13->cd();
-                ZTrackStartEndVec.at(no_entries)->SetLineColor(no_entries);
+                ZTrackStartEndVec.at(no_entries)->SetLineColor(ColorCode);
                 ZTrackStartEndVec.at(no_entries)->Draw("same");
             }
 
