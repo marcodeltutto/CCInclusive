@@ -469,7 +469,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             hZTrackStartEnd->GetYaxis()->SetTitle("Number of Tracks [ ]");
 
             int Size = treenc -> GetEntries();
-            if(Size > 20000) Size = 20000;
+//             if(Size > 20000) Size = 20000;
 
             cout << "number of events used is: " << Size << endl;
 
@@ -503,7 +503,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             TBranch* BrVtxCand = SelectionTree->Branch("VertexCand",&VertexCandidate,"VertexCand/I");
             TBranch* BrMCTrackCand = SelectionTree->Branch("MCTrackCand",&MCTrackCandidate,"MCTrackCand/I");
 
-//             Size = 300000;
+            Size = 300000;
             //Event Loop
             for(int i = 0; i < Size; i++)
             {
