@@ -49,7 +49,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 //     string GeneratorName = "prodgenie_bnb_nu_cosmic";
 //     string GeneratorName = "prodgenie_bnb_nu";
 //     string GeneratorName = "prodcosmics_corsika_inTime";
-//     string GeneratorName = "data_bnb";
+    string GeneratorName = "data_bnb";
 //     string GeneratorName = "data_bnb_external";
 //     string GeneratorName = "data_onbeam_bnb";
 //     string GeneratorName = "data_offbeam_bnbext";
@@ -110,7 +110,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
 
     TChain *treenc = new TChain("analysistree/anatree");
-    treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    treenc -> Add( ("/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
@@ -766,7 +766,12 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
             TFile* OutputFile = new TFile(("rootfiles/Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+"_"+Version+".root").c_str(),"RECREATE");
             
+            std::cout << "First" << std::endl;
+            
+            SelectionTree->Print();
             SelectionTree->Write();
+            
+            std::cout << "Second" << std::endl;
 
             hXVertexPosition->Write();
             hYVertexPosition->Write();
@@ -799,8 +804,12 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             hAllXTrackStartEnd->Write();
             hAllYTrackStartEnd->Write();
             hAllZTrackStartEnd->Write();
+            
+            std::cout << "Third" << std::endl;
 
             OutputFile->Close();
+            
+            std::cout << "Fourth" << std::endl;
 
             cout << "--------------------------------------------------------------------------------------------" << endl;
             cout << endl;
@@ -830,7 +839,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             *EventSelectionCuts.at(6) << "," << EventsTrackLong;
             *EventSelectionCuts.at(7) << "," << (float)EventsTrackLong/(float)NumberOfContainedMCTracks;
             *EventSelectionCuts.at(8) << "," << (float)EventsTruelyReco/(float)EventsTrackLong;
-
+            
             delete hXVertexPosition;
             delete hYVertexPosition;
             delete hZVertexPosition;
@@ -863,6 +872,9 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             delete hAllYTrackStartEnd;
             delete hAllZTrackStartEnd;
             
+            delete BrMCTrackCand;
+            delete BrTrackCand;
+            delete BrVtxCand;
             delete SelectionTree;
 
             // Erase all branch addresses for the next iteration
