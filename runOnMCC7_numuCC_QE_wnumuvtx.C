@@ -50,8 +50,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 //     string GeneratorName = "prodgenie_bnb_nu";
 //     string GeneratorName = "prodcosmics_corsika_inTime";
 //     string GeneratorName = "data_bnb";
-    string GeneratorName = "data_bnb_external";
-//     string GeneratorName = "data_onbeam_bnb";
+//     string GeneratorName = "data_bnb_external";
+    string GeneratorName = "data_onbeam_bnb";
 //     string GeneratorName = "data_offbeam_bnbext";
 
     // Initialize and fill track reco product names
@@ -110,9 +110,9 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
 
     TChain *treenc = new TChain("analysistree/anatree");
-    treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+//     treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
-//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 
     //maximum array sizes
@@ -506,7 +506,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
             double TotalPOT = 0.0;
 
-//             Size = 200000;
+//             Size = 300000;
             //Event Loop
             for(int i = 0; i < Size; i++)
             {
