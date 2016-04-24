@@ -51,8 +51,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 //     string GeneratorName = "prodcosmics_corsika_inTime";
 //     string GeneratorName = "data_bnb";
 //     string GeneratorName = "data_bnb_external";
-//     string GeneratorName = "data_onbeam_bnb";
-    string GeneratorName = "data_offbeam_bnbext";
+    string GeneratorName = "data_onbeam_bnb";
+//     string GeneratorName = "data_offbeam_bnbext";
 
     // Initialize and fill track reco product names
     std::vector<string> TrackProdNameVec;
@@ -112,8 +112,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     TChain *treenc = new TChain("analysistree/anatree");
 //     treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
-//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
-    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 
     //maximum array sizes
     const int maxentries = 35000;
@@ -506,7 +506,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
             double TotalPOT = 0.0;
 
-//             Size = 300000;
+            Size = 300000;
             //Event Loop
             for(int i = 0; i < Size; i++)
             {
@@ -738,9 +738,9 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                                         hSelZVtxPosition->Fill(vtxz[VertexCandidate]);
 
                                         SelectionTree -> Fill();
-                                        BrMCTrackCand->Fill();
-                                        BrTrackCand -> Fill();
-                                        BrVtxCand -> Fill();
+//                                         BrMCTrackCand->Fill();
+//                                         BrTrackCand -> Fill();
+//                                         BrVtxCand -> Fill();
 
                                         double TrkStartMCStartDist = sqrt(pow(XMCTrackStart[MCTrackCandidate] - trkstartx[TrackCandidate],2) + pow(YMCTrackStart[MCTrackCandidate] - trkstarty[TrackCandidate],2) + pow(ZMCTrackStart[MCTrackCandidate] - trkstartz[TrackCandidate],2));
                                         double TrkEndMCEndDist = sqrt(pow(XMCTrackEnd[MCTrackCandidate] - trkendx[TrackCandidate],2) + pow(YMCTrackEnd[MCTrackCandidate] - trkendy[TrackCandidate],2) + pow(ZMCTrackEnd[MCTrackCandidate] - trkendz[TrackCandidate],2));

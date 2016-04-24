@@ -19,10 +19,11 @@ double beammax = 5.15-0.36; //us. Beam window end
 
 float GetMaximum(const std::vector<TH1F*>& HistVector);
 void AddFirstTwoHistograms(std::vector<TH1F*>& HistVector, float Weight);
+float CalcLength(const float& x_1, const float& y_1, const float& z_1, const float& x_2, const float& y_2, const float& z_2);
 
 void HistoProducer()
 {
-    TGaxis::SetMaxDigits(2);
+    TGaxis::SetMaxDigits(4);
     std::vector<TChain*> ChainVec;
 
     std::vector<std::string> FileNameVec;
@@ -30,8 +31,13 @@ void HistoProducer()
     std::vector<std::string> MCLabel;
     std::vector<std::string> GenLabel;
 
+    std::vector<float> ScalingFactors;
+    ScalingFactors.push_back(1/383519.);
+    ScalingFactors.push_back(1/400675.);
+
     std::vector<TH1F*> FlashTime;
     std::vector<TH1F*> SelectionTrackRange;
+    std::vector<TH1F*> SelectionEnergy;
     std::vector<TH1F*> SelectionTheta;
     std::vector<TH1F*> SelectionPhi;
     std::vector<TH1F*> SelXVtxPosition;
@@ -63,36 +69,91 @@ void HistoProducer()
 
     GenLabel.push_back("Data On-Beam BNB");
     GenLabel.push_back("Data Off-Beam BNBEXT");
-    GenLabel.push_back("MC Prodgenie BNB Nu");
-    GenLabel.push_back("MC Prodgenie BNB Nu Cosmic");
-    GenLabel.push_back("MC Prodcosmic Corsika in-Time");
+//     GenLabel.push_back("MC Prodgenie BNB Nu");
+//     GenLabel.push_back("MC Prodgenie BNB Nu Cosmic");
+//     GenLabel.push_back("MC Prodcosmic Corsika in-Time");
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
-    ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
+//     ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
+//     ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
+    ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
+    ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
 
-    ChainVec.push_back(new TChain("analysistree/anatree"));
-    ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
-    ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
+    ChainVec.push_back(new TChain("anatree"));
+//     ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
+//     ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
+    ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
+    ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
 
-    std::vector<double> PotBNB(ChainVec.size());
-    std::vector<int> TrackCandidate(ChainVec.size());
-    std::vector<int> VertexCandidate(ChainVec.size());
+    for(const auto& Label : GenLabel)
+    {
+        SelectionTrackRange.push_back(new TH1F(("Track Range"+Label).c_str(),"Track Range of Selected Track",20,0,1000));
+        SelectionTrackRange.back()->SetStats(0);
+        SelectionTrackRange.back()->GetXaxis()->SetTitle("Track Range [cm]");
+        SelectionTrackRange.back()->GetYaxis()->SetTitle("Number of Tracks [ ]");
 
-    std::vector<std::vector<float>> TrackTheta(ChainVec.size());
+        SelectionTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"#theta-Angle of Selected Track",18,0,3.142));
+        SelectionTheta.back()->SetStats(0);
+        SelectionTheta.back()->GetXaxis()->SetTitle("#theta angle [rad]");
+        SelectionTheta.back()->GetYaxis()->SetTitle("Number of Tracks [ ]");
+
+        SelectionPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle of Selected Track",18,-3.142,3.142));
+        SelectionPhi.back()->SetStats(0);
+        SelectionPhi.back()->GetXaxis()->SetTitle("#phi angle [rad]");
+        SelectionPhi.back()->GetYaxis()->SetTitle("Number of Tracks [ ]");
+
+        SelectionEnergy.push_back(new TH1F(("Energy"+Label).c_str(),"Energy of Selected Track",20,0,3000));
+        SelectionEnergy.back()->SetStats(0);
+        SelectionEnergy.back()->GetXaxis()->SetTitle("#Energy [MeV]");
+        SelectionEnergy.back()->GetYaxis()->SetTitle("Number of Tracks [ ]");
+    }
+
+    int TrkID;
+
+    float TrackTheta[5000];
+    float TrackPhi[5000];
+
+    float XTrackStart[5000];
+    float YTrackStart[5000];
+    float ZTrackStart[5000];
+
+    float XTrackEnd[5000];
+    float YTrackEnd[5000];
+    float ZTrackEnd[5000];
+
+    float KineticEnergy[5000][3];
 
     for(unsigned int file_no = 0; file_no < ChainVec.size(); file_no++)
     {
-        ChainVec.at(file_no)->SetBranchAddress("potbnb", &PotBNB.at(file_no));
-        ChainVec.at(file_no)->SetBranchAddress("TrackCand", &TrackCandidate.at(file_no));
-        ChainVec.at(file_no)->SetBranchAddress("VertexCand", &VertexCandidate.at(file_no));
+        ChainVec.at(file_no) -> SetBranchAddress("TrackCand", &TrkID);
 
-        ChainVec.at(file_no)->SetBranchAddress("trktheta_pandoraNu", &TrackTheta.at(file_no));
+        ChainVec.at(file_no) -> SetBranchAddress("trkke_pandoraNu", KineticEnergy);
+        ChainVec.at(file_no) -> SetBranchAddress("trktheta_pandoraNu", TrackTheta);
+        ChainVec.at(file_no) -> SetBranchAddress("trkphi_pandoraNu",TrackPhi);
+
+        ChainVec.at(file_no) -> SetBranchAddress("trkstartx_pandoraNu",XTrackStart);
+        ChainVec.at(file_no) -> SetBranchAddress("trkstarty_pandoraNu",YTrackStart);
+        ChainVec.at(file_no) -> SetBranchAddress("trkstartz_pandoraNu",ZTrackStart);
+
+        ChainVec.at(file_no) -> SetBranchAddress("trkendx_pandoraNu",XTrackEnd);
+        ChainVec.at(file_no) -> SetBranchAddress("trkendy_pandoraNu",YTrackEnd);
+        ChainVec.at(file_no) -> SetBranchAddress("trkendy_pandoraNu",ZTrackEnd);
 
         for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no)->GetEntries(); tree_index++)
         {
+            if(!(tree_index % 100)) std::cout << "Event\t" << tree_index << "\t of \t" << ChainVec.at(file_no)->GetEntries() << std::endl;
+
             ChainVec.at(file_no)->GetEntry(tree_index);
+            
+            std::cout << TrkID << std::endl;
+
+            SelectionTrackRange.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+            SelectionTheta.at(file_no)->Fill(TrackTheta[TrkID]);
+            SelectionPhi.at(file_no)->Fill(TrackPhi[TrkID]);
+            SelectionEnergy.at(file_no)->Fill(KineticEnergy[TrkID][2]);
         }
+
+
 
 
 //             treenc -> SetBranchAddress("flash_zcenter", flash_zcenter);
@@ -115,71 +176,81 @@ void HistoProducer()
 //
 //             // Product specific stuff
 //             treenc -> SetBranchAddress(("ntracks_"+TrackingName).c_str(),&ntracks_reco);
-//             treenc -> SetBranchAddress(("trkstartx_"+TrackingName).c_str(),trkstartx);
-//             treenc -> SetBranchAddress(("trkstarty_"+TrackingName).c_str(),trkstarty);
-//             treenc -> SetBranchAddress(("trkstartz_"+TrackingName).c_str(),trkstartz);
-//             treenc -> SetBranchAddress(("trkendx_"+TrackingName).c_str(),trkendx);
-//             treenc -> SetBranchAddress(("trkendy_"+TrackingName).c_str(),trkendy);
-//             treenc -> SetBranchAddress(("trkendz_"+TrackingName).c_str(),trkendz);
-//             treenc -> SetBranchAddress(("trktheta_"+TrackingName).c_str(),trktheta);
-//             treenc -> SetBranchAddress(("trkphi_"+TrackingName).c_str(),trkphi);
-//
 //                 treenc -> SetBranchAddress(("nvtx_"+VertexingName).c_str(), &nvtx);
 //                 treenc -> SetBranchAddress(("vtxx_"+VertexingName).c_str(), vtxx);
 //                 treenc -> SetBranchAddress(("vtxy_"+VertexingName).c_str(), vtxy);
 //                 treenc -> SetBranchAddress(("vtxz_"+VertexingName).c_str(), vtxz);
     }
-    
-    
 
 
-//     FileNameVec.push_back("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_prodgenie_bnb_nu_v05_08_00.root");
-//     FileNameVec.push_back("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_prodgenie_bnb_nu_cosmic_v05_08_00.root");
-//     FileNameVec.push_back("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_prodcosmics_corsika_inTime_v05_08_00.root");
-//
-//     TH1F *hSelectionTheta = new TH1F("#theta-Angle of Selected Track","#theta-Angle of Selected Track",90,0,3.142);
-//     SelectionTheta
-//     hSelectionTheta->SetStats(0);
-//     hSelectionTheta->GetXaxis()->SetTitle("#theta angle [rad]");
-//     hSelectionTheta->GetYaxis()->SetTitle("Number of Tracks [ ]");
-//
-//     TLine FlashTimeMinCut(beammin, 0, beammin, 0.6);
-//     TLine FlashTimeMaxCut(beammax, 0, beammax, 0.6);
-//     FlashTimeMinCut.SetLineColor(1);
-//     FlashTimeMaxCut.SetLineColor(1);
-//     TLine FlashTimeMinCut_1(beammin+0.36, 0, beammin+0.36, 0.6);
-//     TLine FlashTimeMaxCut_1(beammax+0.36, 0, beammax+0.36, 0.6);
-//     FlashTimeMinCut_1.SetLineColor(2);
-//     FlashTimeMaxCut_1.SetLineColor(2);
-//
-//     TF1* Const = new TF1("const","0.1",0,8.2);
-//     TF1* SinTheta = new TF1("const","sin(x)",0,3.142);
-//
-//     unsigned int FileNumber = 0;
-//
-//     for(const auto& FileName : FileNameVec)
-//     {
-//         TFile* File = new TFile( (FileName).c_str(),"READ" ) ;
-//         File->cd();
-//
-//         FlashTime.push_back((TH1F*)File->Get("Flash Time"));
-//         SelectionTrackRange.push_back((TH1F*)File->Get("Track Range of Selected Track"));
-//         SelectionTheta.push_back((TH1F*)File->Get("#theta-Angle of Selected Track"));
-//         SelectionPhi.push_back((TH1F*)File->Get("#phi-Angle of Selected Track"));
-//
-//         if(FileNumber == 3)
-//         {
-//             SelectionCCTheta = (TH1F*)File->Get("#theta-Angle of Selected CC Track");
-//             SelectionNCTheta = (TH1F*)File->Get("#theta-Angle of Selected NC Track");
-//             SelectionCCPhi = (TH1F*)File->Get("#phi-Angle of Selected CC Track");
-//             SelectionNCPhi = (TH1F*)File->Get("#phi-Angle of Selected NC Track");
-//             SelectionCCRange = (TH1F*)File->Get("Track Range of Selected CC Track");
-//             SelectionNCRange = (TH1F*)File->Get("Track Range of Selected NC Track");
-//         }
-//
-//     FileNumber++;
-// }
-//
+    for(unsigned int file_no = 0; file_no < ScalingFactors.size(); file_no++)
+    {
+        SelectionTrackRange.at(file_no)->Sumw2();
+        SelectionTheta.at(file_no)->Sumw2();
+        SelectionPhi.at(file_no)->Sumw2();
+        SelectionEnergy.at(file_no)->Sumw2();
+
+        SelectionTrackRange.at(file_no)->Scale(ScalingFactors.at(file_no));
+        SelectionTheta.at(file_no)->Scale(ScalingFactors.at(file_no));
+        SelectionPhi.at(file_no)->Scale(ScalingFactors.at(file_no));
+        SelectionEnergy.at(file_no)->Scale(ScalingFactors.at(file_no));
+    }
+
+    for(unsigned int hist_no = 0; hist_no < DataLabel.size(); hist_no++)
+    {
+        LegendData->AddEntry( SelectionTrackRange.at(hist_no), (DataLabel.at(hist_no)).c_str(),"l" );
+    }
+
+    TCanvas *Canvas1 = new TCanvas("Track Range of Selected Track", "Track Range of Selected Track", 1400, 1000);
+    Canvas1->cd();
+    SelectionTrackRange.front()->SetMaximum(1.1*GetMaximum(SelectionTrackRange));
+    SelectionTrackRange.front()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
+    SelectionTrackRange.front()->GetYaxis()->SetTitleOffset(1.3);
+    SelectionTrackRange.front()->Draw();
+    SelectionTrackRange.at(1)->SetLineColor(2);
+    SelectionTrackRange.at(1)->Draw("SAME");
+    LegendData->Draw();
+    Canvas1->SaveAs("DataSelRange.png");
+
+    TCanvas *Canvas2 = new TCanvas("Theta-Angle of Selected Track", "Theta-Angle of Selected Track", 1400, 1000);
+    Canvas2->cd();
+    SelectionTheta.front()->SetMaximum(1.1*GetMaximum(SelectionTheta));
+    SelectionTheta.front()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#theta}");
+    SelectionTheta.front()->GetYaxis()->SetTitleOffset(1.3);
+    SelectionTheta.front()->Draw();
+    SelectionTheta.at(1)->SetLineColor(2);
+    SelectionTheta.at(1)->Draw("SAME");
+    LegendData->Draw();
+    Canvas2->SaveAs("DataSelTheta.png");
+
+    TCanvas *Canvas3 = new TCanvas("Phi-Angle of Selected Track", "Phi-Angle of Selected Track", 1400, 1000);
+    Canvas3->cd();
+    SelectionPhi.front()->SetMaximum(1.1*GetMaximum(SelectionPhi));
+    SelectionPhi.front()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#phi}");
+    SelectionPhi.front()->GetYaxis()->SetTitleOffset(1.3);
+    SelectionPhi.front()->Draw();
+    SelectionPhi.at(1)->SetLineColor(2);
+    SelectionPhi.at(1)->Draw("SAME");
+    LegendData->Draw();
+    Canvas3->SaveAs("DataSelPhi.png");
+
+    TCanvas *Canvas4 = new TCanvas("Energy of Selected Track", "Energy of Selected Track", 1400, 1000);
+    Canvas4->cd();
+    SelectionEnergy.front()->SetMaximum(1.1*GetMaximum(SelectionEnergy));
+    SelectionEnergy.front()->GetYaxis()->SetTitle("Weighted #frac{dn}{dE}");
+    SelectionEnergy.front()->GetYaxis()->SetTitleOffset(1.3);
+    SelectionEnergy.front()->Draw();
+    SelectionEnergy.at(1)->SetLineColor(2);
+    SelectionEnergy.at(1)->Draw("SAME");
+    LegendData->Draw();
+    Canvas4->SaveAs("DataSelEnergy.png");
+
+    AddFirstTwoHistograms(SelectionTrackRange,-1.);
+    AddFirstTwoHistograms(SelectionTheta,-1.);
+    AddFirstTwoHistograms(SelectionPhi,-1.);
+    AddFirstTwoHistograms(SelectionEnergy,-1);
+    
+    
 //
 // for(unsigned int hist_no = 0; hist_no < SelectionTrackRange.size(); hist_no++)
 // {
@@ -202,10 +273,7 @@ void HistoProducer()
 //     SelectionPhi.at(hist_no)->Rebin(10);
 //
 //     FlashLabel->AddEntry( FlashTime.at(hist_no), (GenLabel.at(hist_no)).c_str(),"l" );
-//     if(hist_no < DataLabel.size())
-//     {
-//         LegendData->AddEntry( SelectionTrackRange.at(hist_no), (DataLabel.at(hist_no)).c_str(),"l" );
-//     }
+//
 // }
 //
 // SelectionCCTheta->Rebin(5);
@@ -272,38 +340,9 @@ void HistoProducer()
 // FlashLabel->Draw();
 // Canvas1->SaveAs("DataFlashTime.png");
 //
-// TCanvas *Canvas2 = new TCanvas("Track Range of Selected Track", "Track Range of Selected Track", 1400, 1000);
-// Canvas2->cd();
-// SelectionTrackRange.front()->SetMaximum(0.0035);//SetMaximum(1.1*GetMaximum(SelectionTrackRange));
-// SelectionTrackRange.front()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
-// SelectionTrackRange.front()->GetYaxis()->SetTitleOffset(1.3);
-// SelectionTrackRange.front()->Draw();
-// SelectionTrackRange.at(1)->SetLineColor(2);
-// SelectionTrackRange.at(1)->Draw("SAME");
-// LegendData->Draw();
-// Canvas2->SaveAs("DataSelRange.png");
+
 //
-// TCanvas *Canvas3 = new TCanvas("Theta-Angle of Selected Track", "Theta-Angle of Selected Track", 1400, 1000);
-// Canvas3->cd();
-// SelectionTheta.front()->SetMaximum(/*1.1*GetMaximum(SelectionTheta)*/0.0016);
-// SelectionTheta.front()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#theta}");
-// SelectionTheta.front()->GetYaxis()->SetTitleOffset(1.3);
-// SelectionTheta.front()->Draw();
-// SelectionTheta.at(1)->SetLineColor(2);
-// SelectionTheta.at(1)->Draw("SAME");
-// LegendData->Draw();
-// Canvas3->SaveAs("DataSelTheta.png");
-//
-// TCanvas *Canvas4 = new TCanvas("Phi-Angle of Selected Track", "Phi-Angle of Selected Track", 1400, 1000);
-// Canvas4->cd();
-// SelectionPhi.front()->SetMaximum(/*1.1*GetMaximum(SelectionPhi)*/0.002);
-// SelectionPhi.front()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#phi}");
-// SelectionPhi.front()->GetYaxis()->SetTitleOffset(1.3);
-// SelectionPhi.front()->Draw();
-// SelectionPhi.at(1)->SetLineColor(2);
-// SelectionPhi.at(1)->Draw("SAME");
-// LegendData->Draw();
-// Canvas4->SaveAs("DataSelPhi.png");
+
 //
 // AddFirstTwoHistograms(SelectionTrackRange,-1.);
 // AddFirstTwoHistograms(SelectionTheta,-1.);
@@ -383,101 +422,6 @@ void HistoProducer()
 // LegendMC->Draw();
 // Canvas11->SaveAs("OffBeam-OnBeamPhi.png");
 
-//
-//     TCanvas *Canvas6 = new TCanvas("Flash Track Distance", "Flash Track Distance", 1400, 1000);
-//     Canvas6->cd();
-//     Canvas6->SetLogy();
-//     FlashTrackHistVec.front()->SetMaximum(1.1*GetMaximum(FlashTrackHistVec));
-//     FlashTrackHistVec.front()->Draw();
-//
-//     TCanvas *Canvas7 = new TCanvas("Vertex Track Distance", "Vertex Track Distance", 1400, 1000);
-//     Canvas7->cd();
-//     Canvas7->SetLogy();
-//     VertexTrackHistVec.front()->SetMaximum(1.1*GetMaximum(VertexTrackHistVec));
-//     VertexTrackHistVec.front()->Draw();
-//
-//     TCanvas *Canvas8 = new TCanvas("Track Length", "Track Length", 1400, 1000);
-//     Canvas8->cd();
-//     Canvas8->SetLogy();
-//     TrackLengthHistVec.front()->SetMaximum(1.1*GetMaximum(TrackLengthHistVec));
-//     TrackLengthHistVec.front()->Draw();
-//
-//     TCanvas *Canvas9 = new TCanvas("Track Multiplicity", "Track Multiplicity", 1400, 1000);
-//     Canvas9->cd();
-//     Canvas9->SetLogy();
-//     TrackMultipHistVec.front()->SetMaximum(1.1*GetMaximum(TrackMultipHistVec));
-//     TrackMultipHistVec.front()->Draw();
-//
-//     for(unsigned int no_entries = 1; no_entries < FileNameVec.size(); no_entries++)
-//     {
-//         Canvas1->cd();
-//         XVtxHistVec.at(no_entries)->SetLineColor(no_entries);
-//         XVtxHistVec.at(no_entries)->Draw("SAME");
-//
-//         Canvas2->cd();
-//         YVtxHistVec.at(no_entries)->SetLineColor(no_entries);
-//         YVtxHistVec.at(no_entries)->Draw("SAME");
-//
-//         Canvas3->cd();
-//         ZVtxHistVec.at(no_entries)->SetLineColor(no_entries);
-//         ZVtxHistVec.at(no_entries)->Draw("SAME");
-//
-//         Canvas6->cd();
-//         FlashTrackHistVec.at(no_entries)->SetLineColor(no_entries);
-//         FlashTrackHistVec.at(no_entries)->Draw("SAME");
-//
-//         Canvas7->cd();
-//         VertexTrackHistVec.at(no_entries)->SetLineColor(no_entries);
-//         VertexTrackHistVec.at(no_entries)->Draw("SAME");
-//
-//         Canvas8->cd();
-//         TrackLengthHistVec.at(no_entries)->SetLineColor(no_entries);
-//         TrackLengthHistVec.at(no_entries)->Draw("SAME");
-//
-//         Canvas9->cd();
-//         TrackMultipHistVec.at(no_entries)->SetLineColor(no_entries);
-//         TrackMultipHistVec.at(no_entries)->Draw("SAME");
-//     }
-//
-//     // Fill legend
-//     for(unsigned int no_entries = 0; no_entries < FileNameVec.size(); no_entries++)
-//     {
-//         Legend->AddEntry( FlashTrackHistVec.at(no_entries), (FileNameVec.at(no_entries)).c_str(),"l" );
-//     }
-//
-//     Canvas1->cd();
-//     Legend->Draw();
-//     Canvas1->SaveAs(("XVtxPosition_"+Version+".png").c_str());
-//
-//     Canvas2->cd();
-//     Legend->Draw();
-//     Canvas2->SaveAs(("YVtxPosition_"+Version+".png").c_str());
-//
-//     Canvas3->cd();
-//     Legend->Draw();
-//     Canvas3->SaveAs(("ZVtxPosition_"+Version+".png").c_str());
-//
-//     Canvas4->SaveAs(("FlashTime_"+Version+".png").c_str());
-//     Canvas5->SaveAs(("PECount_"+Version+".png").c_str());
-//
-//     Canvas6->cd();
-//     Legend->Draw();
-//     Canvas6->SaveAs(("FlashTrackDist_"+Version+".png").c_str());
-//
-//     Canvas7->cd();
-//     Legend->Draw();
-//     Canvas7->SaveAs(("VtxTrackDist_"+Version+".png").c_str());
-//
-//     Canvas8->cd();
-//     Legend->Draw();
-//     Canvas8->SaveAs(("TrackLength_"+Version+".png").c_str());
-//
-//     Canvas9->cd();
-//     Legend->Draw();
-//     Canvas9->SaveAs(("TrackMultiplicity_"+Version+".png").c_str());
-//
-// //   TChain *XVtxHist = new TChain("X Vertex Position");
-
 }
 
 float GetMaximum(const std::vector<TH1F*>& HistVector)
@@ -509,4 +453,9 @@ void AddFirstTwoHistograms(std::vector<TH1F*>& HistVector, float Weight)
     {
         std::cout << "Histograms not added!" << std::endl;
     }
+}
+
+float CalcLength(const float& x_1, const float& y_1, const float& z_1, const float& x_2, const float& y_2, const float& z_2)
+{
+    return sqrt(pow(x_1-x_2, 2) + pow(y_1-y_2, 2) + pow(z_1-z_2, 2));
 }
