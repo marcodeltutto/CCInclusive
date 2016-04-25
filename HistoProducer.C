@@ -216,37 +216,7 @@ void HistoProducer()
             SelYVtxPosition.at(file_no)->Fill(YVertexPosition[VtxID]);
             SelZVtxPosition.at(file_no)->Fill(ZVertexPosition[VtxID]);
         }
-        
-        
         ChainVec.at(file_no)->ResetBranchAddresses();
-
-
-
-
-//             treenc -> SetBranchAddress("flash_zcenter", flash_zcenter);
-//             treenc -> SetBranchAddress("flash_ycenter", flash_ycenter);
-//             treenc -> SetBranchAddress("mcevts_truth", &mcevts_truth);
-//             treenc -> SetBranchAddress("nuvtxx_truth", nuvtxx_truth);
-//             treenc -> SetBranchAddress("nuvtxy_truth", nuvtxy_truth);
-//             treenc -> SetBranchAddress("nuvtxz_truth", nuvtxz_truth);
-//             treenc -> SetBranchAddress("ccnc_truth", ccnc_truth);
-//             treenc -> SetBranchAddress("nuPDG_truth", nuPDG_truth);
-//             treenc -> SetBranchAddress("pdg", PDG_truth);
-//             treenc -> SetBranchAddress("mode_truth", mode_truth);
-//             treenc -> SetBranchAddress("geant_list_size", &NumberOfMCTracks);
-//             treenc -> SetBranchAddress("StartPointx", XMCTrackStart);
-//             treenc -> SetBranchAddress("StartPointy", YMCTrackStart);
-//             treenc -> SetBranchAddress("StartPointz", ZMCTrackStart);
-//             treenc -> SetBranchAddress("EndPointx", XMCTrackEnd);
-//             treenc -> SetBranchAddress("EndPointy", YMCTrackEnd);
-//             treenc -> SetBranchAddress("EndPointz", ZMCTrackEnd);
-//
-//             // Product specific stuff
-//             treenc -> SetBranchAddress(("ntracks_"+TrackingName).c_str(),&ntracks_reco);
-//                 treenc -> SetBranchAddress(("nvtx_"+VertexingName).c_str(), &nvtx);
-//                 treenc -> SetBranchAddress(("vtxx_"+VertexingName).c_str(), vtxx);
-//                 treenc -> SetBranchAddress(("vtxy_"+VertexingName).c_str(), vtxy);
-//                 treenc -> SetBranchAddress(("vtxz_"+VertexingName).c_str(), vtxz);
     }
 
 
@@ -401,38 +371,6 @@ void HistoProducer()
     AddFirstTwoHistograms(SelYVtxPosition,-1);
     AddFirstTwoHistograms(SelZVtxPosition,-1);
     
-//
-// for(unsigned int hist_no = 0; hist_no < SelectionTrackRange.size(); hist_no++)
-// {
-//     SelectionTrackRange.at(hist_no)->Sumw2();
-//     SelectionTheta.at(hist_no)->Sumw2();
-//     if(hist_no != 1)SelectionPhi.at(hist_no)->Sumw2();
-// }
-//
-// AddFirstTwoHistograms(FlashTime,1.);
-// AddFirstTwoHistograms(SelectionTrackRange,1.);
-// AddFirstTwoHistograms(SelectionTheta,1.);
-// SelectionPhi.erase(SelectionPhi.begin()+1);
-// //     AddFirstTwoHistograms(SelectionPhi,1.);
-//
-// for(unsigned int hist_no = 0; hist_no < FlashTime.size(); hist_no++)
-// {
-//     FlashTime.at(hist_no)->Rebin(5);
-//     SelectionTrackRange.at(hist_no)->Rebin(5);
-//     SelectionTheta.at(hist_no)->Rebin(5);
-//     SelectionPhi.at(hist_no)->Rebin(10);
-//
-//     FlashLabel->AddEntry( FlashTime.at(hist_no), (GenLabel.at(hist_no)).c_str(),"l" );
-//
-// }
-//
-// SelectionCCTheta->Rebin(5);
-// SelectionNCTheta->Rebin(5);
-// SelectionCCPhi->Rebin(10);
-// SelectionNCPhi->Rebin(10);
-// SelectionCCRange->Rebin(5);
-// SelectionNCRange->Rebin(5);
-//
 // SelectionCCTheta->Scale(1/SelectionTheta.at(2)->Integral());
 // SelectionNCTheta->Scale(1/SelectionTheta.at(2)->Integral());
 // SelectionCCPhi->Scale(1/SelectionPhi.at(2)->Integral());
@@ -454,50 +392,7 @@ void HistoProducer()
 // FlashTime.at(2)->Scale(2./FlashTime.at(2)->Integral());
 // FlashTime.at(3)->Scale(2./FlashTime.at(3)->Integral());
 // FlashTime.at(4)->Scale(2./FlashTime.at(4)->Integral());
-// SelectionTrackRange.front()->Scale(1./567157.);
-// SelectionTrackRange.at(1)->Scale(1./130967);
-// SelectionTrackRange.at(2)->Scale(1./10880.);
-// SelectionTheta.front()->Scale(1./567157.);
-// SelectionTheta.at(1)->Scale(1./130967.);
-// SelectionTheta.at(2)->Scale(1./10880.);
-// SelectionPhi.front()->Scale(1./300000.);
-// SelectionPhi.at(1)->Scale(1./130967.);
-// SelectionPhi.at(2)->Scale(1./10880.);
-//
-// for(unsigned int hist_no = 0; hist_no < FlashTime.size(); hist_no++)
-// {
-//     FlashTime.at(hist_no)->Add(Const,FlashTime.size()-hist_no-1);
-// }
-//
-// TCanvas *Canvas1 = new TCanvas("Flash Time", "Flash Time", 1400, 1000);
-// Canvas1->cd();
-// FlashTime.front()->SetMaximum(1.1*GetMaximum(FlashTime));
-// FlashTime.front()->SetMinimum(0);
-// FlashTime.front()->GetYaxis()->SetTitle("#propto # Flashes");
-// FlashTime.front()->Draw();
-// FlashTime.at(1)->SetLineColor(2);
-// FlashTime.at(1)->Draw("SAME");
-// FlashTime.at(2)->SetLineColor(3);
-// FlashTime.at(2)->Draw("SAME");
-// FlashTime.at(3)->SetLineColor(6);
-// FlashTime.at(3)->Draw("SAME");
-// FlashTime.at(4)->SetLineColor(7);
-// FlashTime.at(4)->Draw("SAME");
-// FlashTimeMinCut.Draw("SAME");
-// FlashTimeMaxCut.Draw("SAME");
-// FlashTimeMinCut_1.Draw("SAME");
-// FlashTimeMaxCut_1.Draw("SAME");
-// FlashLabel->Draw();
-// Canvas1->SaveAs("DataFlashTime.png");
-//
 
-//
-
-//
-// AddFirstTwoHistograms(SelectionTrackRange,-1.);
-// AddFirstTwoHistograms(SelectionTheta,-1.);
-// AddFirstTwoHistograms(SelectionPhi,-1.);
-//
 // LegendMC->AddEntry( SelectionTrackRange.at(0), (MCLabel.at(0)).c_str(),"lep" );
 // LegendMC->AddEntry( SelectionTrackRange.at(1), (MCLabel.at(1)).c_str(),"f" );
 // LegendMC->AddEntry( SelectionNCRange, (MCLabel.at(2)).c_str(),"l" );
