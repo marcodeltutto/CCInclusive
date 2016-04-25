@@ -40,6 +40,11 @@ void HistoProducer()
     std::vector<TH1F*> SelectionEnergy;
     std::vector<TH1F*> SelectionTheta;
     std::vector<TH1F*> SelectionPhi;
+    
+    std::vector<TH1F*> SelXTrackStartEnd;
+    std::vector<TH1F*> SelYTrackStartEnd;
+    std::vector<TH1F*> SelZTrackStartEnd;
+    
     std::vector<TH1F*> SelXVtxPosition;
     std::vector<TH1F*> SelYVtxPosition;
     std::vector<TH1F*> SelZVtxPosition;
@@ -74,16 +79,16 @@ void HistoProducer()
 //     GenLabel.push_back("MC Prodcosmic Corsika in-Time");
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
-    ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
-//     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
-//     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
+//     ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
+//     ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
+    ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
+    ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
-    ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
-//     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
-//     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
+//     ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
+//     ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
+    ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
+    ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
 
     for(const auto& Label : GenLabel)
     {
@@ -104,11 +109,47 @@ void HistoProducer()
 
         SelectionEnergy.push_back(new TH1F(("Energy"+Label).c_str(),"Energy of Selected Track",20,0,3000));
         SelectionEnergy.back()->SetStats(0);
-        SelectionEnergy.back()->GetXaxis()->SetTitle("#Energy [MeV]");
+        SelectionEnergy.back()->GetXaxis()->SetTitle("Muon Kinetic Energy [MeV]");
         SelectionEnergy.back()->GetYaxis()->SetTitle("Number of Tracks [ ]");
+        
+        SelXTrackStartEnd.push_back(new TH1F(("XTrack"+Label).c_str(),"X Track Start & End Positions",20,0,256));
+        SelXTrackStartEnd.back()->SetStats(0);
+        SelXTrackStartEnd.back()->GetXaxis()->SetTitle("x [cm]");
+        SelXTrackStartEnd.back()->GetYaxis()->SetTitle("Number of Tracks [ ]");
+        
+        SelYTrackStartEnd.push_back(new TH1F(("YTrack"+Label).c_str(),"Y Track Start & End Positions",20,-233/2,233/2));
+        SelYTrackStartEnd.back()->SetStats(0);
+        SelYTrackStartEnd.back()->GetXaxis()->SetTitle("y [cm]");
+        SelYTrackStartEnd.back()->GetYaxis()->SetTitle("Number of Tracks [ ]");
+        
+        SelZTrackStartEnd.push_back(new TH1F(("ZTrack"+Label).c_str(),"Z Track Start & End Positions",20,0,1000));
+        SelZTrackStartEnd.back()->SetStats(0);
+        SelZTrackStartEnd.back()->GetXaxis()->SetTitle("z [cm]");
+        SelZTrackStartEnd.back()->GetYaxis()->SetTitle("Number of Tracks [ ]");
+        
+        SelXVtxPosition.push_back(new TH1F(("XVertex"+Label).c_str(),"X Vertex Position",20,0,256));
+        SelXVtxPosition.back()->SetStats(0);
+        SelXVtxPosition.back()->GetXaxis()->SetTitle("x [cm]");
+        SelXVtxPosition.back()->GetYaxis()->SetTitle("Number of Vertices [ ]");
+        
+        SelYVtxPosition.push_back(new TH1F(("YVertex"+Label).c_str(),"Y Vertex Position",20,-233/2,233/2));
+        SelYVtxPosition.back()->SetStats(0);
+        SelYVtxPosition.back()->GetXaxis()->SetTitle("y [cm]");
+        SelYVtxPosition.back()->GetYaxis()->SetTitle("Number of Vertices [ ]");
+        
+        SelZVtxPosition.push_back(new TH1F(("ZVertex"+Label).c_str(),"Z Vertex Position",20,0,1000));
+        SelZVtxPosition.back()->SetStats(0);
+        SelZVtxPosition.back()->GetXaxis()->SetTitle("z [cm]");
+        SelZVtxPosition.back()->GetYaxis()->SetTitle("Number of Vertices [ ]");
     }
 
     int TrkID;
+    int VtxID;
+    
+    int MCTrkID;
+    int CCNCFlag[10];
+    int PDGTruth[5000];
+    int MCTrkOrigin[5000][3];
 
     float TrackTheta[5000];
     float TrackPhi[5000];
@@ -120,12 +161,22 @@ void HistoProducer()
     float XTrackEnd[5000];
     float YTrackEnd[5000];
     float ZTrackEnd[5000];
+    
+    float XVertexPosition[500];
+    float YVertexPosition[500];
+    float ZVertexPosition[500];
 
     float KineticEnergy[5000][3];
 
     for(unsigned int file_no = 0; file_no < ChainVec.size(); file_no++)
     {
         ChainVec.at(file_no) -> SetBranchAddress("TrackCand", &TrkID);
+        ChainVec.at(file_no) -> SetBranchAddress("VertexCand", &VtxID);
+        
+        ChainVec.at(file_no) -> SetBranchAddress("MCTrackCand", &MCTrkID);
+        ChainVec.at(file_no) -> SetBranchAddress("ccnc_truth", CCNCFlag);
+        ChainVec.at(file_no) -> SetBranchAddress("pdg", PDGTruth);
+        ChainVec.at(file_no) -> SetBranchAddress("trkorigin_pandoraNu", MCTrkOrigin);
 
         ChainVec.at(file_no) -> SetBranchAddress("trkke_pandoraNu", KineticEnergy);
         ChainVec.at(file_no) -> SetBranchAddress("trktheta_pandoraNu", TrackTheta);
@@ -138,6 +189,10 @@ void HistoProducer()
         ChainVec.at(file_no) -> SetBranchAddress("trkendx_pandoraNu",XTrackEnd);
         ChainVec.at(file_no) -> SetBranchAddress("trkendy_pandoraNu",YTrackEnd);
         ChainVec.at(file_no) -> SetBranchAddress("trkendz_pandoraNu",ZTrackEnd);
+        
+        ChainVec.at(file_no) -> SetBranchAddress("vtxx_pandoraNu", XVertexPosition);
+        ChainVec.at(file_no) -> SetBranchAddress("vtxy_pandoraNu", YVertexPosition);
+        ChainVec.at(file_no) -> SetBranchAddress("vtxz_pandoraNu", ZVertexPosition);
 
         for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no)->GetEntries(); tree_index++)
         {
@@ -149,6 +204,17 @@ void HistoProducer()
             SelectionTheta.at(file_no)->Fill(TrackTheta[TrkID]);
             SelectionPhi.at(file_no)->Fill(TrackPhi[TrkID]);
             SelectionEnergy.at(file_no)->Fill(KineticEnergy[TrkID][2]);
+            
+            SelXTrackStartEnd.at(file_no)->Fill(XTrackStart[TrkID]);
+            SelXTrackStartEnd.at(file_no)->Fill(XTrackEnd[TrkID]);
+            SelYTrackStartEnd.at(file_no)->Fill(YTrackStart[TrkID]);
+            SelYTrackStartEnd.at(file_no)->Fill(YTrackEnd[TrkID]);
+            SelZTrackStartEnd.at(file_no)->Fill(ZTrackStart[TrkID]);
+            SelZTrackStartEnd.at(file_no)->Fill(ZTrackEnd[TrkID]);
+            
+            SelXVtxPosition.at(file_no)->Fill(XVertexPosition[VtxID]);
+            SelYVtxPosition.at(file_no)->Fill(YVertexPosition[VtxID]);
+            SelZVtxPosition.at(file_no)->Fill(ZVertexPosition[VtxID]);
         }
         
         
@@ -190,11 +256,23 @@ void HistoProducer()
         SelectionTheta.at(file_no)->Sumw2();
         SelectionPhi.at(file_no)->Sumw2();
         SelectionEnergy.at(file_no)->Sumw2();
+        SelXTrackStartEnd.at(file_no)->Sumw2();
+        SelYTrackStartEnd.at(file_no)->Sumw2();
+        SelZTrackStartEnd.at(file_no)->Sumw2();
+        SelXVtxPosition.at(file_no)->Sumw2();
+        SelYVtxPosition.at(file_no)->Sumw2();
+        SelZVtxPosition.at(file_no)->Sumw2();
 
         SelectionTrackRange.at(file_no)->Scale(ScalingFactors.at(file_no));
         SelectionTheta.at(file_no)->Scale(ScalingFactors.at(file_no));
         SelectionPhi.at(file_no)->Scale(ScalingFactors.at(file_no));
         SelectionEnergy.at(file_no)->Scale(ScalingFactors.at(file_no));
+        SelXTrackStartEnd.at(file_no)->Scale(ScalingFactors.at(file_no));
+        SelYTrackStartEnd.at(file_no)->Scale(ScalingFactors.at(file_no));
+        SelZTrackStartEnd.at(file_no)->Scale(ScalingFactors.at(file_no));
+        SelXVtxPosition.at(file_no)->Scale(ScalingFactors.at(file_no));
+        SelYVtxPosition.at(file_no)->Scale(ScalingFactors.at(file_no));
+        SelZVtxPosition.at(file_no)->Scale(ScalingFactors.at(file_no));
     }
 
     for(unsigned int hist_no = 0; hist_no < DataLabel.size(); hist_no++)
@@ -245,14 +323,83 @@ void HistoProducer()
     SelectionEnergy.at(1)->Draw("SAME");
     LegendData->Draw();
     Canvas4->SaveAs("DataSelEnergy.png");
+    
+    TCanvas *Canvas5 = new TCanvas("X Start & End Point Selected Track", "X Start & End Point Selected Track", 1400, 1000);
+    Canvas5->cd();
+    SelXTrackStartEnd.front()->SetMaximum(1.3*GetMaximum(SelXTrackStartEnd));
+    SelXTrackStartEnd.front()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
+    SelXTrackStartEnd.front()->GetYaxis()->SetTitleOffset(1.3);
+    SelXTrackStartEnd.front()->Draw();
+    SelXTrackStartEnd.at(1)->SetLineColor(2);
+    SelXTrackStartEnd.at(1)->Draw("SAME");
+    LegendData->Draw();
+    Canvas5->SaveAs("DataSelXTrack.png");
+    
+    TCanvas *Canvas6 = new TCanvas("Y Start & End Point Selected Track", "Y Start & End Point Selected Track", 1400, 1000);
+    Canvas6->cd();
+    SelYTrackStartEnd.front()->SetMaximum(1.3*GetMaximum(SelYTrackStartEnd));
+    SelYTrackStartEnd.front()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
+    SelYTrackStartEnd.front()->GetYaxis()->SetTitleOffset(1.3);
+    SelYTrackStartEnd.front()->Draw();
+    SelYTrackStartEnd.at(1)->SetLineColor(2);
+    SelYTrackStartEnd.at(1)->Draw("SAME");
+    LegendData->Draw();
+    Canvas6->SaveAs("DataSelYTrack.png");
+    
+    TCanvas *Canvas7 = new TCanvas("Z Start & End Point Selected Track", "Z Start & End Point Selected Track", 1400, 1000);
+    Canvas7->cd();
+    SelZTrackStartEnd.front()->SetMaximum(1.3*GetMaximum(SelZTrackStartEnd));
+    SelZTrackStartEnd.front()->GetYaxis()->SetTitle("Weighted #frac{dn}{dz}");
+    SelZTrackStartEnd.front()->GetYaxis()->SetTitleOffset(1.3);
+    SelZTrackStartEnd.front()->Draw();
+    SelZTrackStartEnd.at(1)->SetLineColor(2);
+    SelZTrackStartEnd.at(1)->Draw("SAME");
+    LegendData->Draw();
+    Canvas7->SaveAs("DataSelZTrack.png");
+    
+    TCanvas *Canvas8 = new TCanvas("X Vertex Postion", "X Vertex Postion", 1400, 1000);
+    Canvas8->cd();
+    SelXVtxPosition.front()->SetMaximum(1.3*GetMaximum(SelXVtxPosition));
+    SelXVtxPosition.front()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
+    SelXVtxPosition.front()->GetYaxis()->SetTitleOffset(1.3);
+    SelXVtxPosition.front()->Draw();
+    SelXVtxPosition.at(1)->SetLineColor(2);
+    SelXVtxPosition.at(1)->Draw("SAME");
+    LegendData->Draw();
+    Canvas8->SaveAs("DataSelXVertex.png");
+    
+    TCanvas *Canvas9 = new TCanvas("Y Vertex Postion", "Y Vertex Postion", 1400, 1000);
+    Canvas9->cd();
+    SelYVtxPosition.front()->SetMaximum(1.3*GetMaximum(SelYVtxPosition));
+    SelYVtxPosition.front()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
+    SelYVtxPosition.front()->GetYaxis()->SetTitleOffset(1.3);
+    SelYVtxPosition.front()->Draw();
+    SelYVtxPosition.at(1)->SetLineColor(2);
+    SelYVtxPosition.at(1)->Draw("SAME");
+    LegendData->Draw();
+    Canvas9->SaveAs("DataSelYVertex.png");
+    
+    TCanvas *Canvas10 = new TCanvas("Z Vertex Postion", "Z Vertex Postion", 1400, 1000);
+    Canvas10->cd();
+    SelZVtxPosition.front()->SetMaximum(1.3*GetMaximum(SelZVtxPosition));
+    SelZVtxPosition.front()->GetYaxis()->SetTitle("Weighted #frac{dn}{dz}");
+    SelZVtxPosition.front()->GetYaxis()->SetTitleOffset(1.3);
+    SelZVtxPosition.front()->Draw();
+    SelZVtxPosition.at(1)->SetLineColor(2);
+    SelZVtxPosition.at(1)->Draw("SAME");
+    LegendData->Draw();
+    Canvas10->SaveAs("DataSelZVertex.png");
 
     AddFirstTwoHistograms(SelectionTrackRange,-1.);
     AddFirstTwoHistograms(SelectionTheta,-1.);
     AddFirstTwoHistograms(SelectionPhi,-1.);
     AddFirstTwoHistograms(SelectionEnergy,-1);
-    
-    
-    
+    AddFirstTwoHistograms(SelXTrackStartEnd,-1);
+    AddFirstTwoHistograms(SelYTrackStartEnd,-1);
+    AddFirstTwoHistograms(SelZTrackStartEnd,-1);
+    AddFirstTwoHistograms(SelXVtxPosition,-1);
+    AddFirstTwoHistograms(SelYVtxPosition,-1);
+    AddFirstTwoHistograms(SelZVtxPosition,-1);
     
 //
 // for(unsigned int hist_no = 0; hist_no < SelectionTrackRange.size(); hist_no++)
