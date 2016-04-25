@@ -46,13 +46,11 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
     string Version = "v05_08_00";
 
-//     string GeneratorName = "prodgenie_bnb_nu_cosmic";
 //     string GeneratorName = "prodgenie_bnb_nu";
 //     string GeneratorName = "prodcosmics_corsika_inTime";
-//     string GeneratorName = "data_bnb";
-//     string GeneratorName = "data_bnb_external";
 //     string GeneratorName = "data_onbeam_bnb";
-    string GeneratorName = "data_offbeam_bnbext";
+//     string GeneratorName = "data_offbeam_bnbext";
+    string GeneratorName = "prodgenie_bnb_nu_cosmic";
 
     // Initialize and fill track reco product names
     std::vector<string> TrackProdNameVec;
@@ -120,7 +118,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 //     treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
-    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/MC_BNB_Cosmic/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 
     //maximum array sizes
     const int maxentries = 35000;
@@ -181,7 +180,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     Int_t           ccnc_truth[maxmc]; //CC = 0, NC = 1
     Int_t           nuPDG_truth[maxmc]; //true neutrino pdg code. numu = 14
     Int_t           mode_truth[maxmc]; //QE = 0, RES = 1, DIS = 2
-    Int_t	   PDG_truth[maxtracks];
+    Int_t	    PDG_truth[maxtracks];
 
     Int_t	   NumberOfMCTracks;
 
@@ -476,11 +475,6 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             hZTrackStartEnd->GetXaxis()->SetTitle("Z position [cm]");
             hZTrackStartEnd->GetYaxis()->SetTitle("Number of Tracks [ ]");
 
-            int Size = treenc -> GetEntries();
-//             if(Size > 20000) Size = 20000;
-
-            cout << "number of events used is: " << Size << endl;
-
             int theflash = -1;
 
             double diststart = 0;
@@ -503,7 +497,6 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             unsigned int EventsNearVtx = 0;
             unsigned int EventsTrackLong = 0;
             unsigned int EventsTruelyReco = 0;
-            unsigned int EfficiencyCount = 0;
 
             unsigned int NumberOfSignalTruth = 0;
             unsigned int NumberOfSignalTruthSel = 0;
@@ -519,7 +512,12 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
             double TotalPOT = 0.0;
 
+            int Size = treenc -> GetEntries();
+            
+//             if(Size > 20000) Size = 20000;
 //             Size = 200000;
+            
+            cout << "number of events used is: " << Size << endl;
             //Event Loop
             for(int i = 0; i < Size; i++)
             {
@@ -726,22 +724,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                                     if(TrackCandLength > lengthcut)
                                     {
                                         EventsTrackLong++;
-
-                                        if(ccnc_truth[0])
-                                        {
-                                            hSelectionNCTheta->Fill(trktheta[TrackCandidate]);
-                                            hSelectionNCPhi->Fill(trkphi[TrackCandidate]);
-                                            hSelectionNCTrackRange->Fill(TrackCandLength);
-                                        }
-                                        else
-                                        {
-                                            hSelectionCCTheta->Fill(trktheta[TrackCandidate]);
-                                            hSelectionCCPhi->Fill(trkphi[TrackCandidate]);
-                                            hSelectionCCTrackRange->Fill(TrackCandLength);
-                                            EfficiencyCount++;
-                                        }
                                         
-                                        if(MCTrackCandidate > -1 && ccnc_truth == 0)
+                                        if(MCTrackCandidate > -1 && ccnc_truth[0] == 0 && trkorigin[TrackCandidate][2] == 1)
                                         {
                                             if(PDG_truth[MCTrackCandidate] == 13)
                                             {
@@ -755,10 +739,20 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                                             {
                                                 NumberOfBgrNueTruthSel++;
                                             }
+                                            hSelectionCCTheta->Fill(trktheta[TrackCandidate]);
+                                            hSelectionCCPhi->Fill(trkphi[TrackCandidate]);
+                                            hSelectionCCTrackRange->Fill(TrackCandLength);
                                         }
-                                        else if(ccnc_truth == 1)
+                                        else if(ccnc_truth[0] == 1 && trkorigin[TrackCandidate][2] == 1)
                                         {
                                             NumberOfBgrNCTruthSel++;
+                                            hSelectionNCTheta->Fill(trktheta[TrackCandidate]);
+                                            hSelectionNCPhi->Fill(trkphi[TrackCandidate]);
+                                            hSelectionNCTrackRange->Fill(TrackCandLength);
+                                        }
+                                        else if(trkorigin[TrackCandidate][2] != 1)
+                                        {
+                                            NumberOfBgrCosmicSel++;
                                         }
 
                                         // Fill Selection Plots
@@ -862,9 +856,15 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             cout << "number of events with tracks matched within 80cm to flash : " << EventsFlashMatched << endl;
             cout << "number of events with contained tracks : " << EventsTracksInFV << endl;
             cout << "number of events with longest track > 75cm : " << EventsTrackLong << endl;
-            cout << "number of events with track start end within 3cm to mc-vtx : " << EventsTruelyReco << endl;
+            cout << "number of events with track start end within 5cm to mc-vtx : " << EventsTruelyReco << endl;
             cout << "number of events with contained MC tracks : " << NumberOfSignalTruth << endl;
-            cout << "event selection efficiency : " <<  (float)EfficiencyCount/(float)NumberOfSignalTruth << endl;
+            cout << "number of well selected events : " << NumberOfSignalTruthSel << endl;
+            cout << "number of NC events selected : " << NumberOfBgrNCTruthSel << endl;
+            cout << "number of anti-Neutrino events selected : " << NumberOfBgrNumuBarTruthSel << endl;
+            cout << "number of Nu_e events selected : " << NumberOfBgrNueTruthSel << endl;
+            cout << "number of events selected cosmic : " << NumberOfBgrCosmicSel << endl;
+            cout << "event selection efficiency : " <<  (float)NumberOfSignalTruthSel/(float)NumberOfSignalTruth << endl;
+//             cout << "event selection purity : " << (float)NumberOfSignalTruthSel/(float)(NumberOfBgrNCTruthSel+NumberOfBgrNumuBarTruthSel+NumberOfBgrNueTruthSel)
             cout << "event selection correctness : " <<  (float)EventsTruelyReco/(float)EventsTrackLong << endl;
 //             cout << "event selection missid rate : " <<  fabs((float)EventsTruelyReco-(float)NumberOfSignalTruth)/(float)NumberOfSignalTruth << endl;
             cout << endl;
@@ -878,14 +878,14 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             *EventSelectionCuts.at(4)  << "," << EventsFlashMatched;
             *EventSelectionCuts.at(5)  << "," << EventsTracksInFV;
             *EventSelectionCuts.at(6)  << "," << EventsTrackLong;
-            *EventSelectionCuts.at(7)  << "," << (float)EventsTrackLong/(float)NumberOfSignalTruth;
+            *EventSelectionCuts.at(7)  << "," << (float)NumberOfSignalTruthSel/(float)NumberOfSignalTruth;
             *EventSelectionCuts.at(8)  << "," << (float)EventsTruelyReco/(float)EventsTrackLong;
             *EventSelectionCuts.at(9)  << "," << NumberOfSignalTruth;
             *EventSelectionCuts.at(10) << "," << NumberOfSignalTruthSel;
             *EventSelectionCuts.at(11) << "," << NumberOfBgrNCTruthSel;
             *EventSelectionCuts.at(12) << "," << NumberOfBgrNumuBarTruthSel;
             *EventSelectionCuts.at(13) << "," << NumberOfBgrNueTruthSel;
-            *EventSelectionCuts.at(14) << "," << ;
+            *EventSelectionCuts.at(14) << "," << NumberOfBgrCosmicSel;
 
             delete hXVertexPosition;
             delete hYVertexPosition;
