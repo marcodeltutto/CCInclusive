@@ -74,16 +74,16 @@ void HistoProducer()
 //     GenLabel.push_back("MC Prodcosmic Corsika in-Time");
 
     ChainVec.push_back(new TChain("anatree"));
-//     ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
-//     ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
-    ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
-    ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
+    ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
+    ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
+//     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
+//     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
 
     ChainVec.push_back(new TChain("anatree"));
-//     ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
-//     ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
-    ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
-    ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
+    ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
+    ChainVec.back() -> Add("rootfiles/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
+//     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
+//     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
 
     for(const auto& Label : GenLabel)
     {
@@ -92,12 +92,12 @@ void HistoProducer()
         SelectionTrackRange.back()->GetXaxis()->SetTitle("Track Range [cm]");
         SelectionTrackRange.back()->GetYaxis()->SetTitle("Number of Tracks [ ]");
 
-        SelectionTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"#theta-Angle of Selected Track",18,0,3.142));
+        SelectionTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"#theta-Angle of Selected Track",20,0,3.142));
         SelectionTheta.back()->SetStats(0);
         SelectionTheta.back()->GetXaxis()->SetTitle("#theta angle [rad]");
         SelectionTheta.back()->GetYaxis()->SetTitle("Number of Tracks [ ]");
 
-        SelectionPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle of Selected Track",18,-3.142,3.142));
+        SelectionPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle of Selected Track",20,-3.142,3.142));
         SelectionPhi.back()->SetStats(0);
         SelectionPhi.back()->GetXaxis()->SetTitle("#phi angle [rad]");
         SelectionPhi.back()->GetYaxis()->SetTitle("Number of Tracks [ ]");
@@ -137,7 +137,7 @@ void HistoProducer()
 
         ChainVec.at(file_no) -> SetBranchAddress("trkendx_pandoraNu",XTrackEnd);
         ChainVec.at(file_no) -> SetBranchAddress("trkendy_pandoraNu",YTrackEnd);
-        ChainVec.at(file_no) -> SetBranchAddress("trkendy_pandoraNu",ZTrackEnd);
+        ChainVec.at(file_no) -> SetBranchAddress("trkendz_pandoraNu",ZTrackEnd);
 
         for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no)->GetEntries(); tree_index++)
         {
@@ -145,13 +145,14 @@ void HistoProducer()
 
             ChainVec.at(file_no)->GetEntry(tree_index);
             
-            std::cout << TrkID << std::endl;
-
             SelectionTrackRange.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
             SelectionTheta.at(file_no)->Fill(TrackTheta[TrkID]);
             SelectionPhi.at(file_no)->Fill(TrackPhi[TrkID]);
             SelectionEnergy.at(file_no)->Fill(KineticEnergy[TrkID][2]);
         }
+        
+        
+        ChainVec.at(file_no)->ResetBranchAddresses();
 
 
 
@@ -249,6 +250,8 @@ void HistoProducer()
     AddFirstTwoHistograms(SelectionTheta,-1.);
     AddFirstTwoHistograms(SelectionPhi,-1.);
     AddFirstTwoHistograms(SelectionEnergy,-1);
+    
+    
     
     
 //

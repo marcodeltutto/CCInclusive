@@ -83,6 +83,13 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     SelectionNames.push_back("TrackRange_");
     SelectionNames.push_back("SelectionEfficiency_");
     SelectionNames.push_back("SelectionCorrectness_");
+    SelectionNames.push_back("N_sig_truth_");
+    SelectionNames.push_back("N_sig_truth_sel_");
+    SelectionNames.push_back("N_bg_NC_sel_");
+    SelectionNames.push_back("N_bg_numubar_sel_");
+    SelectionNames.push_back("N_bg_nue_sel_");
+    SelectionNames.push_back("N_bg_cosmicbnb_sel_");
+    
 
     // Initialize table file vector
     std::vector<ofstream*> EventSelectionCuts;
@@ -498,7 +505,13 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             unsigned int EventsTruelyReco = 0;
             unsigned int EfficiencyCount = 0;
 
-            unsigned int NumberOfContainedMCTracks = 0;
+            unsigned int NumberOfSignalTruth = 0;
+            unsigned int NumberOfSignalTruthSel = 0;
+            unsigned int NumberOfBgrNCTruthSel = 0;
+            unsigned int NumberOfBgrNumuBarTruthSel = 0;
+            unsigned int NumberOfBgrNueTruthSel = 0;
+            unsigned int NumberOfBgrCosmicSel = 0;
+            
 
             TBranch* BrTrackCand = SelectionTree->Branch("TrackCand",&TrackCandidate,"TrackCand/I");
             TBranch* BrVtxCand = SelectionTree->Branch("VertexCand",&VertexCandidate,"VertexCand/I");
@@ -506,7 +519,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
             double TotalPOT = 0.0;
 
-            Size = 200000;
+//             Size = 200000;
             //Event Loop
             for(int i = 0; i < Size; i++)
             {
@@ -552,8 +565,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                         float MCTrackLength = sqrt(pow(XMCTrackStart[track_no] - XMCTrackEnd[track_no],2) + pow(YMCTrackStart[track_no] - YMCTrackEnd[track_no],2) + pow(ZMCTrackStart[track_no] - ZMCTrackEnd[track_no],2));
 
                         // If the a muon is not contained in a singel neutrino event, set mc-track contained flag to false
-                        if( abs(PDG_truth[track_no]) == 13 // Track has to be a muon
-                                && ccnc_truth[0] == 0
+                        if( ( abs(PDG_truth[track_no]) == 13 && abs(PDG_truth[track_no]) == 11 ) // Track has to be a muon or a electron
 //                                 && flashtag
                                 && inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]) // true vertex has to be in FV
                                 && inFV(XMCTrackStart[track_no],YMCTrackStart[track_no],ZMCTrackStart[track_no]) // Track start has to be in FV
@@ -570,9 +582,9 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                 } // MC vertex loop
 
                 // Count up the number of contained mc-tracks if there are mc candidates
-                if(MCTrackCandidate > -1)
+                if(MCTrackCandidate > -1 && ccnc_truth[0] == 0 && PDG_truth[MCTrackCandidate] == 13)
                 {
-                    NumberOfContainedMCTracks++;
+                    NumberOfSignalTruth++;
                 }
 
                 // If there is a POT entry or we are not looking at beam data
@@ -728,6 +740,26 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                                             hSelectionCCTrackRange->Fill(TrackCandLength);
                                             EfficiencyCount++;
                                         }
+                                        
+                                        if(MCTrackCandidate > -1 && ccnc_truth == 0)
+                                        {
+                                            if(PDG_truth[MCTrackCandidate] == 13)
+                                            {
+                                                NumberOfSignalTruthSel++;
+                                            }
+                                            else if(PDG_truth[MCTrackCandidate] == -13)
+                                            {
+                                                NumberOfBgrNumuBarTruthSel++;
+                                            }
+                                            else if(abs(PDG_truth[MCTrackCandidate]) == 11)
+                                            {
+                                                NumberOfBgrNueTruthSel++;
+                                            }
+                                        }
+                                        else if(ccnc_truth == 1)
+                                        {
+                                            NumberOfBgrNCTruthSel++;
+                                        }
 
                                         // Fill Selection Plots
                                         hSelectionTheta->Fill(trktheta[TrackCandidate]);
@@ -831,23 +863,29 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             cout << "number of events with contained tracks : " << EventsTracksInFV << endl;
             cout << "number of events with longest track > 75cm : " << EventsTrackLong << endl;
             cout << "number of events with track start end within 3cm to mc-vtx : " << EventsTruelyReco << endl;
-            cout << "number of events with contained MC tracks : " << NumberOfContainedMCTracks << endl;
-            cout << "event selection efficiency : " <<  (float)EfficiencyCount/(float)NumberOfContainedMCTracks << endl;
+            cout << "number of events with contained MC tracks : " << NumberOfSignalTruth << endl;
+            cout << "event selection efficiency : " <<  (float)EfficiencyCount/(float)NumberOfSignalTruth << endl;
             cout << "event selection correctness : " <<  (float)EventsTruelyReco/(float)EventsTrackLong << endl;
-//             cout << "event selection missid rate : " <<  fabs((float)EventsTruelyReco-(float)NumberOfContainedMCTracks)/(float)NumberOfContainedMCTracks << endl;
+//             cout << "event selection missid rate : " <<  fabs((float)EventsTruelyReco-(float)NumberOfSignalTruth)/(float)NumberOfSignalTruth << endl;
             cout << endl;
             cout << "--------------------------------------------------------------------------------------------" << endl;
 
             // Write numbers to cvs File
-            *EventSelectionCuts.at(0) << "," << ntrue;
-            *EventSelectionCuts.at(1) << "," << EventsWithFlash;
-            *EventSelectionCuts.at(2) << "," << EventsVtxInFV;
-            *EventSelectionCuts.at(3) << "," << EventsTrackNearVertex;
-            *EventSelectionCuts.at(4) << "," << EventsFlashMatched;
-            *EventSelectionCuts.at(5) << "," << EventsTracksInFV;
-            *EventSelectionCuts.at(6) << "," << EventsTrackLong;
-            *EventSelectionCuts.at(7) << "," << (float)EventsTrackLong/(float)NumberOfContainedMCTracks;
-            *EventSelectionCuts.at(8) << "," << (float)EventsTruelyReco/(float)EventsTrackLong;
+            *EventSelectionCuts.at(0)  << "," << ntrue;
+            *EventSelectionCuts.at(1)  << "," << EventsWithFlash;
+            *EventSelectionCuts.at(2)  << "," << EventsVtxInFV;
+            *EventSelectionCuts.at(3)  << "," << EventsTrackNearVertex;
+            *EventSelectionCuts.at(4)  << "," << EventsFlashMatched;
+            *EventSelectionCuts.at(5)  << "," << EventsTracksInFV;
+            *EventSelectionCuts.at(6)  << "," << EventsTrackLong;
+            *EventSelectionCuts.at(7)  << "," << (float)EventsTrackLong/(float)NumberOfSignalTruth;
+            *EventSelectionCuts.at(8)  << "," << (float)EventsTruelyReco/(float)EventsTrackLong;
+            *EventSelectionCuts.at(9)  << "," << NumberOfSignalTruth;
+            *EventSelectionCuts.at(10) << "," << NumberOfSignalTruthSel;
+            *EventSelectionCuts.at(11) << "," << NumberOfBgrNCTruthSel;
+            *EventSelectionCuts.at(12) << "," << NumberOfBgrNumuBarTruthSel;
+            *EventSelectionCuts.at(13) << "," << NumberOfBgrNueTruthSel;
+            *EventSelectionCuts.at(14) << "," << ;
 
             delete hXVertexPosition;
             delete hYVertexPosition;
