@@ -389,9 +389,10 @@ void HistoProducer()
                 BgrYVtxPosition.at(3)->Fill(YVertexPosition[VtxID]);
                 BgrZVtxPosition.at(3)->Fill(ZVertexPosition[VtxID]);
             }
-            else if(file_no == 2)
+            
+            if(file_no == 2)
             {
-                std::cout << MCTrkID << " " << TrkOrigin[TrkID][2] << " " << CCNCFlag[0] << std::endl;
+                std::cout << TrkID << " " << MCTrkID << " " << TrkOrigin[TrkID][2] << " " << CCNCFlag[0] << std::endl;
             }
         }
         std::cout << nubar << " " << nue << " " << NCnu << " " << Cosmic << std::endl;
