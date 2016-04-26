@@ -56,20 +56,20 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     // Initialize and fill track reco product names
     std::vector<string> TrackProdNameVec;
 
-    TrackProdNameVec.push_back("pandoraNuKHit");
-    TrackProdNameVec.push_back("pandoraCosmic");
+//     TrackProdNameVec.push_back("pandoraNuKHit");
+//     TrackProdNameVec.push_back("pandoraCosmic");
     TrackProdNameVec.push_back("pandoraNu");
-    TrackProdNameVec.push_back("pmtrack");
-    TrackProdNameVec.push_back("pandoraNuPMA");
-    TrackProdNameVec.push_back("trackkalmanhit");
+//     TrackProdNameVec.push_back("pmtrack");
+//     TrackProdNameVec.push_back("pandoraNuPMA");
+//     TrackProdNameVec.push_back("trackkalmanhit");
 
     // Initialize and fill vertex reco product names
     std::vector<string> VertexProdNameVec;
 
-    VertexProdNameVec.push_back("nuvtx");
-    VertexProdNameVec.push_back("pandoraCosmdic");
+//     VertexProdNameVec.push_back("nuvtx");
+//     VertexProdNameVec.push_back("pandoraCosmdic");
     VertexProdNameVec.push_back("pandoraNu");
-    VertexProdNameVec.push_back("pmtrack");
+//     VertexProdNameVec.push_back("pmtrack");
 
     std::vector<string> SelectionNames;
 
@@ -515,7 +515,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
             int Size = treenc -> GetEntries();
             
-            if(Size > 20000) Size = 20000;
+//             if(Size > 20000) Size = 20000;
 //             Size = 200000;
             
             cout << "number of events used is: " << Size << endl;
@@ -564,14 +564,14 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                         float MCTrackLength = sqrt(pow(XMCTrackStart[track_no] - XMCTrackEnd[track_no],2) + pow(YMCTrackStart[track_no] - YMCTrackEnd[track_no],2) + pow(ZMCTrackStart[track_no] - ZMCTrackEnd[track_no],2));
 
                         // If the a muon is not contained in a singel neutrino event, set mc-track contained flag to false
-                        if( ( abs(PDG_truth[track_no]) == 13 && abs(PDG_truth[track_no]) == 11 ) // Track has to be a muon or a electron
+                        if( ( abs(PDG_truth[track_no]) == 13 || abs(PDG_truth[track_no]) == 11 ) // Track has to be a muon or a electron
 //                                 && flashtag
                                 && inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]) // true vertex has to be in FV
                                 && inFV(XMCTrackStart[track_no],YMCTrackStart[track_no],ZMCTrackStart[track_no]) // Track start has to be in FV
 //                                 && inFV(XMCTrackEnd[track_no],YMCTrackEnd[track_no],ZMCTrackEnd[track_no]) // Track end has to be in FV
                                 && sqrt(pow(XMCTrackStart[track_no] - nuvtxx_truth[vertex_no],2) + pow(YMCTrackStart[track_no] - nuvtxy_truth[vertex_no],2) + pow(ZMCTrackStart[track_no] - nuvtxz_truth[vertex_no],2)) < MCTrackToMCVtxDist // Track has to start at vertex
 //                                 && MCTrackLength > lengthcut // Track has to be long
-                                && MCTrackLength > MCTrackCandLength // If the current candidate length is shorter than the new length
+//                                 && MCTrackLength > MCTrackCandLength // If the current candidate length is shorter than the new length
                           )
                         {
                             // Fill new length and candidate index
