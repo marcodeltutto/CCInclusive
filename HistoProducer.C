@@ -246,7 +246,7 @@ void HistoProducer()
     int MCTrkID;
     int CCNCFlag[10];
     int PDGTruth[5000];
-    int MCTrkOrigin[5000][3];
+    short TrkOrigin[5000][3];
 
     float TrackTheta[5000];
     float TrackPhi[5000];
@@ -273,7 +273,7 @@ void HistoProducer()
         ChainVec.at(file_no) -> SetBranchAddress("MCTrackCand", &MCTrkID);
         ChainVec.at(file_no) -> SetBranchAddress("ccnc_truth", CCNCFlag);
         ChainVec.at(file_no) -> SetBranchAddress("pdg", PDGTruth);
-        ChainVec.at(file_no) -> SetBranchAddress("trkorigin_pandoraNu", MCTrkOrigin);
+        ChainVec.at(file_no) -> SetBranchAddress("trkorigin_pandoraNu", TrkOrigin);
 
         ChainVec.at(file_no) -> SetBranchAddress("trkke_pandoraNu", KineticEnergy);
         ChainVec.at(file_no) -> SetBranchAddress("trktheta_pandoraNu", TrackTheta);
@@ -318,7 +318,7 @@ void HistoProducer()
             SelYVtxPosition.at(file_no)->Fill(YVertexPosition[VtxID]);
             SelZVtxPosition.at(file_no)->Fill(ZVertexPosition[VtxID]);
             
-            if(file_no == 2 && MCTrkID > -1 && CCNCFlag[0] == 0 && MCTrkOrigin[TrkID][2] == 1)
+            if(file_no == 2 && MCTrkID > -1 && CCNCFlag[0] == 0 && TrkOrigin[TrkID][2] == 1)
             {
                 if(PDGTruth[MCTrkID] == -13)
                 {
@@ -355,7 +355,7 @@ void HistoProducer()
                     BgrZVtxPosition.at(1)->Fill(ZVertexPosition[VtxID]);
                 }
             }
-            else if(file_no == 2 && CCNCFlag[0] == 1 && MCTrkOrigin[TrkID][2] == 1)
+            else if(file_no == 2 && CCNCFlag[0] == 1 && TrkOrigin[TrkID][2] == 1)
             {
                 NCnu++;
                 BgrTrackRange.at(2)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
@@ -372,7 +372,7 @@ void HistoProducer()
                 BgrYVtxPosition.at(2)->Fill(YVertexPosition[VtxID]);
                 BgrZVtxPosition.at(2)->Fill(ZVertexPosition[VtxID]);
             }
-            else if(file_no == 2 && MCTrkOrigin[TrkID][2] == 2)
+            else if(file_no == 2 && TrkOrigin[TrkID][2] == 2)
             {
                 Cosmic++;
                 BgrTrackRange.at(3)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
@@ -391,7 +391,7 @@ void HistoProducer()
             }
             else if(file_no == 2)
             {
-                std::cout << MCTrkID << " " << MCTrkOrigin[TrkID][2] << " " << CCNCFlag[0] << std::endl;
+                std::cout << MCTrkID << " " << TrkOrigin[TrkID][2] << " " << CCNCFlag[0] << std::endl;
             }
         }
         std::cout << nubar << " " << nue << " " << NCnu << " " << Cosmic << std::endl;
