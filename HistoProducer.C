@@ -102,14 +102,14 @@ void HistoProducer()
     BgrLabel.push_back("Bgr Cosmic Events");
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
-    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
+//     ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
+//     ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
 //     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
 //     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
-    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
+//     ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
+//     ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
 //     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
 //     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
 
@@ -388,6 +388,10 @@ void HistoProducer()
                 BgrXVtxPosition.at(3)->Fill(XVertexPosition[VtxID]);
                 BgrYVtxPosition.at(3)->Fill(YVertexPosition[VtxID]);
                 BgrZVtxPosition.at(3)->Fill(ZVertexPosition[VtxID]);
+            }
+            else if(file_no == 2)
+            {
+                std::cout << MCTrkID << " " << MCTrkOrigin[TrkID][2] << " " << CCNCFlag[0] << std::endl;
             }
         }
         std::cout << nubar << " " << nue << " " << NCnu << " " << Cosmic << std::endl;
