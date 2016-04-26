@@ -48,28 +48,28 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
 //     string GeneratorName = "prodgenie_bnb_nu_cosmic";
 //     string GeneratorName = "prodgenie_bnb_nu";
-//     string GeneratorName = "prodcosmics_corsika_inTime";
+    string GeneratorName = "prodcosmics_corsika_inTime";
 //     string GeneratorName = "data_onbeam_bnb";
 //     string GeneratorName = "data_offbeam_bnbext";
-    string GeneratorName = "prodgenie_bnb_nu_cosmic_uboone";
+//     string GeneratorName = "prodgenie_bnb_nu_cosmic_uboone";
 
     // Initialize and fill track reco product names
     std::vector<string> TrackProdNameVec;
 
-    TrackProdNameVec.push_back("pandoraNuKHit");
-    TrackProdNameVec.push_back("pandoraCosmic");
+//     TrackProdNameVec.push_back("pandoraNuKHit");
+//     TrackProdNameVec.push_back("pandoraCosmic");
     TrackProdNameVec.push_back("pandoraNu");
-    TrackProdNameVec.push_back("pmtrack");
-    TrackProdNameVec.push_back("pandoraNuPMA");
-    TrackProdNameVec.push_back("trackkalmanhit");
+//     TrackProdNameVec.push_back("pmtrack");
+//     TrackProdNameVec.push_back("pandoraNuPMA");
+//     TrackProdNameVec.push_back("trackkalmanhit");
 
     // Initialize and fill vertex reco product names
     std::vector<string> VertexProdNameVec;
 
-    VertexProdNameVec.push_back("nuvtx");
-    VertexProdNameVec.push_back("pandoraCosmdic");
+//     VertexProdNameVec.push_back("nuvtx");
+//     VertexProdNameVec.push_back("pandoraCosmic");
     VertexProdNameVec.push_back("pandoraNu");
-    VertexProdNameVec.push_back("pmtrack");
+//     VertexProdNameVec.push_back("pmtrack");
 
     std::vector<string> SelectionNames;
 
@@ -116,11 +116,11 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
 
     TChain *treenc = new TChain("analysistree/anatree");
-//     treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
-    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/MC_BNB_Cosmic/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/MC_BNB_Cosmic/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 
     //maximum array sizes
     const int maxentries = 35000;
@@ -515,7 +515,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
             int Size = treenc -> GetEntries();
             
-            if(Size > 20000) Size = 20000;
+//             if(Size > 20000) Size = 20000;
 //             Size = 200000;
             
             cout << "number of events used is: " << Size << endl;
