@@ -81,7 +81,7 @@ void HistoProducer()
     DataLabel.push_back("On-Beam BNB");
     DataLabel.push_back("Off-Beam BNB ext");
 
-    TLegend* LegendMC = new TLegend(0.63,0.7,0.9,0.9);
+    TLegend* LegendMC = new TLegend(0.6,0.7,0.9,0.9);
 //     LegendMC->SetHeader("Data Type");
 
     MCLabel.push_back("On-Beam Minus Off-Beam Sample");
@@ -119,141 +119,141 @@ void HistoProducer()
 //     ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root");
     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root");
 
-    unsigned int BgrCount = 0;
     for(const auto& Label : GenLabel)
     {
         SelectionTrackRange.push_back(new TH1F(("Track Range"+Label).c_str(),"Track Range of Selected Track",20,0,1000));
         SelectionTrackRange.back()->SetStats(0);
-        SelectionTrackRange.back()->SetFillColor(ColorMap.at(BgrCount));
         SelectionTrackRange.back()->GetXaxis()->SetTitle("Track Range [cm]");
         SelectionTrackRange.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
 
-        SelectionTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"cos(#theta) of Selected Track",20,-1,1));
+        SelectionTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"cos#theta of Selected Track",20,-1,1));
         SelectionTheta.back()->SetStats(0);
-        SelectionTheta.back()->SetFillColor(ColorMap.at(BgrCount));
-        SelectionTheta.back()->GetXaxis()->SetTitle("cos(#theta) [ ]");
-        SelectionTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dcos(#theta)}");
+        SelectionTheta.back()->GetXaxis()->SetTitle("cos#theta [ ]");
+        SelectionTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d(cos#theta)}");
         SelectionTheta.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelectionPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle of Selected Track",20,-3.142,3.142));
         SelectionPhi.back()->SetStats(0);
-        SelectionPhi.back()->SetFillColor(ColorMap.at(BgrCount));
         SelectionPhi.back()->GetXaxis()->SetTitle("#phi angle [rad]");
         SelectionPhi.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#phi}");
         SelectionPhi.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelectionEnergy.push_back(new TH1F(("Energy"+Label).c_str(),"Energy of Selected Track",20,0,3000));
         SelectionEnergy.back()->SetStats(0);
-        SelectionEnergy.back()->SetFillColor(ColorMap.at(BgrCount));
         SelectionEnergy.back()->GetXaxis()->SetTitle("Muon Kinetic Energy [MeV]");
         SelectionEnergy.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dE}");
         SelectionEnergy.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelXTrackStartEnd.push_back(new TH1F(("XTrack"+Label).c_str(),"X Track Start & End Positions",20,0,256));
         SelXTrackStartEnd.back()->SetStats(0);
-        SelXTrackStartEnd.back()->SetFillColor(ColorMap.at(BgrCount));
         SelXTrackStartEnd.back()->GetXaxis()->SetTitle("x [cm]");
         SelXTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
         SelXTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelYTrackStartEnd.push_back(new TH1F(("YTrack"+Label).c_str(),"Y Track Start & End Positions",20,-233/2,233/2));
         SelYTrackStartEnd.back()->SetStats(0);
-        SelYTrackStartEnd.back()->SetFillColor(ColorMap.at(BgrCount));
         SelYTrackStartEnd.back()->GetXaxis()->SetTitle("y [cm]");
         SelYTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
         SelYTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelZTrackStartEnd.push_back(new TH1F(("ZTrack"+Label).c_str(),"Z Track Start & End Positions",20,0,1000));
         SelZTrackStartEnd.back()->SetStats(0);
-        SelZTrackStartEnd.back()->SetFillColor(ColorMap.at(BgrCount));
         SelZTrackStartEnd.back()->GetXaxis()->SetTitle("z [cm]");
         SelZTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dz}");
         SelZTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelXVtxPosition.push_back(new TH1F(("XVertex"+Label).c_str(),"X Vertex Position",20,0,256));
         SelXVtxPosition.back()->SetStats(0);
-        SelXVtxPosition.back()->SetFillColor(ColorMap.at(BgrCount));
         SelXVtxPosition.back()->GetXaxis()->SetTitle("x [cm]");
         SelXVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
         SelXVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelYVtxPosition.push_back(new TH1F(("YVertex"+Label).c_str(),"Y Vertex Position",20,-233/2,233/2));
         SelYVtxPosition.back()->SetStats(0);
-        SelYVtxPosition.back()->SetFillColor(ColorMap.at(BgrCount));
         SelYVtxPosition.back()->GetXaxis()->SetTitle("y [cm]");
         SelYVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
         SelYVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelZVtxPosition.push_back(new TH1F(("ZVertex"+Label).c_str(),"Z Vertex Position",20,0,1000));
         SelZVtxPosition.back()->SetStats(0);
-        SelZVtxPosition.back()->SetFillColor(ColorMap.at(BgrCount));
         SelZVtxPosition.back()->GetXaxis()->SetTitle("z [cm]");
         SelZVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dz}");
         SelZVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
-        
-        BgrCount++;
     }
 
+    unsigned int BgrCount = 0;
     for(const auto& Label : BgrLabel)
     {
         BgrTrackRange.push_back(new TH1F(("Track Range"+Label).c_str(),"Track Range of Selected Track",20,0,1000));
         BgrTrackRange.back()->SetStats(0);
+        BgrTrackRange.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrTrackRange.back()->GetXaxis()->SetTitle("Track Range [cm]");
         BgrTrackRange.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
 
-        BgrTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"cos(#theta) of Selected Track",20,-1,1));
+        BgrTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"cos#theta of Selected Track",20,-1,1));
         BgrTheta.back()->SetStats(0);
-        BgrTheta.back()->GetXaxis()->SetTitle("cos(#theta) [ ]");
-        BgrTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dcos(#theta)}");
+        BgrTheta.back()->SetFillColor(ColorMap.at(BgrCount));
+        BgrTheta.back()->GetXaxis()->SetTitle("cos#theta [ ]");
+        BgrTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d(cos#theta)}");
         BgrTheta.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle of Selected Track",20,-3.142,3.142));
         BgrPhi.back()->SetStats(0);
+        BgrPhi.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrPhi.back()->GetXaxis()->SetTitle("#phi angle [rad]");
         BgrPhi.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#phi}");
         BgrPhi.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrEnergy.push_back(new TH1F(("Energy"+Label).c_str(),"Energy of Selected Track",20,0,3000));
         BgrEnergy.back()->SetStats(0);
+        BgrEnergy.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrEnergy.back()->GetXaxis()->SetTitle("Muon Kinetic Energy [MeV]");
         BgrEnergy.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dE}");
         BgrEnergy.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrXTrackStartEnd.push_back(new TH1F(("XTrack"+Label).c_str(),"X Track Start & End Positions",20,0,256));
         BgrXTrackStartEnd.back()->SetStats(0);
+        BgrXTrackStartEnd.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrXTrackStartEnd.back()->GetXaxis()->SetTitle("x [cm]");
         BgrXTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
         BgrXTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrYTrackStartEnd.push_back(new TH1F(("YTrack"+Label).c_str(),"Y Track Start & End Positions",20,-233/2,233/2));
         BgrYTrackStartEnd.back()->SetStats(0);
+        BgrYTrackStartEnd.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrYTrackStartEnd.back()->GetXaxis()->SetTitle("y [cm]");
         BgrYTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
         BgrYTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrZTrackStartEnd.push_back(new TH1F(("ZTrack"+Label).c_str(),"Z Track Start & End Positions",20,0,1000));
         BgrZTrackStartEnd.back()->SetStats(0);
+        BgrZTrackStartEnd.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrZTrackStartEnd.back()->GetXaxis()->SetTitle("z [cm]");
         BgrZTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dz}");
         BgrZTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrXVtxPosition.push_back(new TH1F(("XVertex"+Label).c_str(),"X Vertex Position",20,0,256));
         BgrXVtxPosition.back()->SetStats(0);
+        BgrXVtxPosition.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrXVtxPosition.back()->GetXaxis()->SetTitle("x [cm]");
         BgrXVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
         BgrXVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrYVtxPosition.push_back(new TH1F(("YVertex"+Label).c_str(),"Y Vertex Position",20,-233/2,233/2));
         BgrYVtxPosition.back()->SetStats(0);
+        BgrYVtxPosition.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrYVtxPosition.back()->GetXaxis()->SetTitle("y [cm]");
         BgrYVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
         BgrYVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrZVtxPosition.push_back(new TH1F(("ZVertex"+Label).c_str(),"Z Vertex Position",20,0,1000));
         BgrZVtxPosition.back()->SetStats(0);
+        BgrZVtxPosition.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrZVtxPosition.back()->GetXaxis()->SetTitle("z [cm]");
         BgrZVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dz}");
         BgrZVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
+        
+        BgrCount++;
     }
 
     int TrkID;
@@ -583,7 +583,7 @@ void HistoProducer()
     LegendMC->AddEntry( SelectionTrackRange.at(1), (MCLabel.at(1)).c_str(),"f" );
     for(unsigned int bgrhist_no = 0; bgrhist_no < BgrLabel.size(); bgrhist_no++)
     {
-        LegendMC->AddEntry( BgrTrackRange.at(bgrhist_no), (BgrLabel.at(bgrhist_no)).c_str(),"l" );
+        LegendMC->AddEntry( BgrTrackRange.at(bgrhist_no), (BgrLabel.at(bgrhist_no)).c_str(),"f" );
     }
 
     TCanvas *Canvas11 = new TCanvas("OnBeam Minus OffBeam Track Range", "OnBeam Minus OffBeam Track Range", 1400, 1000);
@@ -592,10 +592,10 @@ void HistoProducer()
     SelectionTrackRange.at(1)->SetMinimum(0.0);
     SelectionTrackRange.at(1)->SetFillColorAlpha(46,0.5);
     SelectionTrackRange.at(1)->DrawNormalized("E2");
+    StackBgrTrackRange->Draw("SAME");
     SelectionTrackRange.at(0)->SetLineWidth(2);
     SelectionTrackRange.at(0)->SetLineColor(1);
     SelectionTrackRange.at(0)->DrawNormalized("SAME");
-    StackBgrTrackRange->Draw("SAME");
     LegendMC->Draw();
     Canvas11->SaveAs("On-OffBeamSelRange.png");
 
@@ -605,10 +605,10 @@ void HistoProducer()
     SelectionTheta.at(1)->SetMinimum(0.0);
     SelectionTheta.at(1)->SetFillColorAlpha(46,0.5);
     SelectionTheta.at(1)->DrawNormalized("E2");
+    StackBgrTheta->Draw("SAME");
     SelectionTheta.at(0)->SetLineWidth(2);
     SelectionTheta.at(0)->SetLineColor(1);
     SelectionTheta.at(0)->DrawNormalized("SAME");
-    StackBgrTheta->Draw("SAME");
     LegendMC->Draw();
     Canvas12->SaveAs("On-OffBeamSelTheta.png");
 
@@ -618,10 +618,10 @@ void HistoProducer()
     SelectionPhi.at(1)->SetMinimum(0.0);
     SelectionPhi.at(1)->SetFillColorAlpha(46,0.5);
     SelectionPhi.at(1)->DrawNormalized("E2");
+    StackBgrPhi->Draw("SAME");
     SelectionPhi.at(0)->SetLineWidth(2);
     SelectionPhi.at(0)->SetLineColor(1);
     SelectionPhi.at(0)->DrawNormalized("SAME");
-    StackBgrPhi->Draw("SAME");
     LegendMC->Draw();
     Canvas13->SaveAs("On-OffBeamSelPhi.png");
 
@@ -631,10 +631,10 @@ void HistoProducer()
     SelectionEnergy.at(1)->SetMinimum(0.0);
     SelectionEnergy.at(1)->SetFillColorAlpha(46,0.5);
     SelectionEnergy.at(1)->DrawNormalized("E2");
-    SelectionEnergy.at(0)->SetLineWidth(2);
+   StackBgrEnergy->Draw("SAME");
+     SelectionEnergy.at(0)->SetLineWidth(2);
     SelectionEnergy.at(0)->SetLineColor(1);
     SelectionEnergy.at(0)->DrawNormalized("SAME");
-    StackBgrEnergy->Draw("SAME");
     LegendMC->Draw();
     Canvas14->SaveAs("On-OffBeamSelEnergy.png");
 
@@ -644,10 +644,10 @@ void HistoProducer()
     SelXTrackStartEnd.at(1)->SetMinimum(0.0);
     SelXTrackStartEnd.at(1)->SetFillColorAlpha(46,0.5);
     SelXTrackStartEnd.at(1)->DrawNormalized("E2");
+    StackBgrXTrackStartEnd->Draw("SAME");
     SelXTrackStartEnd.at(0)->SetLineWidth(2);
     SelXTrackStartEnd.at(0)->SetLineColor(1);
     SelXTrackStartEnd.at(0)->DrawNormalized("SAME");
-    StackBgrXTrackStartEnd->Draw("SAME");
     LegendMC->Draw();
     Canvas15->SaveAs("On-OffBeamSelXTrack.png");
 
@@ -657,10 +657,10 @@ void HistoProducer()
     SelYTrackStartEnd.at(1)->SetMinimum(0.0);
     SelYTrackStartEnd.at(1)->SetFillColorAlpha(46,0.5);
     SelYTrackStartEnd.at(1)->DrawNormalized("E2");
+    StackBgrYTrackStartEnd->Draw("SAME");
     SelYTrackStartEnd.at(0)->SetLineWidth(2);
     SelYTrackStartEnd.at(0)->SetLineColor(1);
     SelYTrackStartEnd.at(0)->DrawNormalized("SAME");
-    StackBgrYTrackStartEnd->Draw("SAME");
     LegendMC->Draw();
     Canvas16->SaveAs("On-OffBeamSelYTrack.png");
 
@@ -670,10 +670,10 @@ void HistoProducer()
     SelZTrackStartEnd.at(1)->SetMinimum(0.0);
     SelZTrackStartEnd.at(1)->SetFillColorAlpha(46,0.5);
     SelZTrackStartEnd.at(1)->DrawNormalized("E2");
+    StackBgrZTrackStartEnd->Draw("SAME");
     SelZTrackStartEnd.at(0)->SetLineWidth(2);
     SelZTrackStartEnd.at(0)->SetLineColor(1);
     SelZTrackStartEnd.at(0)->DrawNormalized("SAME");
-    StackBgrZTrackStartEnd->Draw("SAME");
     LegendMC->Draw();
     Canvas17->SaveAs("On-OffBeamSelZTrack.png");
 
@@ -683,10 +683,10 @@ void HistoProducer()
     SelXVtxPosition.at(1)->SetMinimum(0.0);
     SelXVtxPosition.at(1)->SetFillColorAlpha(46,0.5);
     SelXVtxPosition.at(1)->DrawNormalized("E2");
+    StackBgrXVtxPosition->Draw("SAME");
     SelXVtxPosition.at(0)->SetLineWidth(2);
     SelXVtxPosition.at(0)->SetLineColor(1);
     SelXVtxPosition.at(0)->DrawNormalized("SAME");
-    StackBgrXVtxPosition->Draw("SAME");
     LegendMC->Draw();
     Canvas18->SaveAs("On-OffBeamSelXVertex.png");
 
@@ -696,10 +696,10 @@ void HistoProducer()
     SelYVtxPosition.at(1)->SetMinimum(0.0);
     SelYVtxPosition.at(1)->SetFillColorAlpha(46,0.5);
     SelYVtxPosition.at(1)->DrawNormalized("E2");
+    StackBgrYVtxPosition->Draw("SAME");
     SelYVtxPosition.at(0)->SetLineWidth(2);
     SelYVtxPosition.at(0)->SetLineColor(1);
     SelYVtxPosition.at(0)->DrawNormalized("SAME");
-    StackBgrYVtxPosition->Draw("SAME");
     LegendMC->Draw();
     Canvas19->SaveAs("On-OffBeamSelYVertex.png");
 
@@ -709,16 +709,12 @@ void HistoProducer()
     SelZVtxPosition.at(1)->SetMinimum(0.0);
     SelZVtxPosition.at(1)->SetFillColorAlpha(46,0.5);
     SelZVtxPosition.at(1)->DrawNormalized("E2");
+    StackBgrZVtxPosition->Draw("SAME");
     SelZVtxPosition.at(0)->SetLineWidth(2);
     SelZVtxPosition.at(0)->SetLineColor(1);
     SelZVtxPosition.at(0)->DrawNormalized("SAME");
-    StackBgrZVtxPosition->Draw("SAME");
     LegendMC->Draw();
     Canvas20->SaveAs("On-OffBeamSelZVertex.png");
-    
-    TCanvas *Canvas21 = new TCanvas("Bgr Z Vertex Postion", "Bgr Z Vertex Postion", 1400, 1000);
-    StackBgrZVtxPosition->Draw();
-    
 }
 
 float GetMaximum(const std::vector<TH1F*>& HistVector)
