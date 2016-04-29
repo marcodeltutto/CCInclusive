@@ -41,6 +41,7 @@ void HistoProducer()
     std::vector<TH1F*> SelectionTrackRange;
     std::vector<TH1F*> SelectionEnergy;
     std::vector<TH1F*> SelectionTheta;
+    std::vector<TH1F*> SelectionCosTheta;
     std::vector<TH1F*> SelectionPhi;
 
     std::vector<TH1F*> SelXTrackStartEnd;
@@ -54,6 +55,7 @@ void HistoProducer()
     std::vector<TH1F*> BgrTrackRange;
     std::vector<TH1F*> BgrEnergy;
     std::vector<TH1F*> BgrTheta;
+    std::vector<TH1F*> BgrCosTheta;
     std::vector<TH1F*> BgrPhi;
 
     std::vector<TH1F*> BgrXTrackStartEnd;
@@ -63,10 +65,13 @@ void HistoProducer()
     std::vector<TH1F*> BgrXVtxPosition;
     std::vector<TH1F*> BgrYVtxPosition;
     std::vector<TH1F*> BgrZVtxPosition;
+    
+    TF1* SinTheta = new TF1("const","sin(x)",0,3.142);
 
     THStack* StackBgrTrackRange = new THStack("Bgr Track Range","Bgr Track Range");
     THStack* StackBgrEnergy = new THStack("Bgr Energy","Bgr Energy");
     THStack* StackBgrTheta = new THStack("Bgr Theta","Bgr Theta");
+    THStack* StackBgrCosTheta = new THStack("Bgr Theta","Bgr Theta");
     THStack* StackBgrPhi = new THStack("Bgr Phi","Bgr Phi");
     THStack* StackBgrXTrackStartEnd = new THStack("Bgr X Start","Bgr X Start");
     THStack* StackBgrYTrackStartEnd = new THStack("Bgr Y Start","Bgr Y Start");
@@ -81,7 +86,7 @@ void HistoProducer()
     DataLabel.push_back("On-Beam BNB");
     DataLabel.push_back("Off-Beam BNB ext");
 
-    TLegend* LegendMC = new TLegend(0.6,0.7,0.9,0.9);
+    TLegend* LegendMC = new TLegend(0.6,0.72,0.9,0.9);
 //     LegendMC->SetHeader("Data Type");
 
     MCLabel.push_back("On-Beam Minus Off-Beam Sample");
@@ -96,28 +101,28 @@ void HistoProducer()
 //     GenLabel.push_back("MC Prodgenie BNB Nu");
 //     GenLabel.push_back("MC Prodcosmic Corsika in-Time");
 
-    BgrLabel.push_back("Bgr #bar{#nu}_{#mu} Events MC");
-    BgrLabel.push_back("Bgr #nu_{e} Events MC");
-    BgrLabel.push_back("Bgr NC Events MC");
-    BgrLabel.push_back("Bgr Cosmic Events MC");
+    BgrLabel.push_back("Bgr #bar{#nu}_{#mu} Events MC BNB+Cosmic");
+    BgrLabel.push_back("Bgr #nu_{e} Events MC BNB+Cosmic");
+    BgrLabel.push_back("Bgr NC Events MC BNB+Cosmic");
+    BgrLabel.push_back("Bgr Cosmic Events MC BNB+Cosmic");
     
     std::vector<unsigned int> ColorMap = {28,42,30,38};
 
     ChainVec.push_back(new TChain("anatree"));
-//     ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
-//     ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
-    ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
-    ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
+    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
+    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
+//     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
+//     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
 
     ChainVec.push_back(new TChain("anatree"));
-//     ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
-//     ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
-    ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
-    ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
+    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
+    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
+//     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
+//     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
 
     ChainVec.push_back(new TChain("anatree"));
-//     ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root");
-    ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root");
+    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root");
+//     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root");
 
     for(const auto& Label : GenLabel)
     {
@@ -126,11 +131,17 @@ void HistoProducer()
         SelectionTrackRange.back()->GetXaxis()->SetTitle("Track Range [cm]");
         SelectionTrackRange.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
 
-        SelectionTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"cos#theta of Selected Track",20,-1,1));
+        SelectionTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"#theta-Angle of Selected Track",20,0,3.142));
         SelectionTheta.back()->SetStats(0);
-        SelectionTheta.back()->GetXaxis()->SetTitle("cos#theta [ ]");
-        SelectionTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d(cos#theta)}");
+        SelectionTheta.back()->GetXaxis()->SetTitle("#theta [rad]");
+        SelectionTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#theta}");
         SelectionTheta.back()->GetYaxis()->SetTitleOffset(1.3);
+        
+        SelectionCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"cos#theta of Selected Track",20,-1,1));
+        SelectionCosTheta.back()->SetStats(0);
+        SelectionCosTheta.back()->GetXaxis()->SetTitle("cos#theta [ ]");
+        SelectionCosTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d(cos#theta)}");
+        SelectionCosTheta.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelectionPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle of Selected Track",20,-3.142,3.142));
         SelectionPhi.back()->SetStats(0);
@@ -190,12 +201,19 @@ void HistoProducer()
         BgrTrackRange.back()->GetXaxis()->SetTitle("Track Range [cm]");
         BgrTrackRange.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
 
-        BgrTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"cos#theta of Selected Track",20,-1,1));
+        BgrTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"#theta of Selected Track",20,0,3.142));
         BgrTheta.back()->SetStats(0);
         BgrTheta.back()->SetFillColor(ColorMap.at(BgrCount));
-        BgrTheta.back()->GetXaxis()->SetTitle("cos#theta [ ]");
-        BgrTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d(cos#theta)}");
+        BgrTheta.back()->GetXaxis()->SetTitle("#theta [rad]");
+        BgrTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#theta}");
         BgrTheta.back()->GetYaxis()->SetTitleOffset(1.3);
+        
+        BgrCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"cos#theta of Selected Track",20,-1,1));
+        BgrCosTheta.back()->SetStats(0);
+        BgrCosTheta.back()->SetFillColor(ColorMap.at(BgrCount));
+        BgrCosTheta.back()->GetXaxis()->SetTitle("cos#theta [ ]");
+        BgrCosTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d(cos#theta)}");
+        BgrCosTheta.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle of Selected Track",20,-3.142,3.142));
         BgrPhi.back()->SetStats(0);
@@ -319,7 +337,8 @@ void HistoProducer()
             ChainVec.at(file_no)->GetEntry(tree_index);
 
             SelectionTrackRange.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-            SelectionTheta.at(file_no)->Fill(cos(TrackTheta[TrkID]));
+            SelectionTheta.at(file_no)->Fill(TrackTheta[TrkID]);
+            SelectionCosTheta.at(file_no)->Fill(cos(TrackTheta[TrkID]));
             SelectionPhi.at(file_no)->Fill(TrackPhi[TrkID]);
             SelectionEnergy.at(file_no)->Fill(KineticEnergy[TrkID][2]);
 
@@ -340,7 +359,8 @@ void HistoProducer()
                 {
                     nubar++;
                     BgrTrackRange.at(0)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                    BgrTheta.at(0)->Fill(cos(TrackTheta[TrkID]));
+                    BgrTheta.at(0)->Fill(TrackTheta[TrkID]);
+                    BgrCosTheta.at(0)->Fill(cos(TrackTheta[TrkID]));
                     BgrPhi.at(0)->Fill(TrackPhi[TrkID]);
                     BgrEnergy.at(0)->Fill(KineticEnergy[TrkID][2]);
                     BgrXTrackStartEnd.at(0)->Fill(XTrackStart[TrkID]);
@@ -357,7 +377,8 @@ void HistoProducer()
                 {
                     nue++;
                     BgrTrackRange.at(1)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                    BgrTheta.at(1)->Fill(cos(TrackTheta[TrkID]));
+                    BgrTheta.at(1)->Fill(TrackTheta[TrkID]);
+                    BgrCosTheta.at(1)->Fill(cos(TrackTheta[TrkID]));
                     BgrPhi.at(1)->Fill(TrackPhi[TrkID]);
                     BgrEnergy.at(1)->Fill(KineticEnergy[TrkID][2]);
                     BgrXTrackStartEnd.at(1)->Fill(XTrackStart[TrkID]);
@@ -375,7 +396,8 @@ void HistoProducer()
             {
                 NCnu++;
                 BgrTrackRange.at(2)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                BgrTheta.at(2)->Fill(cos(TrackTheta[TrkID]));
+                BgrTheta.at(2)->Fill(TrackTheta[TrkID]);
+                BgrCosTheta.at(2)->Fill(cos(TrackTheta[TrkID]));
                 BgrPhi.at(2)->Fill(TrackPhi[TrkID]);
                 BgrEnergy.at(2)->Fill(KineticEnergy[TrkID][2]);
                 BgrXTrackStartEnd.at(2)->Fill(XTrackStart[TrkID]);
@@ -392,7 +414,8 @@ void HistoProducer()
             {
                 Cosmic++;
                 BgrTrackRange.at(3)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                BgrTheta.at(3)->Fill(cos(TrackTheta[TrkID]));
+                BgrTheta.at(3)->Fill(TrackTheta[TrkID]);
+                BgrCosTheta.at(3)->Fill(cos(TrackTheta[TrkID]));
                 BgrPhi.at(3)->Fill(TrackPhi[TrkID]);
                 BgrEnergy.at(3)->Fill(KineticEnergy[TrkID][2]);
                 BgrXTrackStartEnd.at(3)->Fill(XTrackStart[TrkID]);
@@ -416,6 +439,7 @@ void HistoProducer()
     {
         BgrTrackRange.at(bgrhist_no)->Scale(1/SelectionTrackRange.at(2)->Integral());
         BgrTheta.at(bgrhist_no)->Scale(1/SelectionTheta.at(2)->Integral());
+        BgrCosTheta.at(bgrhist_no)->Scale(1/SelectionCosTheta.at(2)->Integral());
         BgrPhi.at(bgrhist_no)->Scale(1/SelectionPhi.at(2)->Integral());
         BgrEnergy.at(bgrhist_no)->Scale(1/SelectionEnergy.at(2)->Integral());
         BgrXTrackStartEnd.at(bgrhist_no)->Scale(1/SelXTrackStartEnd.at(2)->Integral());
@@ -425,19 +449,9 @@ void HistoProducer()
         BgrYVtxPosition.at(bgrhist_no)->Scale(1/SelYVtxPosition.at(2)->Integral());
         BgrZVtxPosition.at(bgrhist_no)->Scale(1/SelZVtxPosition.at(2)->Integral());
 
-//         BgrTrackRange.at(bgrhist_no)->SetLineColor(bgrhist_no+1);
-//         BgrTheta.at(bgrhist_no)->SetLineColor(bgrhist_no+1);
-//         BgrPhi.at(bgrhist_no)->SetLineColor(bgrhist_no+1);
-//         BgrEnergy.at(bgrhist_no)->SetLineColor(bgrhist_no+1);
-//         BgrXTrackStartEnd.at(bgrhist_no)->SetLineColor(bgrhist_no+1);
-//         BgrYTrackStartEnd.at(bgrhist_no)->SetLineColor(bgrhist_no+1);
-//         BgrZTrackStartEnd.at(bgrhist_no)->SetLineColor(bgrhist_no+1);
-//         BgrXVtxPosition.at(bgrhist_no)->SetLineColor(bgrhist_no+1);
-//         BgrYVtxPosition.at(bgrhist_no)->SetLineColor(bgrhist_no+1);
-//         BgrZVtxPosition.at(bgrhist_no)->SetLineColor(bgrhist_no+1);
-        
         StackBgrTrackRange->Add(BgrTrackRange.at(bgrhist_no));
         StackBgrTheta->Add(BgrTheta.at(bgrhist_no));
+        StackBgrCosTheta->Add(BgrCosTheta.at(bgrhist_no));
         StackBgrPhi->Add(BgrPhi.at(bgrhist_no));
         StackBgrEnergy->Add(BgrEnergy.at(bgrhist_no));
         StackBgrXTrackStartEnd->Add(BgrXTrackStartEnd.at(bgrhist_no));
@@ -452,6 +466,7 @@ void HistoProducer()
     {
         SelectionTrackRange.at(file_no)->Sumw2();
         SelectionTheta.at(file_no)->Sumw2();
+        SelectionCosTheta.at(file_no)->Sumw2();
         SelectionPhi.at(file_no)->Sumw2();
         SelectionEnergy.at(file_no)->Sumw2();
         SelXTrackStartEnd.at(file_no)->Sumw2();
@@ -463,6 +478,7 @@ void HistoProducer()
 
         SelectionTrackRange.at(file_no)->Scale(ScalingFactors.at(file_no));
         SelectionTheta.at(file_no)->Scale(ScalingFactors.at(file_no));
+        SelectionCosTheta.at(file_no)->Scale(ScalingFactors.at(file_no));
         SelectionPhi.at(file_no)->Scale(ScalingFactors.at(file_no));
         SelectionEnergy.at(file_no)->Scale(ScalingFactors.at(file_no));
         SelXTrackStartEnd.at(file_no)->Scale(ScalingFactors.at(file_no));
@@ -495,6 +511,15 @@ void HistoProducer()
     SelectionTheta.at(1)->Draw("SAME");
     LegendData->Draw();
     Canvas2->SaveAs("DataSelTheta.png");
+    
+    TCanvas *Canvas2a = new TCanvas("Cos Theta-Angle of Selected Track", "Cos Theta-Angle of Selected Track", 1400, 1000);
+    Canvas2a->cd();
+    SelectionCosTheta.at(0)->SetMaximum(0.55*GetMaximum(SelectionCosTheta));
+    SelectionCosTheta.at(0)->Draw();
+    SelectionCosTheta.at(1)->SetLineColor(2);
+    SelectionCosTheta.at(1)->Draw("SAME");
+    LegendData->Draw();
+    Canvas2a->SaveAs("DataSelCosTheta.png");
 
     TCanvas *Canvas3 = new TCanvas("Phi-Angle of Selected Track", "Phi-Angle of Selected Track", 1400, 1000);
     Canvas3->cd();
@@ -570,6 +595,7 @@ void HistoProducer()
 
     AddFirstTwoHistograms(SelectionTrackRange,-1.);
     AddFirstTwoHistograms(SelectionTheta,-1.);
+    AddFirstTwoHistograms(SelectionCosTheta,-1.);
     AddFirstTwoHistograms(SelectionPhi,-1.);
     AddFirstTwoHistograms(SelectionEnergy,-1);
     AddFirstTwoHistograms(SelXTrackStartEnd,-1);
@@ -611,6 +637,33 @@ void HistoProducer()
     SelectionTheta.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas12->SaveAs("On-OffBeamSelTheta.png");
+    
+    for(auto& ThetaHistogram : SelectionTheta)
+    {
+        ThetaHistogram->Divide(SinTheta,1.);
+    }
+    
+    for(auto& BgrThetaHist :BgrTheta)
+    {
+        BgrThetaHist->Divide(SinTheta,1.);
+    }
+    SelectionTheta.at(1)->GetYaxis()->SetTitle("Weighted #frac{dn}{d#Omega}");
+    Canvas12->Modified();
+    Canvas12->Update();
+    Canvas12->SaveAs("On-OffBeamSelThetaOmega.png");
+    
+    TCanvas *Canvas12a = new TCanvas("OnBeam Minus OffBeam Cos Theta-Angle", "OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000);
+    Canvas12a->cd();
+    SelectionCosTheta.at(1)->SetMaximum(1.5*SelectionCosTheta.at(1)->GetBinContent(SelectionCosTheta.at(1)->GetMaximumBin()));
+    SelectionCosTheta.at(1)->SetMinimum(0.0);
+    SelectionCosTheta.at(1)->SetFillColorAlpha(46,0.5);
+    SelectionCosTheta.at(1)->DrawNormalized("E2");
+    StackBgrCosTheta->Draw("SAME");
+    SelectionCosTheta.at(0)->SetLineWidth(2);
+    SelectionCosTheta.at(0)->SetLineColor(1);
+    SelectionCosTheta.at(0)->DrawNormalized("SAME");
+    LegendMC->Draw();
+    Canvas12a->SaveAs("On-OffBeamSelCosTheta.png");
 
     TCanvas *Canvas13 = new TCanvas("OnBeam Minus OffBeam Phi-Angle", "OnBeam Minus OffBeam Phi-Angle", 1400, 1000);
     Canvas13->cd();
