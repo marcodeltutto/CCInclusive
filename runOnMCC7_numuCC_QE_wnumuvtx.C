@@ -49,7 +49,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 //     string GeneratorName = "prodgenie_bnb_nu_cosmic";
 //     string GeneratorName = "prodgenie_bnb_nu";
 //     string GeneratorName = "prodcosmics_corsika_inTime";
-//     string GeneratorName = "data_onbeam_bnb";
+    string GeneratorName = "data_onbeam_bnb";
 //     string GeneratorName = "data_offbeam_bnbext";
 //     string GeneratorName = "prodgenie_bnb_nu_cosmic_uboone";
 
