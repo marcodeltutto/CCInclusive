@@ -48,7 +48,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
 //     string GeneratorName = "prodgenie_bnb_nu_cosmic";
 //     string GeneratorName = "prodgenie_bnb_nu";
-    string GeneratorName = "prodcosmics_corsika_inTime";
+//     string GeneratorName = "prodcosmics_corsika_inTime";
 //     string GeneratorName = "data_onbeam_bnb";
 //     string GeneratorName = "data_offbeam_bnbext";
 //     string GeneratorName = "prodgenie_bnb_nu_cosmic_uboone";
@@ -56,20 +56,20 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     // Initialize and fill track reco product names
     std::vector<string> TrackProdNameVec;
 
-    TrackProdNameVec.push_back("pandoraNuKHit");
+//     TrackProdNameVec.push_back("pandoraNuKHit");
     TrackProdNameVec.push_back("pandoraCosmic");
-    TrackProdNameVec.push_back("pandoraNu");
-    TrackProdNameVec.push_back("pmtrack");
-    TrackProdNameVec.push_back("pandoraNuPMA");
-    TrackProdNameVec.push_back("trackkalmanhit");
+//     TrackProdNameVec.push_back("pandoraNu");
+//     TrackProdNameVec.push_back("pmtrack");
+//     TrackProdNameVec.push_back("pandoraNuPMA");
+//     TrackProdNameVec.push_back("trackkalmanhit");
 
     // Initialize and fill vertex reco product names
     std::vector<string> VertexProdNameVec;
 
     VertexProdNameVec.push_back("nuvtx");
-    VertexProdNameVec.push_back("pandoraCosmic");
-    VertexProdNameVec.push_back("pandoraNu");
-    VertexProdNameVec.push_back("pmtrack");
+//     VertexProdNameVec.push_back("pandoraCosmic");
+//     VertexProdNameVec.push_back("pandoraNu");
+//     VertexProdNameVec.push_back("pmtrack");
 
     std::vector<string> SelectionNames;
 
@@ -116,9 +116,9 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
 
     TChain *treenc = new TChain("analysistree/anatree");
-    treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+//     treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
-//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/MC_BNB_Cosmic/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 
@@ -516,7 +516,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             int Size = treenc -> GetEntries();
             
 //             if(Size > 20000) Size = 20000;
-//             Size = 200000;
+            Size = 300000;
             
             cout << "number of events used is: " << Size << endl;
             //Event Loop
@@ -600,12 +600,6 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
                         // Increase events with flash > 50 PE and within beam window
                         EventsWithFlash++;
-
-                        // Loop over all reconstructed tracks
-//                     for(int j = 0; j < ntracks_reco; j++)
-//                     {
-
-//                     } // reco track loop
 
                         // Initialize Track Candidate properties
                         TrackCandidate = -1;
@@ -765,9 +759,6 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                                         hSelZVtxPosition->Fill(vtxz[VertexCandidate]);
 
                                         SelectionTree -> Fill();
-//                                         BrMCTrackCand->Fill();
-//                                         BrTrackCand -> Fill();
-//                                         BrVtxCand -> Fill();
 
                                         double TrkStartMCStartDist = sqrt(pow(XMCTrackStart[MCTrackCandidate] - trkstartx[TrackCandidate],2) + pow(YMCTrackStart[MCTrackCandidate] - trkstarty[TrackCandidate],2) + pow(ZMCTrackStart[MCTrackCandidate] - trkstartz[TrackCandidate],2));
                                         double TrkEndMCEndDist = sqrt(pow(XMCTrackEnd[MCTrackCandidate] - trkendx[TrackCandidate],2) + pow(YMCTrackEnd[MCTrackCandidate] - trkendy[TrackCandidate],2) + pow(ZMCTrackEnd[MCTrackCandidate] - trkendz[TrackCandidate],2));
