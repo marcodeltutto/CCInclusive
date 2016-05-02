@@ -66,9 +66,9 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
     // Initialize and fill vertex reco product names
     std::vector<string> VertexProdNameVec;
 
-    VertexProdNameVec.push_back("nuvtx");
+//     VertexProdNameVec.push_back("nuvtx");
 //     VertexProdNameVec.push_back("pandoraCosmic");
-//     VertexProdNameVec.push_back("pandoraNu");
+    VertexProdNameVec.push_back("pandoraNu");
 //     VertexProdNameVec.push_back("pmtrack");
 
     std::vector<string> SelectionNames;

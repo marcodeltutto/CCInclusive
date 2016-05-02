@@ -10,6 +10,7 @@
 #include <TCanvas.h>
 #include <TFile.h>
 #include <TH1.h>
+#include <TH2.h>
 #include <THStack.h>
 #include <TF1.h>
 #include <TLegend.h>
@@ -21,7 +22,9 @@ double beammax = 5.15-0.36; //us. Beam window end
 
 float GetMaximum(const std::vector<TH1F*>& HistVector);
 void AddFirstTwoHistograms(std::vector<TH1F*>& HistVector, float Weight);
+void AddFirstTwoHistograms2D(std::vector<TH2F*>& HistVector, float Weight);
 float CalcLength(const float& x_1, const float& y_1, const float& z_1, const float& x_2, const float& y_2, const float& z_2);
+double FlashTrackDist(double flash, double start, double end);
 
 void HistoProducer()
 {
@@ -65,7 +68,26 @@ void HistoProducer()
     std::vector<TH1F*> BgrXVtxPosition;
     std::vector<TH1F*> BgrYVtxPosition;
     std::vector<TH1F*> BgrZVtxPosition;
-    
+
+    std::vector<TH2F*> PhiVsTheta;
+    std::vector<TH2F*> PhiVsYPos;
+    std::vector<TH2F*> XPosVsYPos;
+    std::vector<TH2F*> RangeVsPE;
+    std::vector<TH2F*> RangeVsYPos;
+    std::vector<TH2F*> PhiVsFlashTrackDist;
+
+//     std::string TrackProdName="pandoraNuKHit";
+//     std::string TrackProdName = "pandoraCosmic";
+    std::string TrackProdName="pandoraNu";
+//     std::string TrackProdName="pmtrack";
+//     std::string TrackProdName="pandoraNuPMA";
+//     std::string TrackProdName="trackkalmanhit";
+
+//     std::string  VertexProdName="nuvtx";
+//     std::string VertexProdName="pandoraCosmic";
+    std::string VertexProdName = "pandoraNu";
+//     std::string VertexProdName = "pmtrack";
+
     TF1* SinTheta = new TF1("const","sin(x)",0,3.142);
 
     THStack* StackBgrTrackRange = new THStack("Bgr Track Range","Bgr Track Range");
@@ -105,24 +127,24 @@ void HistoProducer()
     BgrLabel.push_back("Bgr #nu_{e} Events MC BNB+Cosmic");
     BgrLabel.push_back("Bgr NC Events MC BNB+Cosmic");
     BgrLabel.push_back("Bgr Cosmic Events MC BNB+Cosmic");
-    
+
     std::vector<unsigned int> ColorMap = {28,42,30,38};
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
-    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
-//     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_1.root");
-//     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_onbeam_bnb_v05_08_00_2.root");
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2.root").c_str());
+//     ChainVec.back() -> Add(("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1.root").c_str());
+//     ChainVec.back() -> Add(("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2.root").c_str());
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
-    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
-//     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_1.root");
-//     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_data_offbeam_bnbext_v05_08_00_2.root");
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2.root").c_str());
+//     ChainVec.back() -> Add(("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1.root").c_str());
+//     ChainVec.back() -> Add(("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2.root").c_str());
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add("/lheppc46/data/uBData/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root");
-//     ChainVec.back() -> Add("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_pandoraNu_Vertex_pandoraNu_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root");
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str());
+//     ChainVec.back() -> Add(("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str());
 
     for(const auto& Label : GenLabel)
     {
@@ -136,7 +158,7 @@ void HistoProducer()
         SelectionTheta.back()->GetXaxis()->SetTitle("#theta [rad]");
         SelectionTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#theta}");
         SelectionTheta.back()->GetYaxis()->SetTitleOffset(1.3);
-        
+
         SelectionCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"cos#theta of Selected Track",20,-1,1));
         SelectionCosTheta.back()->SetStats(0);
         SelectionCosTheta.back()->GetXaxis()->SetTitle("cos#theta [ ]");
@@ -190,6 +212,36 @@ void HistoProducer()
         SelZVtxPosition.back()->GetXaxis()->SetTitle("z [cm]");
         SelZVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dz}");
         SelZVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
+
+        PhiVsTheta.push_back(new TH2F(("PhiVsTheta"+Label).c_str(),"Phi Vs. Theta",10,-3.142,3.142,10,0,3.142));
+        PhiVsTheta.back()->SetStats(0);
+        PhiVsTheta.back()->GetXaxis()->SetTitle("#phi [rad]");
+        PhiVsTheta.back()->GetYaxis()->SetTitle("#theta [rad]");
+
+        PhiVsYPos.push_back(new TH2F(("PhiVsYPos"+Label).c_str(),"Phi Vs. Y-Position",10,-3.142,3.142,10,-233/2,233/2));
+        PhiVsYPos.back()->SetStats(0);
+        PhiVsYPos.back()->GetXaxis()->SetTitle("#phi [rad]");
+        PhiVsYPos.back()->GetYaxis()->SetTitle("y [cm]");
+
+        XPosVsYPos.push_back(new TH2F(("XPosVsYPos"+Label).c_str(),"X-Position Vs. Y-Position",20,0,256,20,-233/2,233/2));
+        XPosVsYPos.back()->SetStats(0);
+        XPosVsYPos.back()->GetXaxis()->SetTitle("x [cm]");
+        XPosVsYPos.back()->GetYaxis()->SetTitle("y [cm]");
+
+        RangeVsPE.push_back(new TH2F(("RangeVsPE"+Label).c_str(),"Track Range Vs. PE",10,0,700,10,50,500));
+        RangeVsPE.back()->SetStats(0);
+        RangeVsPE.back()->GetXaxis()->SetTitle("Track Range [cm]");
+        RangeVsPE.back()->GetYaxis()->SetTitle("# PE [ ]");
+
+        RangeVsYPos.push_back(new TH2F(("RangeVsYPos"+Label).c_str(),"Y-Position Vs. Track Range",10,0,700,10,-233/2,233/2));
+        RangeVsYPos.back()->SetStats(0);
+        RangeVsYPos.back()->GetXaxis()->SetTitle("Track Range [cm]");
+        RangeVsYPos.back()->GetYaxis()->SetTitle("y [cm]");
+        
+        PhiVsFlashTrackDist.push_back(new TH2F(("PhiVsFlashTrackDist"+Label).c_str(),"Phi angle Vs. Track to Flash Distance",10,-3.142,3.142,10,0,80));
+        PhiVsFlashTrackDist.back()->SetStats(0);
+        PhiVsFlashTrackDist.back()->GetXaxis()->SetTitle("#phi angle [rad]");
+        PhiVsFlashTrackDist.back()->GetYaxis()->SetTitle("Track to Flash Distance [cm]");
     }
 
     unsigned int BgrCount = 0;
@@ -207,7 +259,7 @@ void HistoProducer()
         BgrTheta.back()->GetXaxis()->SetTitle("#theta [rad]");
         BgrTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#theta}");
         BgrTheta.back()->GetYaxis()->SetTitleOffset(1.3);
-        
+
         BgrCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"cos#theta of Selected Track",20,-1,1));
         BgrCosTheta.back()->SetStats(0);
         BgrCosTheta.back()->SetFillColor(ColorMap.at(BgrCount));
@@ -270,12 +322,17 @@ void HistoProducer()
         BgrZVtxPosition.back()->GetXaxis()->SetTitle("z [cm]");
         BgrZVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dz}");
         BgrZVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
-        
+
         BgrCount++;
     }
 
     int TrkID;
     int VtxID;
+
+    float FlashPE[5000];
+    int NumberOfFlashes;
+    float FlashTime[5000];
+    float ZFlashCenter[5000];
 
     int MCTrkID;
     int CCNCFlag[10];
@@ -299,37 +356,54 @@ void HistoProducer()
 
     float KineticEnergy[5000][3];
 
+    double beammin = 3.55; //us. Beam window start
+    double beammax = 5.15; //us. Beam window end
+
     for(unsigned int file_no = 0; file_no < ChainVec.size(); file_no++)
     {
         ChainVec.at(file_no) -> SetBranchAddress("TrackCand", &TrkID);
         ChainVec.at(file_no) -> SetBranchAddress("VertexCand", &VtxID);
 
+        ChainVec.at(file_no) -> SetBranchAddress("flash_pe", FlashPE);
+        ChainVec.at(file_no) -> SetBranchAddress("no_flashes", &NumberOfFlashes);
+        ChainVec.at(file_no) -> SetBranchAddress("flash_time", FlashTime);
+        ChainVec.at(file_no) -> SetBranchAddress("flash_zcenter", ZFlashCenter);
+
         ChainVec.at(file_no) -> SetBranchAddress("MCTrackCand", &MCTrkID);
         ChainVec.at(file_no) -> SetBranchAddress("ccnc_truth", CCNCFlag);
         ChainVec.at(file_no) -> SetBranchAddress("pdg", PDGTruth);
-        ChainVec.at(file_no) -> SetBranchAddress("trkorigin_pandoraNu", TrkOrigin);
+        ChainVec.at(file_no) -> SetBranchAddress(("trkorigin_"+TrackProdName).c_str(), TrkOrigin);
 
-        ChainVec.at(file_no) -> SetBranchAddress("trkke_pandoraNu", KineticEnergy);
-        ChainVec.at(file_no) -> SetBranchAddress("trktheta_pandoraNu", TrackTheta);
-        ChainVec.at(file_no) -> SetBranchAddress("trkphi_pandoraNu",TrackPhi);
+        ChainVec.at(file_no) -> SetBranchAddress(("trkke_"+TrackProdName).c_str(), KineticEnergy);
+        ChainVec.at(file_no) -> SetBranchAddress(("trktheta_"+TrackProdName).c_str(), TrackTheta);
+        ChainVec.at(file_no) -> SetBranchAddress(("trkphi_"+TrackProdName).c_str(),TrackPhi);
 
-        ChainVec.at(file_no) -> SetBranchAddress("trkstartx_pandoraNu",XTrackStart);
-        ChainVec.at(file_no) -> SetBranchAddress("trkstarty_pandoraNu",YTrackStart);
-        ChainVec.at(file_no) -> SetBranchAddress("trkstartz_pandoraNu",ZTrackStart);
+        ChainVec.at(file_no) -> SetBranchAddress(("trkstartx_"+TrackProdName).c_str(),XTrackStart);
+        ChainVec.at(file_no) -> SetBranchAddress(("trkstarty_"+TrackProdName).c_str(),YTrackStart);
+        ChainVec.at(file_no) -> SetBranchAddress(("trkstartz_"+TrackProdName).c_str(),ZTrackStart);
 
-        ChainVec.at(file_no) -> SetBranchAddress("trkendx_pandoraNu",XTrackEnd);
-        ChainVec.at(file_no) -> SetBranchAddress("trkendy_pandoraNu",YTrackEnd);
-        ChainVec.at(file_no) -> SetBranchAddress("trkendz_pandoraNu",ZTrackEnd);
+        ChainVec.at(file_no) -> SetBranchAddress(("trkendx_"+TrackProdName).c_str(),XTrackEnd);
+        ChainVec.at(file_no) -> SetBranchAddress(("trkendy_"+TrackProdName).c_str(),YTrackEnd);
+        ChainVec.at(file_no) -> SetBranchAddress(("trkendz_"+TrackProdName).c_str(),ZTrackEnd);
 
-        ChainVec.at(file_no) -> SetBranchAddress("vtxx_pandoraNu", XVertexPosition);
-        ChainVec.at(file_no) -> SetBranchAddress("vtxy_pandoraNu", YVertexPosition);
-        ChainVec.at(file_no) -> SetBranchAddress("vtxz_pandoraNu", ZVertexPosition);
+        if(VertexProdName != "nuvtx")
+        {
+            ChainVec.at(file_no) -> SetBranchAddress(("vtxx_"+VertexProdName).c_str(), XVertexPosition);
+            ChainVec.at(file_no) -> SetBranchAddress(("vtxy_"+VertexProdName).c_str(), YVertexPosition);
+            ChainVec.at(file_no) -> SetBranchAddress(("vtxz_"+VertexProdName).c_str(), ZVertexPosition);
+        }
+        else
+        {
+            ChainVec.at(file_no) -> SetBranchAddress("nuvtxx", XVertexPosition);
+            ChainVec.at(file_no) -> SetBranchAddress("nuvtxy", YVertexPosition);
+            ChainVec.at(file_no) -> SetBranchAddress("nuvtxz", ZVertexPosition);
+        }
 
         unsigned int nubar = 0;
         unsigned int nue = 0;
         unsigned int NCnu = 0;
         unsigned int Cosmic = 0;
-        
+
         for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no)->GetEntries(); tree_index++)
         {
             if(!(tree_index % 100)) std::cout << "Event\t" << tree_index << "\t of \t" << ChainVec.at(file_no)->GetEntries() << std::endl;
@@ -352,7 +426,41 @@ void HistoProducer()
             SelXVtxPosition.at(file_no)->Fill(XVertexPosition[VtxID]);
             SelYVtxPosition.at(file_no)->Fill(YVertexPosition[VtxID]);
             SelZVtxPosition.at(file_no)->Fill(ZVertexPosition[VtxID]);
+
+            PhiVsTheta.at(file_no)->Fill(TrackPhi[TrkID],TrackTheta[TrkID]);
+            PhiVsYPos.at(file_no)->Fill(TrackPhi[TrkID],YTrackStart[TrkID]);
+
+            if(TrackTheta[TrkID] > 0.8 && TrackTheta[TrkID] < 1.5 && TrackPhi[TrkID] > -2.0 && TrackPhi[TrkID] < -0.7)
+            {
+                XPosVsYPos.at(file_no)->Fill(XTrackStart[TrkID],YTrackStart[TrkID]);
+                RangeVsYPos.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),YTrackStart[TrkID]);
+            }
+
+            if(file_no > 0)
+            {
+                beammin -= 0.36;
+                beammax -= 0.36;
+            }
+
+            float FlashMax = 0.0;
+            float ZFlashCenterMax = 0.0;
+
+            for(int flash_no = 0; flash_no < NumberOfFlashes; flash_no++)
+            {
+                if( FlashTime[flash_no] > beammin && FlashTime[flash_no] < beammax && FlashPE[flash_no] > FlashMax)
+                {
+                    FlashMax = FlashPE[flash_no];
+                    ZFlashCenterMax = ZFlashCenter[flash_no];
+                }
+            }
+
+            RangeVsPE.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),FlashMax);
             
+            if(FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]))
+            {
+                PhiVsFlashTrackDist.at(file_no)->Fill(TrackPhi[TrkID],FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]));
+            }
+
             if(file_no == 2 && MCTrkID > -1 && CCNCFlag[0] == 0 && TrkOrigin[TrkID][2] == 1)
             {
                 if(PDGTruth[MCTrkID] == -13)
@@ -428,10 +536,10 @@ void HistoProducer()
                 BgrYVtxPosition.at(3)->Fill(YVertexPosition[VtxID]);
                 BgrZVtxPosition.at(3)->Fill(ZVertexPosition[VtxID]);
             }
-            
+
         }
         std::cout << nubar << " " << nue << " " << NCnu << " " << Cosmic << std::endl;
-        
+
         ChainVec.at(file_no)->ResetBranchAddresses();
     }
 
@@ -487,6 +595,14 @@ void HistoProducer()
         SelXVtxPosition.at(file_no)->Scale(ScalingFactors.at(file_no));
         SelYVtxPosition.at(file_no)->Scale(ScalingFactors.at(file_no));
         SelZVtxPosition.at(file_no)->Scale(ScalingFactors.at(file_no));
+
+        PhiVsTheta.at(file_no)->Scale(ScalingFactors.at(file_no));
+        PhiVsYPos.at(file_no)->Scale(ScalingFactors.at(file_no));
+        RangeVsPE.at(file_no)->Scale(ScalingFactors.at(file_no));
+        XPosVsYPos.at(file_no)->Scale(ScalingFactors.at(file_no));
+        RangeVsPE.at(file_no)->Scale(ScalingFactors.at(file_no));
+        RangeVsYPos.at(file_no)->Scale(ScalingFactors.at(file_no));
+        PhiVsFlashTrackDist.at(file_no)->Scale(ScalingFactors.at(file_no));
     }
 
     for(unsigned int hist_no = 0; hist_no < DataLabel.size(); hist_no++)
@@ -511,7 +627,7 @@ void HistoProducer()
     SelectionTheta.at(1)->Draw("SAME");
     LegendData->Draw();
     Canvas2->SaveAs("DataSelTheta.png");
-    
+
     TCanvas *Canvas2a = new TCanvas("Cos Theta-Angle of Selected Track", "Cos Theta-Angle of Selected Track", 1400, 1000);
     Canvas2a->cd();
     SelectionCosTheta.at(0)->SetMaximum(0.55*GetMaximum(SelectionCosTheta));
@@ -592,6 +708,16 @@ void HistoProducer()
     SelZVtxPosition.at(1)->Draw("SAME");
     LegendData->Draw();
     Canvas10->SaveAs("DataSelZVertex.png");
+    
+    TCanvas *Canvas101 = new TCanvas("Range Vs YPos OnBeam", "Range Vs YPos OnBeam", 1400, 1000);
+    Canvas101->cd();
+    RangeVsYPos.at(0)->Draw("COLZ");
+    Canvas101->SaveAs("PhiVsFlashTrackDisOnBeam.png");
+    
+    TCanvas *Canvas102 = new TCanvas("Range Vs YPos OffBeam", "Range Vs YPos OffBeam", 1400, 1000);
+    Canvas102->cd();
+    RangeVsYPos.at(1)->Draw("COLZ");
+    Canvas102->SaveAs("PhiVsFlashTrackDisOffBeam.png");
 
     AddFirstTwoHistograms(SelectionTrackRange,-1.);
     AddFirstTwoHistograms(SelectionTheta,-1.);
@@ -604,6 +730,13 @@ void HistoProducer()
     AddFirstTwoHistograms(SelXVtxPosition,-1);
     AddFirstTwoHistograms(SelYVtxPosition,-1);
     AddFirstTwoHistograms(SelZVtxPosition,-1);
+
+    AddFirstTwoHistograms2D(PhiVsTheta,-1);
+    AddFirstTwoHistograms2D(PhiVsYPos,-1);
+    AddFirstTwoHistograms2D(RangeVsPE,-1);
+    AddFirstTwoHistograms2D(XPosVsYPos,-1);
+    AddFirstTwoHistograms2D(RangeVsYPos,-1);
+    AddFirstTwoHistograms2D(PhiVsFlashTrackDist,-1);
 
     LegendMC->AddEntry( SelectionTrackRange.at(0), (MCLabel.at(0)).c_str(),"lep" );
     LegendMC->AddEntry( SelectionTrackRange.at(1), (MCLabel.at(1)).c_str(),"f" );
@@ -638,22 +771,40 @@ void HistoProducer()
     LegendMC->Draw();
     Canvas12->SaveAs("On-OffBeamSelTheta.png");
     
+
+    for(auto& BgrThetaHist :BgrTheta)
+    {
+        BgrThetaHist->Scale(SelectionTheta.at(1)->Integral());
+    }
+
     for(auto& ThetaHistogram : SelectionTheta)
     {
         ThetaHistogram->Divide(SinTheta,1.);
     }
-    
+
     for(auto& BgrThetaHist :BgrTheta)
     {
         BgrThetaHist->Divide(SinTheta,1.);
+        BgrThetaHist->Scale(1/SelectionTheta.at(1)->Integral());
     }
-    SelectionTheta.at(1)->GetYaxis()->SetTitle("Weighted #frac{dn}{d#Omega}");
-    Canvas12->Modified();
-    Canvas12->Update();
-    Canvas12->SaveAs("On-OffBeamSelThetaOmega.png");
-    
-    TCanvas *Canvas12a = new TCanvas("OnBeam Minus OffBeam Cos Theta-Angle", "OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000);
+    StackBgrTheta->Modified();
+
+    TCanvas *Canvas12a = new TCanvas("OnBeam Minus OffBeam Theta-Angle", "OnBeam Minus OffBeam Theta-Angle", 1400, 1000);
     Canvas12a->cd();
+    SelectionTheta.at(1)->SetMaximum(1.5*SelectionTheta.at(1)->GetBinContent(SelectionTheta.at(1)->GetMaximumBin()));
+    SelectionTheta.at(1)->SetMinimum(0.0);
+    SelectionTheta.at(1)->SetFillColorAlpha(46,0.5);
+    SelectionTheta.at(1)->GetYaxis()->SetTitle("Weighted #frac{dn}{d#Omega}");
+    SelectionTheta.at(1)->DrawNormalized("E2");
+    StackBgrTheta->Draw("SAME");
+    SelectionTheta.at(0)->SetLineWidth(2);
+    SelectionTheta.at(0)->SetLineColor(1);
+    SelectionTheta.at(0)->DrawNormalized("SAME");
+    LegendMC->Draw();
+    Canvas12a->SaveAs("On-OffBeamSelThetaOmega.png");
+
+    TCanvas *Canvas12b = new TCanvas("OnBeam Minus OffBeam Cos Theta-Angle", "OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000);
+    Canvas12b->cd();
     SelectionCosTheta.at(1)->SetMaximum(1.5*SelectionCosTheta.at(1)->GetBinContent(SelectionCosTheta.at(1)->GetMaximumBin()));
     SelectionCosTheta.at(1)->SetMinimum(0.0);
     SelectionCosTheta.at(1)->SetFillColorAlpha(46,0.5);
@@ -663,7 +814,7 @@ void HistoProducer()
     SelectionCosTheta.at(0)->SetLineColor(1);
     SelectionCosTheta.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas12a->SaveAs("On-OffBeamSelCosTheta.png");
+    Canvas12b->SaveAs("On-OffBeamSelCosTheta.png");
 
     TCanvas *Canvas13 = new TCanvas("OnBeam Minus OffBeam Phi-Angle", "OnBeam Minus OffBeam Phi-Angle", 1400, 1000);
     Canvas13->cd();
@@ -684,8 +835,8 @@ void HistoProducer()
     SelectionEnergy.at(1)->SetMinimum(0.0);
     SelectionEnergy.at(1)->SetFillColorAlpha(46,0.5);
     SelectionEnergy.at(1)->DrawNormalized("E2");
-   StackBgrEnergy->Draw("SAME");
-     SelectionEnergy.at(0)->SetLineWidth(2);
+    StackBgrEnergy->Draw("SAME");
+    SelectionEnergy.at(0)->SetLineWidth(2);
     SelectionEnergy.at(0)->SetLineColor(1);
     SelectionEnergy.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
@@ -768,6 +919,42 @@ void HistoProducer()
     SelZVtxPosition.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas20->SaveAs("On-OffBeamSelZVertex.png");
+
+    TCanvas *Canvas21 = new TCanvas("Phi Vs Theta", "Phi Vs Theta", 1400, 1000);
+    Canvas21->cd();
+    PhiVsTheta.at(0)->Draw("COLZ");
+    Canvas21->SaveAs("PhiVsTheta.png");
+
+    TCanvas *Canvas22 = new TCanvas("Phi Vs YPos", "Phi Vs YPos", 1400, 1000);
+    Canvas22->cd();
+    PhiVsYPos.at(0)->Draw("COLZ");
+    Canvas22->SaveAs("PhiVsYPosition.png");
+
+    TCanvas *Canvas23 = new TCanvas("Range Vs PE Data", "Range Vs PE Data", 1400, 1000);
+    Canvas23->cd();
+    RangeVsPE.at(0)->Draw("COLZ");
+    Canvas23->SaveAs("RangeVsPEData.png");
+
+    TCanvas *Canvas24 = new TCanvas("Range Vs PE MC", "Range Vs PE MC", 1400, 1000);
+    Canvas24->cd();
+    RangeVsPE.at(1)->Draw("COLZ");
+    Canvas24->SaveAs("RangeVsPEMC.png");
+
+    TCanvas *Canvas25 = new TCanvas("XPos Vs YPos", "XPos Vs YPos", 1400, 1000);
+    Canvas25->cd();
+    XPosVsYPos.at(0)->Draw("COLZ");
+    Canvas25->SaveAs("XPosVsYPos.png");
+
+    TCanvas *Canvas26 = new TCanvas("Range Vs YPos", "Range Vs YPos", 1400, 1000);
+    Canvas26->cd();
+    RangeVsYPos.at(0)->Draw("COLZ");
+    Canvas26->SaveAs("RangeVsYPos.png");
+    
+    TCanvas *Canvas27 = new TCanvas("Phi Vs FlashTrackDist", "Range Vs FlashTrackDist", 1400, 1000);
+    Canvas27->cd();
+    PhiVsFlashTrackDist.at(0)->Draw("COLZ");
+    Canvas27->SaveAs("PhiVsFlashTrackDis.png");
+
 }
 
 float GetMaximum(const std::vector<TH1F*>& HistVector)
@@ -801,7 +988,35 @@ void AddFirstTwoHistograms(std::vector<TH1F*>& HistVector, float Weight)
     }
 }
 
+void AddFirstTwoHistograms2D(std::vector<TH2F*>& HistVector, float Weight)
+{
+    if(HistVector.size() > 1)
+    {
+        HistVector.at(0)->Add(HistVector.at(1), Weight);
+        delete HistVector.at(1);
+        HistVector.erase(HistVector.begin()+1);
+    }
+    else
+    {
+        std::cout << "Histograms not added!" << std::endl;
+    }
+}
+
 float CalcLength(const float& x_1, const float& y_1, const float& z_1, const float& x_2, const float& y_2, const float& z_2)
 {
     return sqrt(pow(x_1-x_2, 2) + pow(y_1-y_2, 2) + pow(z_1-z_2, 2));
+}
+
+double FlashTrackDist(double flash, double start, double end)
+{
+    if(end >= start) 
+    {
+        if(flash < end && flash > start) return 0;
+        else return TMath::Min(fabs(flash-start), fabs(flash-end));
+    }
+    else 
+    {
+        if(flash > end && flash < start) return 0;
+        else return TMath::Min(fabs(flash-start), fabs(flash-end));
+    }
 }
