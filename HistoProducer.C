@@ -17,8 +17,6 @@
 #include <TLine.h>
 #include <TAxis.h>
 
-double beammin = 3.55-0.36; //us. Beam window start
-double beammax = 5.15-0.36; //us. Beam window end
 
 float GetMaximum(const std::vector<TH1F*>& HistVector);
 void AddFirstTwoHistograms(std::vector<TH1F*>& HistVector, float Weight);
@@ -70,8 +68,11 @@ void HistoProducer()
     std::vector<TH1F*> BgrZVtxPosition;
 
     std::vector<TH2F*> PhiVsTheta;
+    std::vector<TH2F*> PhiVsXPos;
     std::vector<TH2F*> PhiVsYPos;
+    std::vector<TH2F*> PhiVsZPos;
     std::vector<TH2F*> XPosVsYPos;
+    std::vector<TH2F*> ZPosVsYPos;
     std::vector<TH2F*> RangeVsPE;
     std::vector<TH2F*> RangeVsYPos;
     std::vector<TH2F*> PhiVsFlashTrackDist;
@@ -148,7 +149,7 @@ void HistoProducer()
 
     for(const auto& Label : GenLabel)
     {
-        SelectionTrackRange.push_back(new TH1F(("Track Range"+Label).c_str(),"Track Range of Selected Track",20,0,1000));
+        SelectionTrackRange.push_back(new TH1F(("Track Range"+Label).c_str(),"Track Range of Selected Track",20,0,1036.8));
         SelectionTrackRange.back()->SetStats(0);
         SelectionTrackRange.back()->GetXaxis()->SetTitle("Track Range [cm]");
         SelectionTrackRange.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
@@ -189,7 +190,7 @@ void HistoProducer()
         SelYTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
         SelYTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        SelZTrackStartEnd.push_back(new TH1F(("ZTrack"+Label).c_str(),"Z Track Start & End Positions",20,0,1000));
+        SelZTrackStartEnd.push_back(new TH1F(("ZTrack"+Label).c_str(),"Z Track Start & End Positions",20,0,1036.8));
         SelZTrackStartEnd.back()->SetStats(0);
         SelZTrackStartEnd.back()->GetXaxis()->SetTitle("z [cm]");
         SelZTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dz}");
@@ -207,7 +208,7 @@ void HistoProducer()
         SelYVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
         SelYVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        SelZVtxPosition.push_back(new TH1F(("ZVertex"+Label).c_str(),"Z Vertex Position",20,0,1000));
+        SelZVtxPosition.push_back(new TH1F(("ZVertex"+Label).c_str(),"Z Vertex Position",20,0,1036.8));
         SelZVtxPosition.back()->SetStats(0);
         SelZVtxPosition.back()->GetXaxis()->SetTitle("z [cm]");
         SelZVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dz}");
@@ -218,15 +219,30 @@ void HistoProducer()
         PhiVsTheta.back()->GetXaxis()->SetTitle("#phi [rad]");
         PhiVsTheta.back()->GetYaxis()->SetTitle("#theta [rad]");
 
+        PhiVsXPos.push_back(new TH2F(("PhiVsXPos"+Label).c_str(),"Phi Vs. X-Position",10,-3.142,3.142,10,0,256));
+        PhiVsXPos.back()->SetStats(0);
+        PhiVsXPos.back()->GetXaxis()->SetTitle("#phi [rad]");
+        PhiVsXPos.back()->GetYaxis()->SetTitle("x [cm]");
+        
         PhiVsYPos.push_back(new TH2F(("PhiVsYPos"+Label).c_str(),"Phi Vs. Y-Position",10,-3.142,3.142,10,-233/2,233/2));
         PhiVsYPos.back()->SetStats(0);
         PhiVsYPos.back()->GetXaxis()->SetTitle("#phi [rad]");
         PhiVsYPos.back()->GetYaxis()->SetTitle("y [cm]");
+        
+        PhiVsZPos.push_back(new TH2F(("PhiVsZPos"+Label).c_str(),"Phi Vs. Z-Position",10,-3.142,3.142,10,0,1036.8));
+        PhiVsZPos.back()->SetStats(0);
+        PhiVsZPos.back()->GetXaxis()->SetTitle("#phi [rad]");
+        PhiVsZPos.back()->GetYaxis()->SetTitle("z [cm]");
 
         XPosVsYPos.push_back(new TH2F(("XPosVsYPos"+Label).c_str(),"X-Position Vs. Y-Position",20,0,256,20,-233/2,233/2));
         XPosVsYPos.back()->SetStats(0);
         XPosVsYPos.back()->GetXaxis()->SetTitle("x [cm]");
         XPosVsYPos.back()->GetYaxis()->SetTitle("y [cm]");
+        
+        ZPosVsYPos.push_back(new TH2F(("ZPosVsYPos"+Label).c_str(),"Z-Position Vs. Y-Position",20,0,1036.8,20,-233/2,233/2));
+        ZPosVsYPos.back()->SetStats(0);
+        ZPosVsYPos.back()->GetXaxis()->SetTitle("z [cm]");
+        ZPosVsYPos.back()->GetYaxis()->SetTitle("y [cm]");
 
         RangeVsPE.push_back(new TH2F(("RangeVsPE"+Label).c_str(),"Track Range Vs. PE",10,0,700,10,50,500));
         RangeVsPE.back()->SetStats(0);
@@ -237,8 +253,8 @@ void HistoProducer()
         RangeVsYPos.back()->SetStats(0);
         RangeVsYPos.back()->GetXaxis()->SetTitle("Track Range [cm]");
         RangeVsYPos.back()->GetYaxis()->SetTitle("y [cm]");
-        
-        PhiVsFlashTrackDist.push_back(new TH2F(("PhiVsFlashTrackDist"+Label).c_str(),"Phi angle Vs. Track to Flash Distance",10,-3.142,3.142,10,0,80));
+
+        PhiVsFlashTrackDist.push_back(new TH2F(("PhiVsFlashTrackDist"+Label).c_str(),"Phi angle Vs. Track to Flash Distance",10,-3.142,3.142,10,0,14));
         PhiVsFlashTrackDist.back()->SetStats(0);
         PhiVsFlashTrackDist.back()->GetXaxis()->SetTitle("#phi angle [rad]");
         PhiVsFlashTrackDist.back()->GetYaxis()->SetTitle("Track to Flash Distance [cm]");
@@ -356,11 +372,22 @@ void HistoProducer()
 
     float KineticEnergy[5000][3];
 
-    double beammin = 3.55; //us. Beam window start
-    double beammax = 5.15; //us. Beam window end
+    double beammin;
+    double beammax;
 
     for(unsigned int file_no = 0; file_no < ChainVec.size(); file_no++)
     {
+        if(!file_no)
+        {
+            beammin = 3.55 - 0.36;
+            beammax = 5.15 - 0.36;
+        }
+        else
+        {
+            beammin = 3.55;
+            beammax = 5.15;
+        }
+
         ChainVec.at(file_no) -> SetBranchAddress("TrackCand", &TrkID);
         ChainVec.at(file_no) -> SetBranchAddress("VertexCand", &VtxID);
 
@@ -403,44 +430,18 @@ void HistoProducer()
         unsigned int nue = 0;
         unsigned int NCnu = 0;
         unsigned int Cosmic = 0;
+        unsigned int Signal = 0;
+        
+        float XFVCutValue = 10;
+        float YFVCutValue = 20;
+        float ZFVCutValue = 10;
+        float FlashTrackCut = 80;
 
         for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no)->GetEntries(); tree_index++)
         {
             if(!(tree_index % 100)) std::cout << "Event\t" << tree_index << "\t of \t" << ChainVec.at(file_no)->GetEntries() << std::endl;
 
             ChainVec.at(file_no)->GetEntry(tree_index);
-
-            SelectionTrackRange.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-            SelectionTheta.at(file_no)->Fill(TrackTheta[TrkID]);
-            SelectionCosTheta.at(file_no)->Fill(cos(TrackTheta[TrkID]));
-            SelectionPhi.at(file_no)->Fill(TrackPhi[TrkID]);
-            SelectionEnergy.at(file_no)->Fill(KineticEnergy[TrkID][2]);
-
-            SelXTrackStartEnd.at(file_no)->Fill(XTrackStart[TrkID]);
-            SelXTrackStartEnd.at(file_no)->Fill(XTrackEnd[TrkID]);
-            SelYTrackStartEnd.at(file_no)->Fill(YTrackStart[TrkID]);
-            SelYTrackStartEnd.at(file_no)->Fill(YTrackEnd[TrkID]);
-            SelZTrackStartEnd.at(file_no)->Fill(ZTrackStart[TrkID]);
-            SelZTrackStartEnd.at(file_no)->Fill(ZTrackEnd[TrkID]);
-
-            SelXVtxPosition.at(file_no)->Fill(XVertexPosition[VtxID]);
-            SelYVtxPosition.at(file_no)->Fill(YVertexPosition[VtxID]);
-            SelZVtxPosition.at(file_no)->Fill(ZVertexPosition[VtxID]);
-
-            PhiVsTheta.at(file_no)->Fill(TrackPhi[TrkID],TrackTheta[TrkID]);
-            PhiVsYPos.at(file_no)->Fill(TrackPhi[TrkID],YTrackStart[TrkID]);
-
-            if(TrackTheta[TrkID] > 0.8 && TrackTheta[TrkID] < 1.5 && TrackPhi[TrkID] > -2.0 && TrackPhi[TrkID] < -0.7)
-            {
-                XPosVsYPos.at(file_no)->Fill(XTrackStart[TrkID],YTrackStart[TrkID]);
-                RangeVsYPos.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),YTrackStart[TrkID]);
-            }
-
-            if(file_no > 0)
-            {
-                beammin -= 0.36;
-                beammax -= 0.36;
-            }
 
             float FlashMax = 0.0;
             float ZFlashCenterMax = 0.0;
@@ -454,91 +455,131 @@ void HistoProducer()
                 }
             }
 
-            RangeVsPE.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),FlashMax);
-            
-            if(FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]))
+            if(true /*FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]) < 14  &&*/ /*YTrackStart[TrkID] < (233./2.-30) && YTrackStart[TrkID] > (-233./2.+30) && YTrackEnd[TrkID] < (233./2.-30) && YTrackEnd[TrkID] > (-233./2.+30)*/)
             {
-                PhiVsFlashTrackDist.at(file_no)->Fill(TrackPhi[TrkID],FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]));
-            }
+                Signal++;
+                
+                RangeVsPE.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),FlashMax);
 
-            if(file_no == 2 && MCTrkID > -1 && CCNCFlag[0] == 0 && TrkOrigin[TrkID][2] == 1)
-            {
-                if(PDGTruth[MCTrkID] == -13)
+                if(FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]))
                 {
-                    nubar++;
-                    BgrTrackRange.at(0)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                    BgrTheta.at(0)->Fill(TrackTheta[TrkID]);
-                    BgrCosTheta.at(0)->Fill(cos(TrackTheta[TrkID]));
-                    BgrPhi.at(0)->Fill(TrackPhi[TrkID]);
-                    BgrEnergy.at(0)->Fill(KineticEnergy[TrkID][2]);
-                    BgrXTrackStartEnd.at(0)->Fill(XTrackStart[TrkID]);
-                    BgrXTrackStartEnd.at(0)->Fill(XTrackEnd[TrkID]);
-                    BgrYTrackStartEnd.at(0)->Fill(YTrackStart[TrkID]);
-                    BgrYTrackStartEnd.at(0)->Fill(YTrackEnd[TrkID]);
-                    BgrZTrackStartEnd.at(0)->Fill(ZTrackStart[TrkID]);
-                    BgrZTrackStartEnd.at(0)->Fill(ZTrackEnd[TrkID]);
-                    BgrXVtxPosition.at(0)->Fill(XVertexPosition[VtxID]);
-                    BgrYVtxPosition.at(0)->Fill(YVertexPosition[VtxID]);
-                    BgrZVtxPosition.at(0)->Fill(ZVertexPosition[VtxID]);
+                    PhiVsFlashTrackDist.at(file_no)->Fill(TrackPhi[TrkID],FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]));
                 }
-                else if(abs(PDGTruth[MCTrkID]) == 11)
+
+                SelectionTrackRange.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+                SelectionTheta.at(file_no)->Fill(TrackTheta[TrkID]);
+                SelectionCosTheta.at(file_no)->Fill(cos(TrackTheta[TrkID]));
+                SelectionPhi.at(file_no)->Fill(TrackPhi[TrkID]);
+                SelectionEnergy.at(file_no)->Fill(KineticEnergy[TrkID][2]);
+
+                SelXTrackStartEnd.at(file_no)->Fill(XTrackStart[TrkID]);
+                SelXTrackStartEnd.at(file_no)->Fill(XTrackEnd[TrkID]);
+                SelYTrackStartEnd.at(file_no)->Fill(YTrackStart[TrkID]);
+                SelYTrackStartEnd.at(file_no)->Fill(YTrackEnd[TrkID]);
+                SelZTrackStartEnd.at(file_no)->Fill(ZTrackStart[TrkID]);
+                SelZTrackStartEnd.at(file_no)->Fill(ZTrackEnd[TrkID]);
+
+                SelXVtxPosition.at(file_no)->Fill(XVertexPosition[VtxID]);
+                SelYVtxPosition.at(file_no)->Fill(YVertexPosition[VtxID]);
+                SelZVtxPosition.at(file_no)->Fill(ZVertexPosition[VtxID]);
+
+                PhiVsTheta.at(file_no)->Fill(TrackPhi[TrkID],TrackTheta[TrkID]);
+                PhiVsXPos.at(file_no)->Fill(TrackPhi[TrkID],XTrackStart[TrkID]);
+                PhiVsXPos.at(file_no)->Fill(TrackPhi[TrkID],XTrackEnd[TrkID]);
+                PhiVsYPos.at(file_no)->Fill(TrackPhi[TrkID],YTrackStart[TrkID]);
+                PhiVsYPos.at(file_no)->Fill(TrackPhi[TrkID],YTrackEnd[TrkID]);
+                PhiVsZPos.at(file_no)->Fill(TrackPhi[TrkID],ZTrackStart[TrkID]);
+                PhiVsZPos.at(file_no)->Fill(TrackPhi[TrkID],ZTrackEnd[TrkID]);
+
+                if(TrackTheta[TrkID] > 0.8 && TrackTheta[TrkID] < 1.5 && TrackPhi[TrkID] > -2.0 && TrackPhi[TrkID] < -0.7)
                 {
-                    nue++;
-                    BgrTrackRange.at(1)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                    BgrTheta.at(1)->Fill(TrackTheta[TrkID]);
-                    BgrCosTheta.at(1)->Fill(cos(TrackTheta[TrkID]));
-                    BgrPhi.at(1)->Fill(TrackPhi[TrkID]);
-                    BgrEnergy.at(1)->Fill(KineticEnergy[TrkID][2]);
-                    BgrXTrackStartEnd.at(1)->Fill(XTrackStart[TrkID]);
-                    BgrXTrackStartEnd.at(1)->Fill(XTrackEnd[TrkID]);
-                    BgrYTrackStartEnd.at(1)->Fill(YTrackStart[TrkID]);
-                    BgrYTrackStartEnd.at(1)->Fill(YTrackEnd[TrkID]);
-                    BgrZTrackStartEnd.at(1)->Fill(ZTrackStart[TrkID]);
-                    BgrZTrackStartEnd.at(1)->Fill(ZTrackEnd[TrkID]);
-                    BgrXVtxPosition.at(1)->Fill(XVertexPosition[VtxID]);
-                    BgrYVtxPosition.at(1)->Fill(YVertexPosition[VtxID]);
-                    BgrZVtxPosition.at(1)->Fill(ZVertexPosition[VtxID]);
+                    XPosVsYPos.at(file_no)->Fill(XTrackStart[TrkID],YTrackStart[TrkID]);
+                    XPosVsYPos.at(file_no)->Fill(XTrackEnd[TrkID],YTrackEnd[TrkID]);
+                    ZPosVsYPos.at(file_no)->Fill(ZTrackStart[TrkID],YTrackStart[TrkID]);
+                    ZPosVsYPos.at(file_no)->Fill(ZTrackEnd[TrkID],YTrackEnd[TrkID]);
+                    RangeVsYPos.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),YTrackStart[TrkID]);
+                    RangeVsYPos.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),YTrackEnd[TrkID]);
                 }
-            }
-            else if(file_no == 2 && CCNCFlag[0] == 1 && TrkOrigin[TrkID][2] == 1)
-            {
-                NCnu++;
-                BgrTrackRange.at(2)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                BgrTheta.at(2)->Fill(TrackTheta[TrkID]);
-                BgrCosTheta.at(2)->Fill(cos(TrackTheta[TrkID]));
-                BgrPhi.at(2)->Fill(TrackPhi[TrkID]);
-                BgrEnergy.at(2)->Fill(KineticEnergy[TrkID][2]);
-                BgrXTrackStartEnd.at(2)->Fill(XTrackStart[TrkID]);
-                BgrXTrackStartEnd.at(2)->Fill(XTrackEnd[TrkID]);
-                BgrYTrackStartEnd.at(2)->Fill(YTrackStart[TrkID]);
-                BgrYTrackStartEnd.at(2)->Fill(YTrackEnd[TrkID]);
-                BgrZTrackStartEnd.at(2)->Fill(ZTrackStart[TrkID]);
-                BgrZTrackStartEnd.at(2)->Fill(ZTrackEnd[TrkID]);
-                BgrXVtxPosition.at(2)->Fill(XVertexPosition[VtxID]);
-                BgrYVtxPosition.at(2)->Fill(YVertexPosition[VtxID]);
-                BgrZVtxPosition.at(2)->Fill(ZVertexPosition[VtxID]);
-            }
-            else if(file_no == 2 && TrkOrigin[TrkID][2] != 1)
-            {
-                Cosmic++;
-                BgrTrackRange.at(3)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                BgrTheta.at(3)->Fill(TrackTheta[TrkID]);
-                BgrCosTheta.at(3)->Fill(cos(TrackTheta[TrkID]));
-                BgrPhi.at(3)->Fill(TrackPhi[TrkID]);
-                BgrEnergy.at(3)->Fill(KineticEnergy[TrkID][2]);
-                BgrXTrackStartEnd.at(3)->Fill(XTrackStart[TrkID]);
-                BgrXTrackStartEnd.at(3)->Fill(XTrackEnd[TrkID]);
-                BgrYTrackStartEnd.at(3)->Fill(YTrackStart[TrkID]);
-                BgrYTrackStartEnd.at(3)->Fill(YTrackEnd[TrkID]);
-                BgrZTrackStartEnd.at(3)->Fill(ZTrackStart[TrkID]);
-                BgrZTrackStartEnd.at(3)->Fill(ZTrackEnd[TrkID]);
-                BgrXVtxPosition.at(3)->Fill(XVertexPosition[VtxID]);
-                BgrYVtxPosition.at(3)->Fill(YVertexPosition[VtxID]);
-                BgrZVtxPosition.at(3)->Fill(ZVertexPosition[VtxID]);
+
+                if(file_no == 2 && MCTrkID > -1 && CCNCFlag[0] == 0 && TrkOrigin[TrkID][2] == 1)
+                {
+                    if(PDGTruth[MCTrkID] == -13)
+                    {
+                        nubar++;
+                        BgrTrackRange.at(0)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+                        BgrTheta.at(0)->Fill(TrackTheta[TrkID]);
+                        BgrCosTheta.at(0)->Fill(cos(TrackTheta[TrkID]));
+                        BgrPhi.at(0)->Fill(TrackPhi[TrkID]);
+                        BgrEnergy.at(0)->Fill(KineticEnergy[TrkID][2]);
+                        BgrXTrackStartEnd.at(0)->Fill(XTrackStart[TrkID]);
+                        BgrXTrackStartEnd.at(0)->Fill(XTrackEnd[TrkID]);
+                        BgrYTrackStartEnd.at(0)->Fill(YTrackStart[TrkID]);
+                        BgrYTrackStartEnd.at(0)->Fill(YTrackEnd[TrkID]);
+                        BgrZTrackStartEnd.at(0)->Fill(ZTrackStart[TrkID]);
+                        BgrZTrackStartEnd.at(0)->Fill(ZTrackEnd[TrkID]);
+                        BgrXVtxPosition.at(0)->Fill(XVertexPosition[VtxID]);
+                        BgrYVtxPosition.at(0)->Fill(YVertexPosition[VtxID]);
+                        BgrZVtxPosition.at(0)->Fill(ZVertexPosition[VtxID]);
+                    }
+                    else if(abs(PDGTruth[MCTrkID]) == 11)
+                    {
+                        nue++;
+                        BgrTrackRange.at(1)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+                        BgrTheta.at(1)->Fill(TrackTheta[TrkID]);
+                        BgrCosTheta.at(1)->Fill(cos(TrackTheta[TrkID]));
+                        BgrPhi.at(1)->Fill(TrackPhi[TrkID]);
+                        BgrEnergy.at(1)->Fill(KineticEnergy[TrkID][2]);
+                        BgrXTrackStartEnd.at(1)->Fill(XTrackStart[TrkID]);
+                        BgrXTrackStartEnd.at(1)->Fill(XTrackEnd[TrkID]);
+                        BgrYTrackStartEnd.at(1)->Fill(YTrackStart[TrkID]);
+                        BgrYTrackStartEnd.at(1)->Fill(YTrackEnd[TrkID]);
+                        BgrZTrackStartEnd.at(1)->Fill(ZTrackStart[TrkID]);
+                        BgrZTrackStartEnd.at(1)->Fill(ZTrackEnd[TrkID]);
+                        BgrXVtxPosition.at(1)->Fill(XVertexPosition[VtxID]);
+                        BgrYVtxPosition.at(1)->Fill(YVertexPosition[VtxID]);
+                        BgrZVtxPosition.at(1)->Fill(ZVertexPosition[VtxID]);
+                    }
+                }
+                else if(file_no == 2 && CCNCFlag[0] == 1 && TrkOrigin[TrkID][2] == 1)
+                {
+                    NCnu++;
+                    BgrTrackRange.at(2)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+                    BgrTheta.at(2)->Fill(TrackTheta[TrkID]);
+                    BgrCosTheta.at(2)->Fill(cos(TrackTheta[TrkID]));
+                    BgrPhi.at(2)->Fill(TrackPhi[TrkID]);
+                    BgrEnergy.at(2)->Fill(KineticEnergy[TrkID][2]);
+                    BgrXTrackStartEnd.at(2)->Fill(XTrackStart[TrkID]);
+                    BgrXTrackStartEnd.at(2)->Fill(XTrackEnd[TrkID]);
+                    BgrYTrackStartEnd.at(2)->Fill(YTrackStart[TrkID]);
+                    BgrYTrackStartEnd.at(2)->Fill(YTrackEnd[TrkID]);
+                    BgrZTrackStartEnd.at(2)->Fill(ZTrackStart[TrkID]);
+                    BgrZTrackStartEnd.at(2)->Fill(ZTrackEnd[TrkID]);
+                    BgrXVtxPosition.at(2)->Fill(XVertexPosition[VtxID]);
+                    BgrYVtxPosition.at(2)->Fill(YVertexPosition[VtxID]);
+                    BgrZVtxPosition.at(2)->Fill(ZVertexPosition[VtxID]);
+                }
+                else if(file_no == 2 && TrkOrigin[TrkID][2] != 1)
+                {
+                    Cosmic++;
+                    BgrTrackRange.at(3)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+                    BgrTheta.at(3)->Fill(TrackTheta[TrkID]);
+                    BgrCosTheta.at(3)->Fill(cos(TrackTheta[TrkID]));
+                    BgrPhi.at(3)->Fill(TrackPhi[TrkID]);
+                    BgrEnergy.at(3)->Fill(KineticEnergy[TrkID][2]);
+                    BgrXTrackStartEnd.at(3)->Fill(XTrackStart[TrkID]);
+                    BgrXTrackStartEnd.at(3)->Fill(XTrackEnd[TrkID]);
+                    BgrYTrackStartEnd.at(3)->Fill(YTrackStart[TrkID]);
+                    BgrYTrackStartEnd.at(3)->Fill(YTrackEnd[TrkID]);
+                    BgrZTrackStartEnd.at(3)->Fill(ZTrackStart[TrkID]);
+                    BgrZTrackStartEnd.at(3)->Fill(ZTrackEnd[TrkID]);
+                    BgrXVtxPosition.at(3)->Fill(XVertexPosition[VtxID]);
+                    BgrYVtxPosition.at(3)->Fill(YVertexPosition[VtxID]);
+                    BgrZVtxPosition.at(3)->Fill(ZVertexPosition[VtxID]);
+                }
             }
 
         }
-        std::cout << nubar << " " << nue << " " << NCnu << " " << Cosmic << std::endl;
+        std::cout << Signal << " " << nubar << " " << nue << " " << NCnu << " " << Cosmic << std::endl;
 
         ChainVec.at(file_no)->ResetBranchAddresses();
     }
@@ -597,9 +638,12 @@ void HistoProducer()
         SelZVtxPosition.at(file_no)->Scale(ScalingFactors.at(file_no));
 
         PhiVsTheta.at(file_no)->Scale(ScalingFactors.at(file_no));
+        PhiVsXPos.at(file_no)->Scale(ScalingFactors.at(file_no));
         PhiVsYPos.at(file_no)->Scale(ScalingFactors.at(file_no));
+        PhiVsZPos.at(file_no)->Scale(ScalingFactors.at(file_no));
         RangeVsPE.at(file_no)->Scale(ScalingFactors.at(file_no));
         XPosVsYPos.at(file_no)->Scale(ScalingFactors.at(file_no));
+        ZPosVsYPos.at(file_no)->Scale(ScalingFactors.at(file_no));
         RangeVsPE.at(file_no)->Scale(ScalingFactors.at(file_no));
         RangeVsYPos.at(file_no)->Scale(ScalingFactors.at(file_no));
         PhiVsFlashTrackDist.at(file_no)->Scale(ScalingFactors.at(file_no));
@@ -708,12 +752,12 @@ void HistoProducer()
     SelZVtxPosition.at(1)->Draw("SAME");
     LegendData->Draw();
     Canvas10->SaveAs("DataSelZVertex.png");
-    
+
     TCanvas *Canvas101 = new TCanvas("Range Vs YPos OnBeam", "Range Vs YPos OnBeam", 1400, 1000);
     Canvas101->cd();
     RangeVsYPos.at(0)->Draw("COLZ");
     Canvas101->SaveAs("PhiVsFlashTrackDisOnBeam.png");
-    
+
     TCanvas *Canvas102 = new TCanvas("Range Vs YPos OffBeam", "Range Vs YPos OffBeam", 1400, 1000);
     Canvas102->cd();
     RangeVsYPos.at(1)->Draw("COLZ");
@@ -732,9 +776,12 @@ void HistoProducer()
     AddFirstTwoHistograms(SelZVtxPosition,-1);
 
     AddFirstTwoHistograms2D(PhiVsTheta,-1);
+    AddFirstTwoHistograms2D(PhiVsXPos,-1);
     AddFirstTwoHistograms2D(PhiVsYPos,-1);
+    AddFirstTwoHistograms2D(PhiVsZPos,-1);
     AddFirstTwoHistograms2D(RangeVsPE,-1);
     AddFirstTwoHistograms2D(XPosVsYPos,-1);
+    AddFirstTwoHistograms2D(ZPosVsYPos,-1);
     AddFirstTwoHistograms2D(RangeVsYPos,-1);
     AddFirstTwoHistograms2D(PhiVsFlashTrackDist,-1);
 
@@ -770,7 +817,7 @@ void HistoProducer()
     SelectionTheta.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas12->SaveAs("On-OffBeamSelTheta.png");
-    
+
 
     for(auto& BgrThetaHist :BgrTheta)
     {
@@ -925,10 +972,20 @@ void HistoProducer()
     PhiVsTheta.at(0)->Draw("COLZ");
     Canvas21->SaveAs("PhiVsTheta.png");
 
-    TCanvas *Canvas22 = new TCanvas("Phi Vs YPos", "Phi Vs YPos", 1400, 1000);
-    Canvas22->cd();
+    TCanvas *Canvas22a = new TCanvas("Phi Vs XPos", "Phi Vs XPos", 1400, 1000);
+    Canvas22a->cd();
+    PhiVsXPos.at(0)->Draw("COLZ");
+    Canvas22a->SaveAs("PhiVsXPosition.png");
+    
+    TCanvas *Canvas22b = new TCanvas("Phi Vs YPos", "Phi Vs YPos", 1400, 1000);
+    Canvas22b->cd();
     PhiVsYPos.at(0)->Draw("COLZ");
-    Canvas22->SaveAs("PhiVsYPosition.png");
+    Canvas22b->SaveAs("PhiVsYPosition.png");
+    
+    TCanvas *Canvas22c = new TCanvas("Phi Vs ZPos", "Phi Vs ZPos", 1400, 1000);
+    Canvas22c->cd();
+    PhiVsZPos.at(0)->Draw("COLZ");
+    Canvas22c->SaveAs("PhiVsZPosition.png");
 
     TCanvas *Canvas23 = new TCanvas("Range Vs PE Data", "Range Vs PE Data", 1400, 1000);
     Canvas23->cd();
@@ -944,12 +1001,17 @@ void HistoProducer()
     Canvas25->cd();
     XPosVsYPos.at(0)->Draw("COLZ");
     Canvas25->SaveAs("XPosVsYPos.png");
+    
+    TCanvas *Canvas25a = new TCanvas("ZPos Vs YPos", "ZPos Vs YPos", 1400, 1000);
+    Canvas25a->cd();
+    ZPosVsYPos.at(0)->Draw("COLZ");
+    Canvas25a->SaveAs("ZPosVsYPos.png");
 
     TCanvas *Canvas26 = new TCanvas("Range Vs YPos", "Range Vs YPos", 1400, 1000);
     Canvas26->cd();
     RangeVsYPos.at(0)->Draw("COLZ");
     Canvas26->SaveAs("RangeVsYPos.png");
-    
+
     TCanvas *Canvas27 = new TCanvas("Phi Vs FlashTrackDist", "Range Vs FlashTrackDist", 1400, 1000);
     Canvas27->cd();
     PhiVsFlashTrackDist.at(0)->Draw("COLZ");
@@ -1009,12 +1071,12 @@ float CalcLength(const float& x_1, const float& y_1, const float& z_1, const flo
 
 double FlashTrackDist(double flash, double start, double end)
 {
-    if(end >= start) 
+    if(end >= start)
     {
         if(flash < end && flash > start) return 0;
         else return TMath::Min(fabs(flash-start), fabs(flash-end));
     }
-    else 
+    else
     {
         if(flash > end && flash < start) return 0;
         else return TMath::Min(fabs(flash-start), fabs(flash-end));
