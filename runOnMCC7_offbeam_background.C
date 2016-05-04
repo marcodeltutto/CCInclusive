@@ -41,7 +41,7 @@ double FlashTrackDist(double flash, double start, double end) {
 }
 
 // Main function
-int runOnMCC7_numuCC_QE_wnumuvtx()
+int runOnMCC7_offbeam_background()
 {
 
     string Version = "v05_08_00";
