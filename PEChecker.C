@@ -63,10 +63,12 @@ void PEChecker()
     THStack* StackBgrTrackRange = new THStack("Bgr Track Range","Bgr Track Range");
 
     TLegend* LegendData = new TLegend(0.7,0.8,0.9,0.9);
-    LegendData->SetHeader("Data Sample");
-
-    DataLabel.push_back("On-Beam BNB");
-    DataLabel.push_back("Off-Beam BNB ext");
+    LegendData->SetHeader("PE Cut Value");
+    
+    for(const auto& CutValue : PECutValueVec)
+    {
+        DataLabel.push_back("Number of PE > "+std::to_string(CutValue));
+    }
 
     TLegend* LegendMC = new TLegend(0.6,0.72,0.9,0.9);
 //     LegendMC->SetHeader("Data Type");
@@ -116,7 +118,7 @@ void PEChecker()
             SelectionTrackRange.back().push_back(new TH1F(("Track Range"+Label+std::to_string(CutValue)).c_str(),"Track Range of Selected Track",20,0,1000));
             SelectionTrackRange.back().back()->SetStats(0);
             SelectionTrackRange.back().back()->GetXaxis()->SetTitle("Track Range [cm]");
-            SelectionTrackRange.back().back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
+            SelectionTrackRange.back().back()->GetYaxis()->SetTitle("Proportional to Number of Events [ ]");
         }
     }
 
@@ -277,8 +279,6 @@ void PEChecker()
             }
 
         }
-        std::cout << Signal << " " << nubar << " " << nue << " " << NCnu << " " << Cosmic << std::endl;
-
         ChainVec.at(file_no)->ResetBranchAddresses();
     }
 
@@ -297,20 +297,22 @@ void PEChecker()
             SelectionTrackRange.at(cut_index).at(file_no)->Scale(ScalingFactors.at(file_no));
         }
     }
-
-//     for(unsigned int hist_no = 0; hist_no < DataLabel.size(); hist_no++)
-//     {
-//         LegendData->AddEntry( SelectionTrackRange.at(hist_no), (DataLabel.at(hist_no)).c_str(),"l" );
-//     }
-
+    
+    std::cout << DataLabel.size() << " " << SelectionTrackRange.size() << " " << PECutValueVec.size() << std::endl;
+    
     for(auto& SelectionHistoSet : SelectionTrackRange)
     {
         AddFirstTwoHistograms(SelectionHistoSet,-1.);
     }
     
+    for(unsigned int hist_no = 0; hist_no < DataLabel.size(); hist_no++)
+    {
+        LegendData->AddEntry( SelectionTrackRange.at(hist_no).at(1), (DataLabel.at(hist_no)).c_str(),"l" );
+    }
+    
     TCanvas *Canvas1 = new TCanvas("Track Range of Selected Track", "Track Range of Selected Track", 1400, 1000);
     Canvas1->cd();
-    SelectionTrackRange.at(0).at(1)->SetMaximum(1.1*GetMaximum(SelectionTrackRange.at(0)));
+//     SelectionTrackRange.at(0).at(1)->SetMaximum(1.1*GetMaximum(SelectionTrackRange.at(0)));
     SelectionTrackRange.at(0).at(1)->SetMinimum(0.0);
     SelectionTrackRange.at(0).at(1)->Draw();
     SelectionTrackRange.at(0).at(1)->SetLineColor(1);
@@ -319,8 +321,30 @@ void PEChecker()
         SelectionTrackRange.at(cut_index).at(1)->SetLineColor(cut_index+1);
         SelectionTrackRange.at(cut_index).at(1)->Draw("SAME");
     }
-//     LegendData->Draw();
+    LegendData->Draw();
     Canvas1->SaveAs("MCRangeByPE.png");
+    
+    
+    for(unsigned int cut_index = PECutValueVec.size()-1; cut_index > 0; cut_index--)
+    {
+        SelectionTrackRange.at(cut_index).at(1)->Divide(SelectionTrackRange.at(0).at(1));
+    }
+    
+    
+    TCanvas *Canvas2 = new TCanvas("Track Range of Selected Track", "Track Range of Selected Track", 1400, 1000);
+    Canvas2->cd();
+//     SelectionTrackRange.at(1).at(1)->SetMaximum(1.1*GetMaximum(SelectionTrackRange.at(0)));
+//     SelectionTrackRange.at(1).at(1)->SetMinimum(0.0);
+    SelectionTrackRange.at(1).at(1)->GetYaxis()->SetTitle("Ratio of PE Cuts [ ]");
+    SelectionTrackRange.at(1).at(1)->Draw();
+    SelectionTrackRange.at(1).at(1)->SetLineColor(2);
+    for(unsigned int cut_index = 2; cut_index < PECutValueVec.size(); cut_index++)
+    {
+        SelectionTrackRange.at(cut_index).at(1)->SetLineColor(cut_index+1);
+        SelectionTrackRange.at(cut_index).at(1)->Draw("SAME");
+    }
+//     LegendData->Draw();
+    Canvas2->SaveAs("MCRangeByPERatio.png");
 
 //     LegendMC->AddEntry( SelectionTrackRange.at(0), (MCLabel.at(0)).c_str(),"lep" );
 //     LegendMC->AddEntry( SelectionTrackRange.at(1), (MCLabel.at(1)).c_str(),"f" );
