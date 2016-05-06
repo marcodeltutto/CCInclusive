@@ -23,6 +23,7 @@ void AddFirstTwoHistograms(std::vector<TH1F*>& HistVector, float Weight);
 void AddFirstTwoHistograms2D(std::vector<TH2F*>& HistVector, float Weight);
 float CalcLength(const float& x_1, const float& y_1, const float& z_1, const float& x_2, const float& y_2, const float& z_2);
 double FlashTrackDist(double flash, double start, double end);
+bool inDeadRegion(double y, double z);
 
 void HistoProducer()
 {
@@ -223,12 +224,12 @@ void HistoProducer()
         PhiVsXPos.back()->SetStats(0);
         PhiVsXPos.back()->GetXaxis()->SetTitle("#phi [rad]");
         PhiVsXPos.back()->GetYaxis()->SetTitle("x [cm]");
-        
+
         PhiVsYPos.push_back(new TH2F(("PhiVsYPos"+Label).c_str(),"Phi Vs. Y-Position",10,-3.142,3.142,10,-233/2,233/2));
         PhiVsYPos.back()->SetStats(0);
         PhiVsYPos.back()->GetXaxis()->SetTitle("#phi [rad]");
         PhiVsYPos.back()->GetYaxis()->SetTitle("y [cm]");
-        
+
         PhiVsZPos.push_back(new TH2F(("PhiVsZPos"+Label).c_str(),"Phi Vs. Z-Position",10,-3.142,3.142,10,0,1036.8));
         PhiVsZPos.back()->SetStats(0);
         PhiVsZPos.back()->GetXaxis()->SetTitle("#phi [rad]");
@@ -238,7 +239,7 @@ void HistoProducer()
         XPosVsYPos.back()->SetStats(0);
         XPosVsYPos.back()->GetXaxis()->SetTitle("x [cm]");
         XPosVsYPos.back()->GetYaxis()->SetTitle("y [cm]");
-        
+
         ZPosVsYPos.push_back(new TH2F(("ZPosVsYPos"+Label).c_str(),"Z-Position Vs. Y-Position",20,0,1036.8,20,-233/2,233/2));
         ZPosVsYPos.back()->SetStats(0);
         ZPosVsYPos.back()->GetXaxis()->SetTitle("z [cm]");
@@ -431,11 +432,11 @@ void HistoProducer()
         unsigned int NCnu = 0;
         unsigned int Cosmic = 0;
         unsigned int Signal = 0;
-        
-        float XFVCutValue = 10;
-        float YFVCutValue = 20;
-        float ZFVCutValue = 10;
-        float FlashTrackCut = 80;
+
+        float XFVCutValue = 10; //10
+        float YFVCutValue = 20; //20
+        float ZFVCutValue = 10; //10
+        float FlashTrackCut = 80; //80
 
         for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no)->GetEntries(); tree_index++)
         {
@@ -455,10 +456,14 @@ void HistoProducer()
                 }
             }
 
-            if(true /*FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]) < 14  &&*/ /*YTrackStart[TrkID] < (233./2.-30) && YTrackStart[TrkID] > (-233./2.+30) && YTrackEnd[TrkID] < (233./2.-30) && YTrackEnd[TrkID] > (-233./2.+30)*/)
+//             if(FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]) < FlashTrackCut  && YTrackStart[TrkID] < (233./2.-30) && YTrackStart[TrkID] > (-233./2.+30) && YTrackEnd[TrkID] < (233./2.-30) && YTrackEnd[TrkID] > (-233./2.+30))
+            if( YTrackStart[TrkID] < (233./2.-YFVCutValue) && YTrackStart[TrkID] > (-233./2.+YFVCutValue) && YTrackEnd[TrkID] < (233./2.-YFVCutValue) && YTrackEnd[TrkID] > (-233./2.+YFVCutValue) &&
+                ZTrackStart[TrkID] < (1036.8-ZFVCutValue) && ZTrackStart[TrkID] > ZFVCutValue && ZTrackEnd[TrkID] < (1036.8-ZFVCutValue) && ZTrackEnd[TrkID] > ZFVCutValue &&
+                FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]) < FlashTrackCut )
+//             if(!inDeadRegion(YTrackStart[TrkID],ZTrackStart[TrkID]) && !inDeadRegion(YTrackEnd[TrkID],ZTrackEnd[TrkID]))
             {
                 Signal++;
-                
+
                 RangeVsPE.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),FlashMax);
 
                 if(FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]))
@@ -976,12 +981,12 @@ void HistoProducer()
     Canvas22a->cd();
     PhiVsXPos.at(0)->Draw("COLZ");
     Canvas22a->SaveAs("PhiVsXPosition.png");
-    
+
     TCanvas *Canvas22b = new TCanvas("Phi Vs YPos", "Phi Vs YPos", 1400, 1000);
     Canvas22b->cd();
     PhiVsYPos.at(0)->Draw("COLZ");
     Canvas22b->SaveAs("PhiVsYPosition.png");
-    
+
     TCanvas *Canvas22c = new TCanvas("Phi Vs ZPos", "Phi Vs ZPos", 1400, 1000);
     Canvas22c->cd();
     PhiVsZPos.at(0)->Draw("COLZ");
@@ -1001,7 +1006,7 @@ void HistoProducer()
     Canvas25->cd();
     XPosVsYPos.at(0)->Draw("COLZ");
     Canvas25->SaveAs("XPosVsYPos.png");
-    
+
     TCanvas *Canvas25a = new TCanvas("ZPos Vs YPos", "ZPos Vs YPos", 1400, 1000);
     Canvas25a->cd();
     ZPosVsYPos.at(0)->Draw("COLZ");
@@ -1081,4 +1086,13 @@ double FlashTrackDist(double flash, double start, double end)
         if(flash > end && flash < start) return 0;
         else return TMath::Min(fabs(flash-start), fabs(flash-end));
     }
+}
+
+bool inDeadRegion(double y, double z)
+{
+    if((y < (0.63*z+20)) && (y > (0.63*z-130))) return true;
+    else if((y < (0.63*z-185)) && (y > (0.63*z-232.3))) return true;
+    else if((y > (-0.63*z+429.3)) && (y < (-0.63*z+476.5))) return true;
+    else if(z > 700 && z < 750) return true;
+    else return false;
 }

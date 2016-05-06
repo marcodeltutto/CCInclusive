@@ -656,7 +656,7 @@ void HistoProducerBGRCorrected()
     
     TH1F* PhiBgrScale = (TH1F*) SelectionPhi.at(1)->Clone("#phi-Angle Bgr Reweight");
     PhiBgrScale->Scale(1/PhiBgrScale->Integral());
-    PhiBgrScale->Divide(BgrPhi.back());
+    PhiBgrScale->Divide(BgrPhi.at(3));
     
     TCanvas *Canvas0 = new TCanvas("Track Range of Selected Track", "Track Range of Selected Track", 1400, 1000);
     Canvas0->cd();
