@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <array>
+#include <fstream>
 #include <functional>
 #include <memory>
 #include <string>
@@ -342,6 +343,10 @@ void HistoProducer()
 
         BgrCount++;
     }
+    
+    int Run;
+    int Subrun;
+    int Event;
 
     int TrkID;
     int VtxID;
@@ -353,7 +358,10 @@ void HistoProducer()
 
     int MCTrkID;
     int CCNCFlag[10];
+    int TruthMode[10];
     int PDGTruth[5000];
+    
+    short TrkBestPlane[5000];
     short TrkOrigin[5000][3];
 
     float TrackTheta[5000];
@@ -375,6 +383,8 @@ void HistoProducer()
 
     double beammin;
     double beammax;
+    
+    std::ofstream DataToLookAt("ExcessData.txt",ios::trunc);
 
     for(unsigned int file_no = 0; file_no < ChainVec.size(); file_no++)
     {
@@ -388,6 +398,10 @@ void HistoProducer()
             beammin = 3.55;
             beammax = 5.15;
         }
+        
+        ChainVec.at(file_no) -> SetBranchAddress("run", &Run);
+        ChainVec.at(file_no) -> SetBranchAddress("subrun", &Subrun);
+        ChainVec.at(file_no) -> SetBranchAddress("event", &Event);
 
         ChainVec.at(file_no) -> SetBranchAddress("TrackCand", &TrkID);
         ChainVec.at(file_no) -> SetBranchAddress("VertexCand", &VtxID);
@@ -399,8 +413,10 @@ void HistoProducer()
 
         ChainVec.at(file_no) -> SetBranchAddress("MCTrackCand", &MCTrkID);
         ChainVec.at(file_no) -> SetBranchAddress("ccnc_truth", CCNCFlag);
+        ChainVec.at(file_no) -> SetBranchAddress("mode_truth", TruthMode);
         ChainVec.at(file_no) -> SetBranchAddress("pdg", PDGTruth);
         ChainVec.at(file_no) -> SetBranchAddress(("trkorigin_"+TrackProdName).c_str(), TrkOrigin);
+        ChainVec.at(file_no) -> SetBranchAddress(("trkpidbestplane_"+TrackProdName).c_str(), TrkBestPlane);
 
         ChainVec.at(file_no) -> SetBranchAddress(("trkke_"+TrackProdName).c_str(), KineticEnergy);
         ChainVec.at(file_no) -> SetBranchAddress(("trktheta_"+TrackProdName).c_str(), TrackTheta);
@@ -431,7 +447,13 @@ void HistoProducer()
         unsigned int nue = 0;
         unsigned int NCnu = 0;
         unsigned int Cosmic = 0;
+        unsigned int UnknownOrigin = 0;
         unsigned int Signal = 0;
+
+        unsigned int nuQE = 0;
+        unsigned int nuRES = 0;
+        unsigned int nuDIS = 0;
+        unsigned int nuCOH = 0;
 
         float XFVCutValue = 10; //10
         float YFVCutValue = 20; //20
@@ -458,8 +480,8 @@ void HistoProducer()
 
 //             if(FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]) < FlashTrackCut  && YTrackStart[TrkID] < (233./2.-30) && YTrackStart[TrkID] > (-233./2.+30) && YTrackEnd[TrkID] < (233./2.-30) && YTrackEnd[TrkID] > (-233./2.+30))
             if( YTrackStart[TrkID] < (233./2.-YFVCutValue) && YTrackStart[TrkID] > (-233./2.+YFVCutValue) && YTrackEnd[TrkID] < (233./2.-YFVCutValue) && YTrackEnd[TrkID] > (-233./2.+YFVCutValue) &&
-                ZTrackStart[TrkID] < (1036.8-ZFVCutValue) && ZTrackStart[TrkID] > ZFVCutValue && ZTrackEnd[TrkID] < (1036.8-ZFVCutValue) && ZTrackEnd[TrkID] > ZFVCutValue &&
-                FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]) < FlashTrackCut )
+                    ZTrackStart[TrkID] < (1036.8-ZFVCutValue) && ZTrackStart[TrkID] > ZFVCutValue && ZTrackEnd[TrkID] < (1036.8-ZFVCutValue) && ZTrackEnd[TrkID] > ZFVCutValue &&
+                    FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]) < FlashTrackCut )
 //             if(!inDeadRegion(YTrackStart[TrkID],ZTrackStart[TrkID]) && !inDeadRegion(YTrackEnd[TrkID],ZTrackEnd[TrkID]))
             {
                 Signal++;
@@ -498,6 +520,11 @@ void HistoProducer()
 
                 if(TrackTheta[TrkID] > 0.8 && TrackTheta[TrkID] < 1.5 && TrackPhi[TrkID] > -2.0 && TrackPhi[TrkID] < -0.7)
                 {
+                    if(file_no == 0)
+                    {
+                        DataToLookAt << Run << " " << Subrun << " " << Event << "\n";
+                    }
+                    
                     XPosVsYPos.at(file_no)->Fill(XTrackStart[TrkID],YTrackStart[TrkID]);
                     XPosVsYPos.at(file_no)->Fill(XTrackEnd[TrkID],YTrackEnd[TrkID]);
                     ZPosVsYPos.at(file_no)->Fill(ZTrackStart[TrkID],YTrackStart[TrkID]);
@@ -506,7 +533,7 @@ void HistoProducer()
                     RangeVsYPos.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),YTrackEnd[TrkID]);
                 }
 
-                if(file_no == 2 && MCTrkID > -1 && CCNCFlag[0] == 0 && TrkOrigin[TrkID][2] == 1)
+                if(file_no == 2 && MCTrkID > -1 && CCNCFlag[0] == 0 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
                     if(PDGTruth[MCTrkID] == -13)
                     {
@@ -544,8 +571,24 @@ void HistoProducer()
                         BgrYVtxPosition.at(1)->Fill(YVertexPosition[VtxID]);
                         BgrZVtxPosition.at(1)->Fill(ZVertexPosition[VtxID]);
                     }
+                    else if(file_no == 2 && TruthMode[0] == 0)
+                    {
+                        nuQE++;
+                    }
+                    else if(file_no == 2 && TruthMode[0] == 1)
+                    {
+                        nuRES++;
+                    }
+                    else if(file_no == 2 && TruthMode[0] == 2)
+                    {
+                        nuDIS++;
+                    }
+                    else if(file_no == 2 && TruthMode[0] == 3)
+                    {
+                        nuCOH++;
+                    }
                 }
-                else if(file_no == 2 && CCNCFlag[0] == 1 && TrkOrigin[TrkID][2] == 1)
+                else if(file_no == 2 && CCNCFlag[0] == 1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
                     NCnu++;
                     BgrTrackRange.at(2)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
@@ -563,7 +606,7 @@ void HistoProducer()
                     BgrYVtxPosition.at(2)->Fill(YVertexPosition[VtxID]);
                     BgrZVtxPosition.at(2)->Fill(ZVertexPosition[VtxID]);
                 }
-                else if(file_no == 2 && TrkOrigin[TrkID][2] != 1)
+                else if(file_no == 2 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] != 1)
                 {
                     Cosmic++;
                     BgrTrackRange.at(3)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
@@ -580,14 +623,22 @@ void HistoProducer()
                     BgrXVtxPosition.at(3)->Fill(XVertexPosition[VtxID]);
                     BgrYVtxPosition.at(3)->Fill(YVertexPosition[VtxID]);
                     BgrZVtxPosition.at(3)->Fill(ZVertexPosition[VtxID]);
+
+                    if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == -1)
+                    {
+                        UnknownOrigin++;
+                    }
                 }
             }
 
         }
-        std::cout << Signal << " " << nubar << " " << nue << " " << NCnu << " " << Cosmic << std::endl;
+        std::cout << Signal << " " << nubar << " " << nue << " " << NCnu << " " << Cosmic << " " << UnknownOrigin << std::endl;
+        std::cout << nuQE << " " << nuRES << " " << nuDIS << " " << nuCOH << std::endl;
 
         ChainVec.at(file_no)->ResetBranchAddresses();
     }
+    
+    DataToLookAt.close();
 
     for(unsigned int bgrhist_no = 0; bgrhist_no < BgrLabel.size(); bgrhist_no++)
     {
