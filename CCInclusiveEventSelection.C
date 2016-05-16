@@ -51,8 +51,8 @@ int CCInclusiveEventSelection()
 //     string GeneratorName = "prodgenie_bnb_nu";
 //     string GeneratorName = "prodcosmics_corsika_inTime";
     
-//     string GeneratorName = "data_onbeam_bnb";
-    string GeneratorName = "data_offbeam_bnbext";
+    string GeneratorName = "data_onbeam_bnb";
+//     string GeneratorName = "data_offbeam_bnbext";
 //     string GeneratorName = "prodgenie_bnb_nu_cosmic_uboone";
 
     // Initialize and fill track reco product names
@@ -76,8 +76,8 @@ int CCInclusiveEventSelection()
         TChain *treenc = new TChain("analysistree/anatree");
 //     treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
-//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
-    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/MC_BNB_Cosmic/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 
     std::vector<string> SelectionNames;
@@ -521,7 +521,7 @@ int CCInclusiveEventSelection()
             int Size = treenc -> GetEntries();
 
 //             if(Size > 20000) Size = 20000;
-            Size = 200000;
+            Size = 300000;
 
             cout << "number of events used is: " << Size << endl;
             //Event Loop
