@@ -485,7 +485,7 @@ int CCInclusiveEventSelection()
 
             double diststart = 0;
             double distend = 0;
-            double length = 0;
+            double TrackRange = 0;
 
             int ntrue = 0;
 
@@ -557,7 +557,7 @@ int CCInclusiveEventSelection()
                 } // flash loop
 
                 MCTrackCandidate = -1;
-                float MCTrackCandLength = 0;
+                float MCTrackCandRange = 0;
 
                 // Loop over all MC neutrino vertices
                 for(unsigned vertex_no = 0; vertex_no < mcevts_truth; vertex_no++)
@@ -576,7 +576,7 @@ int CCInclusiveEventSelection()
 //                                 && inFV(XMCTrackEnd[track_no],YMCTrackEnd[track_no],ZMCTrackEnd[track_no]) // Track end has to be in FV
                                 && sqrt(pow(XMCTrackStart[track_no] - nuvtxx_truth[vertex_no],2) + pow(YMCTrackStart[track_no] - nuvtxy_truth[vertex_no],2) + pow(ZMCTrackStart[track_no] - nuvtxz_truth[vertex_no],2)) < MCTrackToMCVtxDist // Track has to start at vertex
 //                                 && MCTrackLength > lengthcut // Track has to be long
-//                                 && MCTrackLength > MCTrackCandLength // If the current candidate length is shorter than the new length
+//                                 && MCTrackLength > MCTrackCandRange // If the current candidate length is shorter than the new length
                           )
                         {
                             // Fill new length and candidate index
@@ -621,7 +621,7 @@ int CCInclusiveEventSelection()
                                 // Calculate distances from track start/end to vertex and calculate track lenth
                                 diststart = sqrt((vtxx[v] - trkstartx[j])*(vtxx[v] - trkstartx[j]) + (vtxy[v] - trkstarty[j])*(vtxy[v] - trkstarty[j]) + (vtxz[v] - trkstartz[j])*(vtxz[v] - trkstartz[j]));
                                 distend = sqrt((vtxx[v] - trkendx[j])*(vtxx[v] - trkendx[j]) + (vtxy[v] - trkendy[j])*(vtxy[v] - trkendy[j]) + (vtxz[v] - trkendz[j])*(vtxz[v] - trkendz[j]));
-                                length = sqrt(pow(trkstartx[j] - trkendx[j],2) + pow(trkstarty[j] - trkendy[j],2) + pow(trkstartz[j] - trkendz[j],2));
+                                TrackRange = sqrt(pow(trkstartx[j] - trkendx[j],2) + pow(trkstarty[j] - trkendy[j],2) + pow(trkstartz[j] - trkendz[j],2));
 
                                 // If the track vertex distance is within cut, increase track count
                                 if(diststart < distcut || distend < distcut)
@@ -675,7 +675,7 @@ int CCInclusiveEventSelection()
                             {
                                 // Add up numbers
                                 NormFactor += trklen[TrackID];
-                                WeightedCosTheta += cos(trklen[TrackID])*trktheta[TrackID];
+                                WeightedCosTheta += trklen[TrackID]*cos(trktheta[TrackID]);
                             }// track loop
 
                             // Make average
