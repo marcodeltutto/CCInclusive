@@ -38,8 +38,13 @@ void HistoProducer()
 
     std::vector<float> ScalingFactors;
     ScalingFactors.push_back(1/383519.);
+//     ScalingFactors.push_back(1/179041.);
     ScalingFactors.push_back(1/400675.);
     ScalingFactors.push_back(1/550000.);
+    
+    // Binning
+    unsigned int NumberOfBins = 20;
+    unsigned int NumberOf2DBins = 10;
 
     std::vector<TH1F*> SelectionTrackRange;
     std::vector<TH1F*> SelectionEnergy;
@@ -143,117 +148,117 @@ void HistoProducer()
 
     ChainVec.push_back(new TChain("anatree"));
 //     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str());
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_v05_08_00.root").c_str());
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_sc_uboone_v05_08_00.root").c_str());
+//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_v05_08_00.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_sc_uboone_v05_08_00.root").c_str());
 
     for(const auto& Label : GenLabel)
     {
-        SelectionTrackRange.push_back(new TH1F(("Track Range"+Label).c_str(),"Track Range of Selected Track",20,0,1036.8));
+        SelectionTrackRange.push_back(new TH1F(("Track Range"+Label).c_str(),"Track Range of Selected Track",NumberOfBins,0,1036.8));
         SelectionTrackRange.back()->SetStats(0);
         SelectionTrackRange.back()->GetXaxis()->SetTitle("Track Range [cm]");
         SelectionTrackRange.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
 
-        SelectionTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"#theta-Angle of Selected Track",20,0,3.142));
+        SelectionTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"#theta-Angle of Selected Track",NumberOfBins,0,3.142));
         SelectionTheta.back()->SetStats(0);
         SelectionTheta.back()->GetXaxis()->SetTitle("#theta [rad]");
         SelectionTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#theta}");
         SelectionTheta.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        SelectionCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"cos#theta of Selected Track",20,-1,1));
+        SelectionCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"cos#theta of Selected Track",NumberOfBins,-1,1));
         SelectionCosTheta.back()->SetStats(0);
         SelectionCosTheta.back()->GetXaxis()->SetTitle("cos#theta [ ]");
         SelectionCosTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d(cos#theta)}");
         SelectionCosTheta.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        SelectionPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle of Selected Track",20,-3.142,3.142));
+        SelectionPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle of Selected Track",NumberOfBins,-3.142,3.142));
         SelectionPhi.back()->SetStats(0);
         SelectionPhi.back()->GetXaxis()->SetTitle("#phi angle [rad]");
         SelectionPhi.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#phi}");
         SelectionPhi.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        SelectionEnergy.push_back(new TH1F(("Energy"+Label).c_str(),"Energy of Selected Track",20,0,3000));
+        SelectionEnergy.push_back(new TH1F(("Energy"+Label).c_str(),"Energy of Selected Track",NumberOfBins,0,3000));
         SelectionEnergy.back()->SetStats(0);
         SelectionEnergy.back()->GetXaxis()->SetTitle("Muon Kinetic Energy [MeV]");
         SelectionEnergy.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dE}");
         SelectionEnergy.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        SelXTrackStartEnd.push_back(new TH1F(("XTrack"+Label).c_str(),"X Track Start & End Positions",20,0,256));
+        SelXTrackStartEnd.push_back(new TH1F(("XTrack"+Label).c_str(),"X Track Start & End Positions",NumberOfBins,0,256));
         SelXTrackStartEnd.back()->SetStats(0);
         SelXTrackStartEnd.back()->GetXaxis()->SetTitle("x [cm]");
         SelXTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
         SelXTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        SelYTrackStartEnd.push_back(new TH1F(("YTrack"+Label).c_str(),"Y Track Start & End Positions",20,-233/2,233/2));
+        SelYTrackStartEnd.push_back(new TH1F(("YTrack"+Label).c_str(),"Y Track Start & End Positions",NumberOfBins,-233/2,233/2));
         SelYTrackStartEnd.back()->SetStats(0);
         SelYTrackStartEnd.back()->GetXaxis()->SetTitle("y [cm]");
         SelYTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
         SelYTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        SelZTrackStartEnd.push_back(new TH1F(("ZTrack"+Label).c_str(),"Z Track Start & End Positions",20,0,1036.8));
+        SelZTrackStartEnd.push_back(new TH1F(("ZTrack"+Label).c_str(),"Z Track Start & End Positions",NumberOfBins,0,1036.8));
         SelZTrackStartEnd.back()->SetStats(0);
         SelZTrackStartEnd.back()->GetXaxis()->SetTitle("z [cm]");
         SelZTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dz}");
         SelZTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        SelXVtxPosition.push_back(new TH1F(("XVertex"+Label).c_str(),"X Vertex Position",20,0,256));
+        SelXVtxPosition.push_back(new TH1F(("XVertex"+Label).c_str(),"X Vertex Position",NumberOfBins,0,256));
         SelXVtxPosition.back()->SetStats(0);
         SelXVtxPosition.back()->GetXaxis()->SetTitle("x [cm]");
         SelXVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
         SelXVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        SelYVtxPosition.push_back(new TH1F(("YVertex"+Label).c_str(),"Y Vertex Position",20,-233/2,233/2));
+        SelYVtxPosition.push_back(new TH1F(("YVertex"+Label).c_str(),"Y Vertex Position",NumberOfBins,-233/2,233/2));
         SelYVtxPosition.back()->SetStats(0);
         SelYVtxPosition.back()->GetXaxis()->SetTitle("y [cm]");
         SelYVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
         SelYVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        SelZVtxPosition.push_back(new TH1F(("ZVertex"+Label).c_str(),"Z Vertex Position",20,0,1036.8));
+        SelZVtxPosition.push_back(new TH1F(("ZVertex"+Label).c_str(),"Z Vertex Position",NumberOfBins,0,1036.8));
         SelZVtxPosition.back()->SetStats(0);
         SelZVtxPosition.back()->GetXaxis()->SetTitle("z [cm]");
         SelZVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dz}");
         SelZVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        PhiVsTheta.push_back(new TH2F(("PhiVsTheta"+Label).c_str(),"Phi Vs. Theta",10,-3.142,3.142,10,0,3.142));
+        PhiVsTheta.push_back(new TH2F(("PhiVsTheta"+Label).c_str(),"Phi Vs. Theta",NumberOf2DBins,-3.142,3.142,NumberOf2DBins,0,3.142));
         PhiVsTheta.back()->SetStats(0);
         PhiVsTheta.back()->GetXaxis()->SetTitle("#phi [rad]");
         PhiVsTheta.back()->GetYaxis()->SetTitle("#theta [rad]");
 
-        PhiVsXPos.push_back(new TH2F(("PhiVsXPos"+Label).c_str(),"Phi Vs. X-Position",10,-3.142,3.142,10,0,256));
+        PhiVsXPos.push_back(new TH2F(("PhiVsXPos"+Label).c_str(),"Phi Vs. X-Position",NumberOf2DBins,-3.142,3.142,NumberOf2DBins,0,256));
         PhiVsXPos.back()->SetStats(0);
         PhiVsXPos.back()->GetXaxis()->SetTitle("#phi [rad]");
         PhiVsXPos.back()->GetYaxis()->SetTitle("x [cm]");
 
-        PhiVsYPos.push_back(new TH2F(("PhiVsYPos"+Label).c_str(),"Phi Vs. Y-Position",10,-3.142,3.142,10,-233/2,233/2));
+        PhiVsYPos.push_back(new TH2F(("PhiVsYPos"+Label).c_str(),"Phi Vs. Y-Position",NumberOf2DBins,-3.142,3.142,NumberOf2DBins,-233/2,233/2));
         PhiVsYPos.back()->SetStats(0);
         PhiVsYPos.back()->GetXaxis()->SetTitle("#phi [rad]");
         PhiVsYPos.back()->GetYaxis()->SetTitle("y [cm]");
 
-        PhiVsZPos.push_back(new TH2F(("PhiVsZPos"+Label).c_str(),"Phi Vs. Z-Position",10,-3.142,3.142,10,0,1036.8));
+        PhiVsZPos.push_back(new TH2F(("PhiVsZPos"+Label).c_str(),"Phi Vs. Z-Position",NumberOf2DBins,-3.142,3.142,NumberOf2DBins,0,1036.8));
         PhiVsZPos.back()->SetStats(0);
         PhiVsZPos.back()->GetXaxis()->SetTitle("#phi [rad]");
         PhiVsZPos.back()->GetYaxis()->SetTitle("z [cm]");
 
-        XPosVsYPos.push_back(new TH2F(("XPosVsYPos"+Label).c_str(),"X-Position Vs. Y-Position",20,0,256,20,-233/2,233/2));
+        XPosVsYPos.push_back(new TH2F(("XPosVsYPos"+Label).c_str(),"X-Position Vs. Y-Position",NumberOfBins,0,256,NumberOfBins,-233/2,233/2));
         XPosVsYPos.back()->SetStats(0);
         XPosVsYPos.back()->GetXaxis()->SetTitle("x [cm]");
         XPosVsYPos.back()->GetYaxis()->SetTitle("y [cm]");
 
-        ZPosVsYPos.push_back(new TH2F(("ZPosVsYPos"+Label).c_str(),"Z-Position Vs. Y-Position",20,0,1036.8,20,-233/2,233/2));
+        ZPosVsYPos.push_back(new TH2F(("ZPosVsYPos"+Label).c_str(),"Z-Position Vs. Y-Position",NumberOfBins,0,1036.8,NumberOfBins,-233/2,233/2));
         ZPosVsYPos.back()->SetStats(0);
         ZPosVsYPos.back()->GetXaxis()->SetTitle("z [cm]");
         ZPosVsYPos.back()->GetYaxis()->SetTitle("y [cm]");
 
-        RangeVsPE.push_back(new TH2F(("RangeVsPE"+Label).c_str(),"Track Range Vs. PE",10,0,700,10,50,500));
+        RangeVsPE.push_back(new TH2F(("RangeVsPE"+Label).c_str(),"Track Range Vs. PE",NumberOf2DBins,0,700,NumberOf2DBins,50,500));
         RangeVsPE.back()->SetStats(0);
         RangeVsPE.back()->GetXaxis()->SetTitle("Track Range [cm]");
         RangeVsPE.back()->GetYaxis()->SetTitle("# PE [ ]");
 
-        RangeVsYPos.push_back(new TH2F(("RangeVsYPos"+Label).c_str(),"Y-Position Vs. Track Range",10,0,700,10,-233/2,233/2));
+        RangeVsYPos.push_back(new TH2F(("RangeVsYPos"+Label).c_str(),"Y-Position Vs. Track Range",NumberOf2DBins,0,700,NumberOf2DBins,-233/2,233/2));
         RangeVsYPos.back()->SetStats(0);
         RangeVsYPos.back()->GetXaxis()->SetTitle("Track Range [cm]");
         RangeVsYPos.back()->GetYaxis()->SetTitle("y [cm]");
 
-        PhiVsFlashTrackDist.push_back(new TH2F(("PhiVsFlashTrackDist"+Label).c_str(),"Phi angle Vs. Track to Flash Distance",10,-3.142,3.142,10,0,14));
+        PhiVsFlashTrackDist.push_back(new TH2F(("PhiVsFlashTrackDist"+Label).c_str(),"Phi angle Vs. Track to Flash Distance",NumberOf2DBins,-3.142,3.142,NumberOf2DBins,0,14));
         PhiVsFlashTrackDist.back()->SetStats(0);
         PhiVsFlashTrackDist.back()->GetXaxis()->SetTitle("#phi angle [rad]");
         PhiVsFlashTrackDist.back()->GetYaxis()->SetTitle("Track to Flash Distance [cm]");
@@ -262,76 +267,76 @@ void HistoProducer()
     unsigned int BgrCount = 0;
     for(const auto& Label : BgrLabel)
     {
-        BgrTrackRange.push_back(new TH1F(("Track Range"+Label).c_str(),"Track Range of Selected Track",20,0,1000));
+        BgrTrackRange.push_back(new TH1F(("Track Range"+Label).c_str(),"Track Range of Selected Track",NumberOfBins,0,1000));
         BgrTrackRange.back()->SetStats(0);
         BgrTrackRange.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrTrackRange.back()->GetXaxis()->SetTitle("Track Range [cm]");
         BgrTrackRange.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
 
-        BgrTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"#theta of Selected Track",20,0,3.142));
+        BgrTheta.push_back(new TH1F(("#theta-Angle"+Label).c_str(),"#theta of Selected Track",NumberOfBins,0,3.142));
         BgrTheta.back()->SetStats(0);
         BgrTheta.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrTheta.back()->GetXaxis()->SetTitle("#theta [rad]");
         BgrTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#theta}");
         BgrTheta.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        BgrCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"cos#theta of Selected Track",20,-1,1));
+        BgrCosTheta.push_back(new TH1F(("cos#theta-Angle"+Label).c_str(),"cos#theta of Selected Track",NumberOfBins,-1,1));
         BgrCosTheta.back()->SetStats(0);
         BgrCosTheta.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrCosTheta.back()->GetXaxis()->SetTitle("cos#theta [ ]");
         BgrCosTheta.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d(cos#theta)}");
         BgrCosTheta.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        BgrPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle of Selected Track",20,-3.142,3.142));
+        BgrPhi.push_back(new TH1F(("#phi-Angle"+Label).c_str(),"#phi-Angle of Selected Track",NumberOfBins,-3.142,3.142));
         BgrPhi.back()->SetStats(0);
         BgrPhi.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrPhi.back()->GetXaxis()->SetTitle("#phi angle [rad]");
         BgrPhi.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#phi}");
         BgrPhi.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        BgrEnergy.push_back(new TH1F(("Energy"+Label).c_str(),"Energy of Selected Track",20,0,3000));
+        BgrEnergy.push_back(new TH1F(("Energy"+Label).c_str(),"Energy of Selected Track",NumberOfBins,0,3000));
         BgrEnergy.back()->SetStats(0);
         BgrEnergy.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrEnergy.back()->GetXaxis()->SetTitle("Muon Kinetic Energy [MeV]");
         BgrEnergy.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dE}");
         BgrEnergy.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        BgrXTrackStartEnd.push_back(new TH1F(("XTrack"+Label).c_str(),"X Track Start & End Positions",20,0,256));
+        BgrXTrackStartEnd.push_back(new TH1F(("XTrack"+Label).c_str(),"X Track Start & End Positions",NumberOfBins,0,256));
         BgrXTrackStartEnd.back()->SetStats(0);
         BgrXTrackStartEnd.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrXTrackStartEnd.back()->GetXaxis()->SetTitle("x [cm]");
         BgrXTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
         BgrXTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        BgrYTrackStartEnd.push_back(new TH1F(("YTrack"+Label).c_str(),"Y Track Start & End Positions",20,-233/2,233/2));
+        BgrYTrackStartEnd.push_back(new TH1F(("YTrack"+Label).c_str(),"Y Track Start & End Positions",NumberOfBins,-233/2,233/2));
         BgrYTrackStartEnd.back()->SetStats(0);
         BgrYTrackStartEnd.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrYTrackStartEnd.back()->GetXaxis()->SetTitle("y [cm]");
         BgrYTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
         BgrYTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        BgrZTrackStartEnd.push_back(new TH1F(("ZTrack"+Label).c_str(),"Z Track Start & End Positions",20,0,1000));
+        BgrZTrackStartEnd.push_back(new TH1F(("ZTrack"+Label).c_str(),"Z Track Start & End Positions",NumberOfBins,0,1000));
         BgrZTrackStartEnd.back()->SetStats(0);
         BgrZTrackStartEnd.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrZTrackStartEnd.back()->GetXaxis()->SetTitle("z [cm]");
         BgrZTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dz}");
         BgrZTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        BgrXVtxPosition.push_back(new TH1F(("XVertex"+Label).c_str(),"X Vertex Position",20,0,256));
+        BgrXVtxPosition.push_back(new TH1F(("XVertex"+Label).c_str(),"X Vertex Position",NumberOfBins,0,256));
         BgrXVtxPosition.back()->SetStats(0);
         BgrXVtxPosition.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrXVtxPosition.back()->GetXaxis()->SetTitle("x [cm]");
         BgrXVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
         BgrXVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        BgrYVtxPosition.push_back(new TH1F(("YVertex"+Label).c_str(),"Y Vertex Position",20,-233/2,233/2));
+        BgrYVtxPosition.push_back(new TH1F(("YVertex"+Label).c_str(),"Y Vertex Position",NumberOfBins,-233/2,233/2));
         BgrYVtxPosition.back()->SetStats(0);
         BgrYVtxPosition.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrYVtxPosition.back()->GetXaxis()->SetTitle("y [cm]");
         BgrYVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
         BgrYVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        BgrZVtxPosition.push_back(new TH1F(("ZVertex"+Label).c_str(),"Z Vertex Position",20,0,1000));
+        BgrZVtxPosition.push_back(new TH1F(("ZVertex"+Label).c_str(),"Z Vertex Position",NumberOfBins,0,1000));
         BgrZVtxPosition.back()->SetStats(0);
         BgrZVtxPosition.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrZVtxPosition.back()->GetXaxis()->SetTitle("z [cm]");
@@ -893,7 +898,7 @@ void HistoProducer()
     }
     StackBgrTheta->Modified();
 
-    TCanvas *Canvas12a = new TCanvas("OnBeam Minus OffBeam Theta-Angle", "OnBeam Minus OffBeam Theta-Angle", 1400, 1000);
+    TCanvas *Canvas12a = new TCanvas("OnBeam Minus OffBeam Theta-Angle Omega", "OnBeam Minus OffBeam Theta-Angle Omega", 1400, 1000);
     Canvas12a->cd();
     SelectionTheta.at(1)->SetMaximum(1.5*SelectionTheta.at(1)->GetBinContent(SelectionTheta.at(1)->GetMaximumBin()));
     SelectionTheta.at(1)->SetMinimum(0.0);

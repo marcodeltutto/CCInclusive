@@ -13,7 +13,7 @@
 #include <TLine.h>
 #include <TTree.h>
 
-using namespace std;
+// using namespace std;
 
 //This defines our current settings for the fiducial volume
 double FVx = 256.35;
@@ -42,21 +42,21 @@ double FlashTrackDist(double flash, double start, double end) {
 }
 
 // Main function
-int CCInclusiveEventSelection()
+int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned int NumberOfThreads)
 {
 
-    string Version = "v05_08_00";
+    std::string Version = "v05_08_00";
 
-//     string GeneratorName = "prodgenie_bnb_nu_cosmic";
-//     string GeneratorName = "prodgenie_bnb_nu";
-//     string GeneratorName = "prodcosmics_corsika_inTime";
-    
-//     string GeneratorName = "data_onbeam_bnb";
-//     string GeneratorName = "data_offbeam_bnbext";
-    string GeneratorName = "prodgenie_bnb_nu_cosmic_uboone";
+//     std::string GeneratorName = "prodgenie_bnb_nu_cosmic";
+//     std::string GeneratorName = "prodgenie_bnb_nu";
+//     std::string GeneratorName = "prodcosmics_corsika_inTime";
+//     std::string GeneratorName = "prodgenie_bnb_nu_cosmic_sc_uboone";
+//     std::string GeneratorName = "data_onbeam_bnb";
+//     std::string GeneratorName = "data_offbeam_bnbext";
+//     std::string GeneratorName = "prodgenie_bnb_nu_cosmic_uboone";
 
     // Initialize and fill track reco product names
-    std::vector<string> TrackProdNameVec;
+    std::vector<std::string> TrackProdNameVec;
 
 //     TrackProdNameVec.push_back("pandoraNuKHit");
 //     TrackProdNameVec.push_back("pandoraCosmic");
@@ -66,21 +66,34 @@ int CCInclusiveEventSelection()
 //     TrackProdNameVec.push_back("trackkalmanhit");
 
     // Initialize and fill vertex reco product names
-    std::vector<string> VertexProdNameVec;
+    std::vector<std::string> VertexProdNameVec;
 
 //     VertexProdNameVec.push_back("nuvtx");
 //     VertexProdNameVec.push_back("pandoraCosmic");
     VertexProdNameVec.push_back("pandoraNu");
 //     VertexProdNameVec.push_back("pmtrack");
     
-        TChain *treenc = new TChain("analysistree/anatree");
-//     treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    TChain *treenc = new TChain("analysistree/anatree");    
+    
+    if(GeneratorName == "data_onbeam_bnb")
+    {
+        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    }
+    else if(GeneratorName == "data_offbeam_bnbext")
+    {
+        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    }
+    else if(GeneratorName == "prodgenie_bnb_nu_cosmic_uboone")
+    {
+        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/MC_BNB_Cosmic/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    }
+    else
+    {
+        treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    }
 //     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
-//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
-//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
-    treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/MC_BNB_Cosmic/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 
-    std::vector<string> SelectionNames;
+    std::vector<std::string> SelectionNames;
 
     SelectionNames.push_back("NumberOfEvents_");
     SelectionNames.push_back("FlashCut_");
@@ -100,13 +113,13 @@ int CCInclusiveEventSelection()
 
 
     // Initialize table file vector
-    std::vector<ofstream*> EventSelectionCuts;
+    std::vector<std::ofstream*> EventSelectionCuts;
 
 //     // Create files and write first line
     for(const auto& SelName : SelectionNames)
     {
         // Fill vector of fstreams
-        EventSelectionCuts.push_back(new ofstream("cvsfiles/"+SelName+GeneratorName+"_"+Version+".cvs",ios::trunc));
+        EventSelectionCuts.push_back(new ofstream("cvsfiles/"+SelName+GeneratorName+"_"+Version+".cvs",std::ios::trunc));
 
         // Fill Title
         *EventSelectionCuts.back() << SelName + GeneratorName << "\n";
@@ -518,16 +531,21 @@ int CCInclusiveEventSelection()
 
             double TotalPOT = 0.0;
 
-            int Size = treenc -> GetEntries();
+            unsigned long int Size = treenc -> GetEntries();
+            
+            // Set start and end event number for multiple threads
+            unsigned long int StartEvent = Size*(ThreadNumber - 1)/NumberOfThreads; 
+            unsigned long int EndEvent = Size*ThreadNumber/NumberOfThreads;
+            
 
 //             if(Size > 20000) Size = 20000;
 //             Size = 200000;
 
-            cout << "number of events used is: " << Size << endl;
+            std::cout << "number of events used is: " << EndEvent-StartEvent << " of " << Size << std::endl;
             //Event Loop
-            for(int i = 0; i < Size; i++)
+            for(int i = StartEvent; i < EndEvent; i++)
             {
-                if(i%1000 == 0) cout << "\t... " << i << endl;
+                if(i%1000 == 0) std::cout << "\t... " << i << std::endl;
 
                 // Get tree entries
                 treenc -> GetEntry(i);
@@ -607,7 +625,7 @@ int CCInclusiveEventSelection()
                         EventsWithFlash++;
 
                         // Initialize a vertex and associated track collection
-                        map< int,vector<int> > VertexTrackCollection;
+                        std::map< int,std::vector<int> > VertexTrackCollection;
 
                         // Loop over all vertices
                         for(int v = 0; v < nvtx; v++)
@@ -637,7 +655,7 @@ int CCInclusiveEventSelection()
                                     if(!TrackCountAtVertex)
                                     {
                                         // Fill vertex ID into the collection map
-                                        VertexTrackCollection.insert(pair< int,vector<int> >(v,vector<int>()));
+                                        VertexTrackCollection.insert(std::pair< int,std::vector<int> >(v,std::vector<int>()));
                                     }
 
                                     // Push back track ID for vertex v
@@ -885,30 +903,30 @@ int CCInclusiveEventSelection()
             hAllYTrackStartEnd->Write();
             hAllZTrackStartEnd->Write();
 
-            cout << "--------------------------------------------------------------------------------------------" << endl;
-            cout << endl;
-            cout << "Track Reco Product Name : " << TrackingName << "  Vertex Reco Product Name : " << VertexingName << endl;
-            cout << "Total POT : " << TotalPOT*1e12 << endl;
-            cout << "number of CC events with vertex in FV : " << ntrue << endl;
-            cout << "number of events with flash > 50 PE : " << EventsWithFlash << endl;
-            cout << "number of events with track start/end within 5cm to vtx : " << EventsTrackNearVertex << endl;
-            cout << "number of events with vtx in FV : " << EventsVtxInFV << endl;
-            cout << "number of events with tracks matched within 80cm to flash : " << EventsFlashMatched << endl;
-            cout << "number of events with contained tracks : " << EventsTracksInFV << endl;
-            cout << "number of events with longest track > 75cm : " << EventsTrackLong << endl;
-            cout << "number of events with track start end within 5cm to mc-vtx : " << EventsTruelyReco << endl;
-            cout << "number of events with contained MC tracks : " << NumberOfSignalTruth << endl;
-            cout << "number of well selected events : " << NumberOfSignalTruthSel << endl;
-            cout << "number of NC events selected : " << NumberOfBgrNCTruthSel << endl;
-            cout << "number of anti-Neutrino events selected : " << NumberOfBgrNumuBarTruthSel << endl;
-            cout << "number of Nu_e events selected : " << NumberOfBgrNueTruthSel << endl;
-            cout << "number of events selected cosmic : " << NumberOfBgrCosmicSel << endl;
-            cout << "event selection efficiency : " <<  (float)NumberOfSignalTruthSel/(float)NumberOfSignalTruth << endl;
-//             cout << "event selection purity : " << (float)NumberOfSignalTruthSel/(float)(NumberOfBgrNCTruthSel+NumberOfBgrNumuBarTruthSel+NumberOfBgrNueTruthSel)
-            cout << "event selection correctness : " <<  (float)EventsTruelyReco/(float)EventsTrackLong << endl;
-//             cout << "event selection missid rate : " <<  fabs((float)EventsTruelyReco-(float)NumberOfSignalTruth)/(float)NumberOfSignalTruth << endl;
-            cout << endl;
-            cout << "--------------------------------------------------------------------------------------------" << endl;
+            std::cout << "--------------------------------------------------------------------------------------------" << std::endl;
+            std::cout << std::endl;
+            std::cout << "Track Reco Product Name : " << TrackingName << "  Vertex Reco Product Name : " << VertexingName << std::endl;
+            std::cout << "Total POT : " << TotalPOT*1e12 << std::endl;
+            std::cout << "number of CC events with vertex in FV : " << ntrue << std::endl;
+            std::cout << "number of events with flash > 50 PE : " << EventsWithFlash << std::endl;
+            std::cout << "number of events with track start/end within 5cm to vtx : " << EventsTrackNearVertex << std::endl;
+            std::cout << "number of events with vtx in FV : " << EventsVtxInFV << std::endl;
+            std::cout << "number of events with tracks matched within 80cm to flash : " << EventsFlashMatched << std::endl;
+            std::cout << "number of events with contained tracks : " << EventsTracksInFV << std::endl;
+            std::cout << "number of events with longest track > 75cm : " << EventsTrackLong << std::endl;
+            std::cout << "number of events with track start end within 5cm to mc-vtx : " << EventsTruelyReco << std::endl;
+            std::cout << "number of events with contained MC tracks : " << NumberOfSignalTruth << std::endl;
+            std::cout << "number of well selected events : " << NumberOfSignalTruthSel << std::endl;
+            std::cout << "number of NC events selected : " << NumberOfBgrNCTruthSel << std::endl;
+            std::cout << "number of anti-Neutrino events selected : " << NumberOfBgrNumuBarTruthSel << std::endl;
+            std::cout << "number of Nu_e events selected : " << NumberOfBgrNueTruthSel << std::endl;
+            std::cout << "number of events selected cosmic : " << NumberOfBgrCosmicSel << std::endl;
+            std::cout << "event selection efficiency : " <<  (float)NumberOfSignalTruthSel/(float)NumberOfSignalTruth << std::endl;
+//             std::cout << "event selection purity : " << (float)NumberOfSignalTruthSel/(float)(NumberOfBgrNCTruthSel+NumberOfBgrNumuBarTruthSel+NumberOfBgrNueTruthSel)
+            std::cout << "event selection correctness : " <<  (float)EventsTruelyReco/(float)EventsTrackLong << std::endl;
+//             std::cout << "event selection missid rate : " <<  fabs((float)EventsTruelyReco-(float)NumberOfSignalTruth)/(float)NumberOfSignalTruth << std::endl;
+            std::cout << std::endl;
+            std::cout << "--------------------------------------------------------------------------------------------" << std::endl;
 
             // Write numbers to cvs File
             *EventSelectionCuts.at(0)  << "," << ntrue;
