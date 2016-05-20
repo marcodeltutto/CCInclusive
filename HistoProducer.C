@@ -41,7 +41,7 @@ void HistoProducer()
 //     ScalingFactors.push_back(1/179041.);
     ScalingFactors.push_back(1/400675.);
     ScalingFactors.push_back(1/550000.);
-    
+
     // Binning
     unsigned int NumberOfBins = 20;
     unsigned int NumberOf2DBins = 10;
@@ -141,15 +141,21 @@ void HistoProducer()
     ChainVec.push_back(new TChain("anatree"));
     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1.root").c_str());
     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2.root").c_str());
+//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1.root").c_str());
+//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2.root").c_str());
 
     ChainVec.push_back(new TChain("anatree"));
     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1.root").c_str());
     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2.root").c_str());
+//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1.root").c_str());
+//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2.root").c_str());
+    
 
     ChainVec.push_back(new TChain("anatree"));
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str());
+//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str());
 //     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_v05_08_00.root").c_str());
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_sc_uboone_v05_08_00.root").c_str());
+//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_sc_uboone_v05_08_00.root").c_str());
 
     for(const auto& Label : GenLabel)
     {
@@ -238,12 +244,12 @@ void HistoProducer()
         PhiVsZPos.back()->GetXaxis()->SetTitle("#phi [rad]");
         PhiVsZPos.back()->GetYaxis()->SetTitle("z [cm]");
 
-        XPosVsYPos.push_back(new TH2F(("XPosVsYPos"+Label).c_str(),"X-Position Vs. Y-Position",NumberOfBins,0,256,NumberOfBins,-233/2,233/2));
+        XPosVsYPos.push_back(new TH2F(("XPosVsYPos"+Label).c_str(),"X-Position Vs. Y-Position",NumberOf2DBins,0,256,NumberOf2DBins,-233/2,233/2));
         XPosVsYPos.back()->SetStats(0);
         XPosVsYPos.back()->GetXaxis()->SetTitle("x [cm]");
         XPosVsYPos.back()->GetYaxis()->SetTitle("y [cm]");
 
-        ZPosVsYPos.push_back(new TH2F(("ZPosVsYPos"+Label).c_str(),"Z-Position Vs. Y-Position",NumberOfBins,0,1036.8,NumberOfBins,-233/2,233/2));
+        ZPosVsYPos.push_back(new TH2F(("ZPosVsYPos"+Label).c_str(),"Z-Position Vs. Y-Position",NumberOf2DBins,0,1036.8,NumberOf2DBins,-233/2,233/2));
         ZPosVsYPos.back()->SetStats(0);
         ZPosVsYPos.back()->GetXaxis()->SetTitle("z [cm]");
         ZPosVsYPos.back()->GetYaxis()->SetTitle("y [cm]");
@@ -345,7 +351,7 @@ void HistoProducer()
 
         BgrCount++;
     }
-    
+
     int Run;
     int Subrun;
     int Event;
@@ -362,7 +368,7 @@ void HistoProducer()
     int CCNCFlag[10];
     int TruthMode[10];
     int PDGTruth[5000];
-    
+
     short TrkBestPlane[5000];
     short TrkOrigin[5000][3];
 
@@ -385,8 +391,8 @@ void HistoProducer()
 
     double beammin;
     double beammax;
-    
-    std::ofstream DataToLookAt("ExcessData.txt",ios::trunc);
+
+    std::ofstream DataToLookAt("SelectedData.txt",std::ios::trunc);
 
     for(unsigned int file_no = 0; file_no < ChainVec.size(); file_no++)
     {
@@ -400,7 +406,7 @@ void HistoProducer()
             beammin = 3.55;
             beammax = 5.15;
         }
-        
+
         ChainVec.at(file_no) -> SetBranchAddress("run", &Run);
         ChainVec.at(file_no) -> SetBranchAddress("subrun", &Subrun);
         ChainVec.at(file_no) -> SetBranchAddress("event", &Event);
@@ -487,6 +493,11 @@ void HistoProducer()
 //             if(!inDeadRegion(YTrackStart[TrkID],ZTrackStart[TrkID]) && !inDeadRegion(YTrackEnd[TrkID],ZTrackEnd[TrkID]))
             if(true)
             {
+                if(file_no == 0)
+                {
+                    DataToLookAt << Run << " " << Subrun << " " << Event << "\n";
+                }
+
                 Signal++;
 
                 RangeVsPE.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),FlashMax);
@@ -523,11 +534,6 @@ void HistoProducer()
 
                 if(TrackTheta[TrkID] > 0.8 && TrackTheta[TrkID] < 1.5 && TrackPhi[TrkID] > -2.0 && TrackPhi[TrkID] < -0.7)
                 {
-                    if(file_no == 0)
-                    {
-                        DataToLookAt << Run << " " << Subrun << " " << Event << "\n";
-                    }
-                    
                     XPosVsYPos.at(file_no)->Fill(XTrackStart[TrkID],YTrackStart[TrkID]);
                     XPosVsYPos.at(file_no)->Fill(XTrackEnd[TrkID],YTrackEnd[TrkID]);
                     ZPosVsYPos.at(file_no)->Fill(ZTrackStart[TrkID],YTrackStart[TrkID]);
@@ -640,7 +646,7 @@ void HistoProducer()
 
         ChainVec.at(file_no)->ResetBranchAddresses();
     }
-    
+
     DataToLookAt.close();
 
     for(unsigned int bgrhist_no = 0; bgrhist_no < BgrLabel.size(); bgrhist_no++)
@@ -843,7 +849,7 @@ void HistoProducer()
     AddFirstTwoHistograms2D(ZPosVsYPos,-1);
     AddFirstTwoHistograms2D(RangeVsYPos,-1);
     AddFirstTwoHistograms2D(PhiVsFlashTrackDist,-1);
-    
+
     std::cout << "Theta KS significance: " << SelectionTheta.at(1)->KolmogorovTest(SelectionTheta.at(0)) << std::endl;
     std::cout << "Phi KS significance: " << SelectionPhi.at(1)->KolmogorovTest(SelectionPhi.at(0)) << std::endl;
 
