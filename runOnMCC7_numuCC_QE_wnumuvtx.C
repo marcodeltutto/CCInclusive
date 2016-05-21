@@ -41,12 +41,12 @@ double FlashTrackDist(double flash, double start, double end) {
 }
 
 // Main function
-int runOnMCC7_numuCC_QE_wnumuvtx()
+int runOnMCC7_numuCC_QE_wnumuvtx(std::string GeneratorName, unsigned int ThreadNumber, unsigned int NumberOfThreads)
 {
 
     string Version = "v05_08_00";
 
-    string GeneratorName = "prodgenie_bnb_nu_cosmic";
+//     string GeneratorName = "prodgenie_bnb_nu_cosmic";
 //     string GeneratorName = "prodgenie_bnb_nu";
 //     string GeneratorName = "prodcosmics_corsika_inTime";
 //     string GeneratorName = "data_onbeam_bnb";
@@ -71,6 +71,17 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 //     VertexProdNameVec.push_back("pandoraCosmic");
     VertexProdNameVec.push_back("pandoraNu");
 //     VertexProdNameVec.push_back("pmtrack");
+    
+    std::string FileNumberStr;
+    
+    if(NumberOfThreads > 1)
+    {
+        FileNumberStr = "_" + std::to_string(ThreadNumber);
+    }
+    else
+    {
+        FileNumberStr = "";
+    }
 
     std::vector<string> SelectionNames;
 
@@ -224,7 +235,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
         for(const auto& VertexingName : VertexProdNameVec)
         {
             // Open output file
-            TFile* OutputFile = new TFile(("rootfiles/Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+"_"+Version+".root").c_str(),"RECREATE");
+            TFile* OutputFile = new TFile(("rootfiles/Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+"_"+Version+FileNumberStr+".root").c_str(),"RECREATE");
             // Make a clone tree which gets filled
             TTree *SelectionTree = treenc->CloneTree(0);
 
@@ -497,11 +508,18 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             unsigned int EventsTrackNearVertex = 0;
             unsigned int EventsFlashMatched = 0;
             unsigned int EventsTracksInFV = 0;
-            unsigned int EventsLengthCut = 0;
             unsigned int EventsNearVtx = 0;
             unsigned int EventsTrackLong = 0;
             unsigned int EventsTruelyReco = 0;
 
+            unsigned int MCEventsWithFlash = 0;
+            unsigned int MCEventsVtxInFV = 0;
+            unsigned int MCEventsTrackNearVertex = 0;
+            unsigned int MCEventsFlashMatched = 0;
+            unsigned int MCEventsTracksInFV = 0;
+            unsigned int MCEventsNearVtx = 0;
+            unsigned int MCEventsTrackLong = 0;
+            
             unsigned int NumberOfSignalTruth = 0;
             unsigned int NumberOfSignalTruthSel = 0;
             unsigned int NumberOfBgrNCTruthSel = 0;
@@ -521,9 +539,13 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 //             if(Size > 20000) Size = 20000;
 //             Size = 200000;
             
+            // Set start and end event number for multiple threads
+            unsigned long int StartEvent = Size*(ThreadNumber - 1)/NumberOfThreads; 
+            unsigned long int EndEvent = Size*ThreadNumber/NumberOfThreads;
+            
             cout << "number of events used is: " << Size << endl;
             //Event Loop
-            for(int i = 0; i < Size; i++)
+            for(int i = StartEvent; i < EndEvent; i++)
             {
                 if(i%1000 == 0) cout << "\t... " << i << endl;
 
@@ -603,6 +625,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
 
                         // Increase events with flash > 50 PE and within beam window
                         EventsWithFlash++;
+                        if(MCTrackCandidate > -1)
+                            MCEventsWithFlash++;
 
                         // Initialize Track Candidate properties
                         TrackCandidate = -1;
@@ -625,6 +649,9 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                                 if(VertexInFVFlag)
                                 {
                                     EventsVtxInFV++;
+                                    if(MCTrackCandidate > -1)
+                                        MCEventsVtxInFV++;
+
                                     VertexInFVFlag = false;
                                 }
 
@@ -654,6 +681,9 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                                         if(TrackDistanceFlag)
                                         {
                                             EventsTrackNearVertex++;
+                                            if(MCTrackCandidate > -1)
+                                                MCEventsTrackNearVertex++;
+                                            
                                             TrackDistanceFlag = false;
                                         }
 
@@ -695,6 +725,9 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                                 if(FlashMatchFlag)
                                 {
                                     EventsFlashMatched++;
+                                    if(MCTrackCandidate > -1)
+                                        MCEventsFlashMatched++;
+                                    
                                     FlashMatchFlag = false;
                                     // Set track contained flag true, so the other cuts can be applied on this vertex
                                     TrackContainedFlag = true;
@@ -714,6 +747,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                                         && TrackContainedFlag )
                                 {
                                     EventsTracksInFV++;
+                                    if(MCTrackCandidate > -1)
+                                        MCEventsTracksInFV++;
 
                                     // Fill Track length
                                     hTrackLength->Fill(TrackCandLength);
@@ -722,6 +757,8 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
                                     if(TrackCandLength > lengthcut)
                                     {
                                         EventsTrackLong++;
+                                        if(MCTrackCandidate > -1)
+                                            MCEventsTrackLong++;
                                         
                                         if(MCTrackCandidate > -1 && ccnc_truth[0] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                                         {
@@ -840,30 +877,30 @@ int runOnMCC7_numuCC_QE_wnumuvtx()
             hAllYTrackStartEnd->Write();
             hAllZTrackStartEnd->Write();
 
-            cout << "--------------------------------------------------------------------------------------------" << endl;
-            cout << endl;
-            cout << "Track Reco Product Name : " << TrackingName << "  Vertex Reco Product Name : " << VertexingName << endl;
-            cout << "Total POT : " << TotalPOT*1e12 << endl;
-            cout << "number of CC events with vertex in FV : " << ntrue << endl;
-            cout << "number of events with flash > 50 PE : " << EventsWithFlash << endl;
-            cout << "number of events with vtx in FV : " << EventsVtxInFV << endl;
-            cout << "number of events with track start/end within 5cm to vtx : " << EventsTrackNearVertex << endl;
-            cout << "number of events with tracks matched within 80cm to flash : " << EventsFlashMatched << endl;
-            cout << "number of events with contained tracks : " << EventsTracksInFV << endl;
-            cout << "number of events with longest track > 75cm : " << EventsTrackLong << endl;
-            cout << "number of events with track start end within 5cm to mc-vtx : " << EventsTruelyReco << endl;
-            cout << "number of events with contained MC tracks : " << NumberOfSignalTruth << endl;
-            cout << "number of well selected events : " << NumberOfSignalTruthSel << endl;
-            cout << "number of NC events selected : " << NumberOfBgrNCTruthSel << endl;
-            cout << "number of anti-Neutrino events selected : " << NumberOfBgrNumuBarTruthSel << endl;
-            cout << "number of Nu_e events selected : " << NumberOfBgrNueTruthSel << endl;
-            cout << "number of events selected cosmic : " << NumberOfBgrCosmicSel << endl;
-            cout << "event selection efficiency : " <<  (float)NumberOfSignalTruthSel/(float)NumberOfSignalTruth << endl;
-//             cout << "event selection purity : " << (float)NumberOfSignalTruthSel/(float)(NumberOfBgrNCTruthSel+NumberOfBgrNumuBarTruthSel+NumberOfBgrNueTruthSel)
-            cout << "event selection correctness : " <<  (float)EventsTruelyReco/(float)EventsTrackLong << endl;
-//             cout << "event selection missid rate : " <<  fabs((float)EventsTruelyReco-(float)NumberOfSignalTruth)/(float)NumberOfSignalTruth << endl;
-            cout << endl;
-            cout << "--------------------------------------------------------------------------------------------" << endl;
+            std::cout << "--------------------------------------------------------------------------------------------" << std::endl;
+            std::cout << std::endl;
+            std::cout << "Track Reco Product Name : " << TrackingName << "  Vertex Reco Product Name : " << VertexingName << std::endl;
+            std::cout << "Total POT : " << TotalPOT*1e12 << std::endl;
+            std::cout << "number of CC events with vertex in FV : " << ntrue << std::endl;
+            std::cout << "number of events with flash > 50 PE : " << EventsWithFlash << " " << MCEventsWithFlash << std::endl;
+            std::cout << "number of events with vtx in FV : " << EventsVtxInFV << " " << MCEventsVtxInFV << std::endl;
+            std::cout << "number of events with track start/end within 5cm to vtx : " << EventsTrackNearVertex << " " << MCEventsTrackNearVertex << std::endl;
+            std::cout << "number of events with tracks matched within 80cm to flash : " << EventsFlashMatched << " " << MCEventsFlashMatched << std::endl;
+            std::cout << "number of events with contained tracks : " << EventsTracksInFV << " " << MCEventsTracksInFV << std::endl;
+            std::cout << "number of events with longest track > 75cm : " << EventsTrackLong << " " << MCEventsTrackLong << std::endl;
+            std::cout << "number of events with track start end within 5cm to mc-vtx : " << EventsTruelyReco << std::endl;
+            std::cout << "number of events with contained MC tracks : " << NumberOfSignalTruth << std::endl;
+            std::cout << "number of well selected events : " << NumberOfSignalTruthSel << std::endl;
+            std::cout << "number of NC events selected : " << NumberOfBgrNCTruthSel << std::endl;
+            std::cout << "number of anti-Neutrino events selected : " << NumberOfBgrNumuBarTruthSel << std::endl;
+            std::cout << "number of Nu_e events selected : " << NumberOfBgrNueTruthSel << std::endl;
+            std::cout << "number of events selected cosmic : " << NumberOfBgrCosmicSel << std::endl;
+            std::cout << "event selection efficiency : " <<  (float)NumberOfSignalTruthSel/(float)NumberOfSignalTruth << std::endl;
+//             std::cout << "event selection purity : " << (float)NumberOfSignalTruthSel/(float)(NumberOfBgrNCTruthSel+NumberOfBgrNumuBarTruthSel+NumberOfBgrNueTruthSel)
+            std::cout << "event selection correctness : " <<  (float)EventsTruelyReco/(float)EventsTrackLong << std::endl;
+//             std::cout << "event selection missid rate : " <<  fabs((float)EventsTruelyReco-(float)NumberOfSignalTruth)/(float)NumberOfSignalTruth << std::endl;
+            std::cout << std::endl;
+            std::cout << "--------------------------------------------------------------------------------------------" << std::endl;
 
             // Write numbers to cvs File
             *EventSelectionCuts.at(0)  << "," << ntrue;
