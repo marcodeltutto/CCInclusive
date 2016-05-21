@@ -128,7 +128,25 @@ int runOnMCC7_numuCC_QE_wnumuvtx(std::string GeneratorName, unsigned int ThreadN
 
 
     TChain *treenc = new TChain("analysistree/anatree");
-    treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    
+    if(GeneratorName == "data_onbeam_bnb")
+    {
+        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    }
+    else if(GeneratorName == "data_offbeam_bnbext")
+    {
+        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    }
+    else if(GeneratorName == "prodgenie_bnb_nu_cosmic_uboone")
+    {
+        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/MC_BNB_Cosmic/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    }
+    else
+    {
+        treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    }
+    
+//     treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
@@ -235,7 +253,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx(std::string GeneratorName, unsigned int ThreadN
         for(const auto& VertexingName : VertexProdNameVec)
         {
             // Open output file
-            TFile* OutputFile = new TFile(("rootfiles/Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+"_"+Version+FileNumberStr+".root").c_str(),"RECREATE");
+            TFile* OutputFile = new TFile(("rootfiles/Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+"_"+Version+FileNumberStr+"_Old.root").c_str(),"RECREATE");
             // Make a clone tree which gets filled
             TTree *SelectionTree = treenc->CloneTree(0);
 

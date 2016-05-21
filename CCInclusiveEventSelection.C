@@ -219,8 +219,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
     Float_t	   XMCTrackEnd[maxtracks];
     Float_t	   YMCTrackEnd[maxtracks];
     Float_t	   ZMCTrackEnd[maxtracks];
-
-
+    
     //define cut variables
     double flashwidth = 80; //cm. Distance flash-track
     double distcut = 5; //cm. Distance track start/end to vertex
