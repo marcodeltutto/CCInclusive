@@ -166,6 +166,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
     Float_t         trkmomrange[maxtracks]; //track momentum calculated from track range
     Short_t         trkId[maxtracks];
     Short_t         trkorigin[maxtracks][3]; //for MC only: which true particle contributes most hits to the reco track: 2 = cosmic. 1 = neutrino
+    Int_t           TrackIDTruth[maxtracks][3]; // MC id matched with reco track
     bool            vertexatstart[maxtracks]; //for analysis: is the vertex at start of the track?
     bool            vertexatend[maxtracks]; //for analysis: ist the vertex at end of track?
 
@@ -277,6 +278,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             treenc -> SetBranchAddress(("trktheta_"+TrackingName).c_str(),trktheta);
             treenc -> SetBranchAddress(("trkphi_"+TrackingName).c_str(),trkphi);
             treenc -> SetBranchAddress(("trkorigin_"+TrackingName).c_str(),trkorigin);
+            treenc -> SetBranchAddress(("trkidtruth_"+TrackingName).c_str(),TrackIDTruth);
             treenc -> SetBranchAddress(("trkpidbestplane_"+TrackingName).c_str(), trkbestplane);
 
             // Program hack to apply for non uniform naming of nuvtx
@@ -842,14 +844,13 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                             hTrackStartDist->Fill(TrkEndMCStartDist);
                                             hTrackEndDist->Fill(TrkStartMCEndDist);
                                         }
-
-                                        // If track end or start are close to montecarlo vertex
-                                        if(   (TrkStartMCStartDist < TrackToMCDist && TrkEndMCEndDist < TrackToMCDist)
-                                                ||(TrkStartMCEndDist < TrackToMCDist && TrkEndMCStartDist < TrackToMCDist)
-                                          )
-                                        {
-                                            EventsTruelyReco++;
-                                        }
+                                        std::cout << trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] << " " << NumberOfMCTracks << " " << TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]] << std::endl;
+                                        // If track is of neutrino origin and if the muon is reconstructed
+//                                         if( MCTrackCandidate > -1 && TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]] > -1 
+//                                             && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1 && PDG_truth[ TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]] ] == 13 )
+//                                         {
+//                                             EventsTruelyReco++;
+//                                         }
                                     }
                                 }
                                 // Set track contained flag false

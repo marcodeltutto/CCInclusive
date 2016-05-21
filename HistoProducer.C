@@ -139,21 +139,21 @@ void HistoProducer()
     std::vector<unsigned int> ColorMap = {28,42,30,38};
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1.root").c_str());
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2.root").c_str());
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1.root").c_str());
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2.root").c_str());
+//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1.root").c_str());
+//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2.root").c_str());
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1.root").c_str());
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2.root").c_str());
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1.root").c_str());
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2.root").c_str());
+//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1.root").c_str());
+//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2.root").c_str());
     
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str());
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str());
+//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str());
 //     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_v05_08_00.root").c_str());
 //     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_sc_uboone_v05_08_00.root").c_str());
 
@@ -462,6 +462,9 @@ void HistoProducer()
         unsigned int nuRES = 0;
         unsigned int nuDIS = 0;
         unsigned int nuCOH = 0;
+        
+        unsigned int negPhi = 0;
+        unsigned int posPhi = 0;
 
         float XFVCutValue = 10; //10
         float YFVCutValue = 20; //20
@@ -531,6 +534,9 @@ void HistoProducer()
                 PhiVsYPos.at(file_no)->Fill(TrackPhi[TrkID],YTrackEnd[TrkID]);
                 PhiVsZPos.at(file_no)->Fill(TrackPhi[TrkID],ZTrackStart[TrkID]);
                 PhiVsZPos.at(file_no)->Fill(TrackPhi[TrkID],ZTrackEnd[TrkID]);
+                
+                if(TrackPhi[TrkID] < 0) negPhi++;
+                else posPhi++;
 
                 if(TrackTheta[TrkID] > 0.8 && TrackTheta[TrkID] < 1.5 && TrackPhi[TrkID] > -2.0 && TrackPhi[TrkID] < -0.7)
                 {
@@ -643,6 +649,9 @@ void HistoProducer()
         }
         std::cout << Signal << " " << nubar << " " << nue << " " << NCnu << " " << Cosmic << " " << UnknownOrigin << std::endl;
         std::cout << nuQE << " " << nuRES << " " << nuDIS << " " << nuCOH << std::endl;
+        
+        std::cout << "Number of negative phi in " << GenLabel.at(file_no) << " : " << negPhi << std::endl;
+        std::cout << "Number of positive phi in " << GenLabel.at(file_no) << " : " << posPhi << std::endl;
 
         ChainVec.at(file_no)->ResetBranchAddresses();
     }
