@@ -101,9 +101,6 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     Float_t        MCPhi[maxtracks];
     Float_t        MCEnergy[maxtracks];
 
-    // Open output file
-    TFile* OutputFile = new TFile(("rootfiles/Hist_MC_Truth_"+GeneratorName+"_"+Version+FileNumberStr+".root").c_str(),"RECREATE");
-
     treenc -> SetBranchAddress("mcevts_truth", &mcevts_truth);
     treenc -> SetBranchAddress("nuvtxx_truth", nuvtxx_truth);
     treenc -> SetBranchAddress("nuvtxy_truth", nuvtxy_truth);
@@ -123,6 +120,9 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     treenc -> SetBranchAddress("phi", MCTheta);
     treenc -> SetBranchAddress("Eng", MCEnergy);
     
+    
+    // Open output file
+    TFile* OutputFile = new TFile(("rootfiles/Hist_MC_Truth_"+GeneratorName+"_"+Version+FileNumberStr+".root").c_str(),"RECREATE");
     // Make a clone tree which gets filled
     TTree *SelectionTree = treenc->CloneTree(0);
 
@@ -175,7 +175,6 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
                 {
                     // Fill new length and candidate index
                     MCTrackCandidate = track_no;
-                    SelectionTree->Fill();
                 }
             } // MC particle loop
         } // MC vertex loop
@@ -184,6 +183,7 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
         if(MCTrackCandidate > -1 && ccnc_truth[0] == 0 && PDG_truth[MCTrackCandidate] == 13)
         {
             NumberOfSignalTruth++;
+            SelectionTree->Fill();
         }
 
 
