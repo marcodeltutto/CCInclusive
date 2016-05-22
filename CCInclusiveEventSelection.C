@@ -518,6 +518,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             int VertexCandidate;
 
             int MCTrackCandidate;
+            int NuMuCCTrackCandidate;
 
             unsigned int EventsWithFlash = 0;
             unsigned int EventsVtxInFV = 0;
@@ -594,6 +595,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                 } // flash loop
 
                 MCTrackCandidate = -1;
+                NuMuCCTrackCandidate = -1;
                 float MCTrackCandRange = 0;
 
                 // Loop over all MC neutrino vertices
@@ -642,7 +644,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
 
                         // Increase events with flash > 50 PE and within beam window
                         EventsWithFlash++;
-                        if(MCTrackCandRange > -1)
+                        if(NuMuCCTrackCandidate > -1)
                             MCEventsWithFlash++;
                         
 
@@ -670,7 +672,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                     if(TrackDistanceFlag)
                                     {
                                         EventsTrackNearVertex++;
-                                        if(MCTrackCandRange > -1)
+                                        if(NuMuCCTrackCandidate > -1)
                                             MCEventsTrackNearVertex++;
                                         
                                         TrackDistanceFlag = false;
@@ -748,7 +750,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                             if(VertexInFVFlag)
                             {
                                 EventsVtxInFV++;
-                                if(MCTrackCandRange > -1)
+                                if(NuMuCCTrackCandidate > -1)
                                     MCEventsVtxInFV++;
                                 VertexInFVFlag = false;
                             }
@@ -785,7 +787,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                 if(FlashMatchFlag)
                                 {
                                     EventsFlashMatched++;
-                                    if(MCTrackCandRange > -1)
+                                    if(NuMuCCTrackCandidate > -1)
                                         MCEventsFlashMatched++;
                                     FlashMatchFlag = false;
                                     // Set track contained flag true, so the other cuts can be applied on this vertex
@@ -806,7 +808,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                         && TrackContainedFlag )
                                 {
                                     EventsTracksInFV++;
-                                    if(MCTrackCandRange > -1)
+                                    if(NuMuCCTrackCandidate > -1)
                                         MCEventsTracksInFV++;
 
                                     // Fill Track length
@@ -816,7 +818,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                     if(TrackCandLength > lengthcut)
                                     {
                                         EventsTrackLong++;
-                                        if(MCTrackCandRange > -1)
+                                        if(NuMuCCTrackCandidate > -1)
                                             MCEventsTrackLong++;
 
                                         if(MCTrackCandidate > -1 && ccnc_truth[0] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)

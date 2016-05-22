@@ -520,6 +520,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx(std::string GeneratorName, unsigned int ThreadN
             int VertexCandidate;
 
             int MCTrackCandidate;
+            int NuMuCCTrackCandidate;
 
             unsigned int EventsWithFlash = 0;
             unsigned int EventsVtxInFV = 0;
@@ -595,6 +596,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx(std::string GeneratorName, unsigned int ThreadN
                 } // flash loop
 
                 MCTrackCandidate = -1;
+                NuMuCCTrackCandidate = -1;
                 float MCTrackCandLength = 0;
 
                 // Loop over all MC neutrino vertices
@@ -643,7 +645,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx(std::string GeneratorName, unsigned int ThreadN
 
                         // Increase events with flash > 50 PE and within beam window
                         EventsWithFlash++;
-                        if(MCTrackCandidate > -1)
+                        if(NuMuCCTrackCandidate > -1)
                             MCEventsWithFlash++;
 
                         // Initialize Track Candidate properties
@@ -667,7 +669,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx(std::string GeneratorName, unsigned int ThreadN
                                 if(VertexInFVFlag)
                                 {
                                     EventsVtxInFV++;
-                                    if(MCTrackCandidate > -1)
+                                    if(NuMuCCTrackCandidate > -1)
                                         MCEventsVtxInFV++;
 
                                     VertexInFVFlag = false;
@@ -699,7 +701,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx(std::string GeneratorName, unsigned int ThreadN
                                         if(TrackDistanceFlag)
                                         {
                                             EventsTrackNearVertex++;
-                                            if(MCTrackCandidate > -1)
+                                            if(NuMuCCTrackCandidate > -1)
                                                 MCEventsTrackNearVertex++;
                                             
                                             TrackDistanceFlag = false;
@@ -743,7 +745,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx(std::string GeneratorName, unsigned int ThreadN
                                 if(FlashMatchFlag)
                                 {
                                     EventsFlashMatched++;
-                                    if(MCTrackCandidate > -1)
+                                    if(NuMuCCTrackCandidate > -1)
                                         MCEventsFlashMatched++;
                                     
                                     FlashMatchFlag = false;
@@ -765,7 +767,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx(std::string GeneratorName, unsigned int ThreadN
                                         && TrackContainedFlag )
                                 {
                                     EventsTracksInFV++;
-                                    if(MCTrackCandidate > -1)
+                                    if(NuMuCCTrackCandidate > -1)
                                         MCEventsTracksInFV++;
 
                                     // Fill Track length
@@ -775,7 +777,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx(std::string GeneratorName, unsigned int ThreadN
                                     if(TrackCandLength > lengthcut)
                                     {
                                         EventsTrackLong++;
-                                        if(MCTrackCandidate > -1)
+                                        if(NuMuCCTrackCandidate > -1)
                                             MCEventsTrackLong++;
                                         
                                         if(MCTrackCandidate > -1 && ccnc_truth[0] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)

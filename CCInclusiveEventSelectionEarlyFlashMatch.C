@@ -519,6 +519,7 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
             int VertexCandidate;
 
             int MCTrackCandidate;
+            int NuMuCCTrackCandidate;
 
             unsigned int EventsWithFlash = 0;
             unsigned int EventsVtxInFV = 0;
@@ -595,6 +596,7 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
                 } // flash loop
 
                 MCTrackCandidate = -1;
+                NuMuCCTrackCandidate = -1;
                 float MCTrackCandRange = 0;
 
                 // Loop over all MC neutrino vertices
@@ -627,6 +629,7 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
                 if(MCTrackCandidate > -1 && ccnc_truth[0] == 0 && PDG_truth[MCTrackCandidate] == 13)
                 {
                     NumberOfSignalTruth++;
+                    NuMuCCTrackCandidate = MCTrackCandidate;
                 }
 
                 // If there is a POT entry or we are not looking at beam data
@@ -642,7 +645,7 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
 
                         // Increase events with flash > 50 PE and within beam window
                         EventsWithFlash++;
-                        if(MCTrackCandRange > -1)
+                        if(NuMuCCTrackCandidate > -1)
                             MCEventsWithFlash++;
 
                         // Initialize vertex candidates for flash matched clusters
@@ -674,7 +677,7 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
                                         if(FlashMatchFlag)
                                         {
                                             EventsFlashMatched++;
-                                            if(MCTrackCandRange > -1)
+                                            if(NuMuCCTrackCandidate > -1)
                                                 MCEventsFlashMatched++;
                                             FlashMatchFlag = false;
                                         }
@@ -715,7 +718,7 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
                                     if(TrackDistanceFlag)
                                     {
                                         EventsTrackNearVertex++;
-                                        if(MCTrackCandRange > -1)
+                                        if(NuMuCCTrackCandidate > -1)
                                             MCEventsTrackNearVertex++;
 
                                         TrackDistanceFlag = false;
@@ -793,7 +796,7 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
                             if(VertexInFVFlag)
                             {
                                 EventsVtxInFV++;
-                                if(MCTrackCandRange > -1)
+                                if(NuMuCCTrackCandidate > -1)
                                     MCEventsVtxInFV++;
                                 VertexInFVFlag = false;
                             }
@@ -842,7 +845,7 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
                                 hZTrackStartEnd->Fill(trkendz[TrackCandidate]);
 
                                 EventsTracksInFV++;
-                                if(MCTrackCandRange > -1)
+                                if(NuMuCCTrackCandidate > -1)
                                     MCEventsTracksInFV++;
 
                                 // Fill Track length
@@ -852,7 +855,7 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
                                 if(TrackCandLength > lengthcut)
                                 {
                                     EventsTrackLong++;
-                                    if(MCTrackCandRange > -1)
+                                    if(NuMuCCTrackCandidate > -1)
                                         MCEventsTrackLong++;
 
                                     if(MCTrackCandidate > -1 && ccnc_truth[0] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
@@ -982,9 +985,9 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
             std::cout << "Total POT : " << TotalPOT*1e12 << std::endl;
             std::cout << "number of CC events with vertex in FV : " << ntrue << std::endl;
             std::cout << "number of events with flash > 50 PE : " << EventsWithFlash << " " << MCEventsWithFlash << std::endl;
+            std::cout << "number of events with tracks matched within 80cm to flash : " << EventsFlashMatched << " " << MCEventsFlashMatched << std::endl;
             std::cout << "number of events with track start/end within 5cm to vtx : " << EventsTrackNearVertex << " " << MCEventsTrackNearVertex << std::endl;
             std::cout << "number of events with vtx in FV : " << EventsVtxInFV << " " << MCEventsVtxInFV << std::endl;
-            std::cout << "number of events with tracks matched within 80cm to flash : " << EventsFlashMatched << " " << MCEventsFlashMatched << std::endl;
             std::cout << "number of events with contained tracks : " << EventsTracksInFV << " " << MCEventsTracksInFV << std::endl;
             std::cout << "number of events with longest track > 75cm : " << EventsTrackLong << " " << MCEventsTrackLong << std::endl;
             std::cout << "number of events with track start end within 5cm to mc-vtx : " << EventsTruelyReco << std::endl;
