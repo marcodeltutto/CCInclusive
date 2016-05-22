@@ -101,15 +101,6 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     Float_t        MCPhi[maxtracks];
     Float_t        MCEnergy[maxtracks];
 
-
-
-    if(GeneratorName == "data_bnb" || GeneratorName == "data_onbeam_bnb")
-    {
-        std::cout << "Changed beam gate window for on-beam data" << std::endl;
-        beammin -= 0.36;
-        beammax -= 0.36;
-    }
-
     // Open output file
     TFile* OutputFile = new TFile(("rootfiles/Hist_MC_Truth_"+GeneratorName+"_"+Version+FileNumberStr+".root").c_str(),"RECREATE");
 
