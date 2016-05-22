@@ -129,6 +129,8 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     int ntrue = 0;
     int MCTrackCandidate;
     
+    double MCTrackToMCVtxDist = 1; //cm. distance between mc track start and mc vertex
+    
     unsigned int NumberOfSignalTruth;
 
     TBranch* BrMCTrackCand = SelectionTree->Branch("MCTrackCand",&MCTrackCandidate,"MCTrackCand/I");
