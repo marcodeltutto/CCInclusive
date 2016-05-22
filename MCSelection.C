@@ -100,6 +100,26 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     Float_t        MCTheta[maxtracks];
     Float_t        MCPhi[maxtracks];
     Float_t        MCEnergy[maxtracks];
+    
+    treenc -> SetBranchStatus("*",0);
+    treenc -> SetBranchStatus("mcevts_truth", 1);
+    treenc -> SetBranchStatus("nuvtxx_truth", 1);
+    treenc -> SetBranchStatus("nuvtxy_truth", 1);
+    treenc -> SetBranchStatus("nuvtxz_truth", 1);
+    treenc -> SetBranchStatus("ccnc_truth", 1);
+    treenc -> SetBranchStatus("nuPDG_truth", 1);
+    treenc -> SetBranchStatus("pdg", 1);
+    treenc -> SetBranchStatus("mode_truth", 1);
+    treenc -> SetBranchStatus("geant_list_size", 1);
+    treenc -> SetBranchStatus("StartPointx", 1);
+    treenc -> SetBranchStatus("StartPointy", 1);
+    treenc -> SetBranchStatus("StartPointz", 1);
+    treenc -> SetBranchStatus("EndPointx", 1);
+    treenc -> SetBranchStatus("EndPointy", 1);
+    treenc -> SetBranchStatus("EndPointz", 1);
+    treenc -> SetBranchStatus("theta", 1);
+    treenc -> SetBranchStatus("phi", 1);
+    treenc -> SetBranchStatus("Eng", 1);
 
     treenc -> SetBranchAddress("mcevts_truth", &mcevts_truth);
     treenc -> SetBranchAddress("nuvtxx_truth", nuvtxx_truth);
