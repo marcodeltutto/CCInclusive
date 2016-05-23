@@ -545,7 +545,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx(std::string GeneratorName, unsigned int ThreadN
             unsigned int NumberOfBgrNumuBarTruthSel = 0;
             unsigned int NumberOfBgrNueTruthSel = 0;
             unsigned int NumberOfBgrCosmicSel = 0;
-            
+            unsigned int NumberOfBgrNuOutFVSel = 0;
 
             TBranch* BrTrackCand = SelectionTree->Branch("TrackCand",&TrackCandidate,"TrackCand/I");
             TBranch* BrVtxCand = SelectionTree->Branch("VertexCand",&VertexCandidate,"VertexCand/I");
@@ -780,6 +780,11 @@ int runOnMCC7_numuCC_QE_wnumuvtx(std::string GeneratorName, unsigned int ThreadN
                                         EventsTrackLong++;
                                         if(NuMuCCTrackCandidate > -1)
                                             MCEventsTrackLong++;
+                                        
+                                        if(!inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]) && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
+                                        {
+                                            NumberOfBgrNuOutFVSel++;
+                                        }
                                         
                                         if(MCTrackCandidate > -1 && ccnc_truth[0] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                                         {

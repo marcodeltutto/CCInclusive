@@ -46,7 +46,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
 {
 
     std::string Version = "v05_08_00";
-    
+
 //     std::string GeneratorName = "prodgenie_bnb_nu_cosmic";
 //     std::string GeneratorName = "prodgenie_bnb_nu";
 //     std::string GeneratorName = "prodcosmics_corsika_inTime";
@@ -72,9 +72,9 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
 //     VertexProdNameVec.push_back("pandoraCosmic");
     VertexProdNameVec.push_back("pandoraNu");
 //     VertexProdNameVec.push_back("pmtrack");
-    
+
     std::string FileNumberStr;
-    
+
     if(NumberOfThreads > 1)
     {
         FileNumberStr = "_" + std::to_string(ThreadNumber);
@@ -83,9 +83,9 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
     {
         FileNumberStr = "";
     }
-    
-    TChain *treenc = new TChain("analysistree/anatree");    
-    
+
+    TChain *treenc = new TChain("analysistree/anatree");
+
     if(GeneratorName == "data_onbeam_bnb")
     {
         treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
@@ -219,7 +219,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
     Float_t	   XMCTrackEnd[maxtracks];
     Float_t	   YMCTrackEnd[maxtracks];
     Float_t	   ZMCTrackEnd[maxtracks];
-    
+
     //define cut variables
     double flashwidth = 80; //cm. Distance flash-track
     double distcut = 5; //cm. Distance track start/end to vertex
@@ -528,7 +528,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             unsigned int EventsNearVtx = 0;
             unsigned int EventsTrackLong = 0;
             unsigned int EventsTruelyReco = 0;
-            
+
             unsigned int MCEventsWithFlash = 0;
             unsigned int MCEventsVtxInFV = 0;
             unsigned int MCEventsTrackNearVertex = 0;
@@ -543,6 +543,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             unsigned int NumberOfBgrNumuBarTruthSel = 0;
             unsigned int NumberOfBgrNueTruthSel = 0;
             unsigned int NumberOfBgrCosmicSel = 0;
+            unsigned int NumberOfBgrNuOutFVSel = 0;
 
 
             TBranch* BrTrackCand = SelectionTree->Branch("TrackCand",&TrackCandidate,"TrackCand/I");
@@ -552,11 +553,11 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             double TotalPOT = 0.0;
 
             unsigned long int Size = treenc -> GetEntries();
-            
+
             // Set start and end event number for multiple threads
-            unsigned long int StartEvent = Size*(ThreadNumber - 1)/NumberOfThreads; 
+            unsigned long int StartEvent = Size*(ThreadNumber - 1)/NumberOfThreads;
             unsigned long int EndEvent = Size*ThreadNumber/NumberOfThreads;
-            
+
 
 //             if(Size > 20000) Size = 20000;
 //             Size = 200000;
@@ -646,7 +647,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                         EventsWithFlash++;
                         if(NuMuCCTrackCandidate > -1)
                             MCEventsWithFlash++;
-                        
+
 
                         // Initialize a vertex and associated track collection
                         std::map< int,std::vector<int> > VertexTrackCollection;
@@ -674,7 +675,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                         EventsTrackNearVertex++;
                                         if(NuMuCCTrackCandidate > -1)
                                             MCEventsTrackNearVertex++;
-                                        
+
                                         TrackDistanceFlag = false;
                                     }
 
@@ -821,6 +822,11 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                         if(NuMuCCTrackCandidate > -1)
                                             MCEventsTrackLong++;
 
+                                        if(!inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]) && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
+                                        {
+                                            NumberOfBgrNuOutFVSel++;
+                                        }
+
                                         if(MCTrackCandidate > -1 && ccnc_truth[0] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                                         {
                                             if(PDG_truth[MCTrackCandidate] == 13)
@@ -877,7 +883,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                             hTrackStartDist->Fill(TrkEndMCStartDist);
                                             hTrackEndDist->Fill(TrkStartMCEndDist);
                                         }
-                                        
+
                                         // If track end or start are close to montecarlo vertex
                                         if(   (TrkStartMCStartDist < TrackToMCDist && TrkEndMCEndDist < TrackToMCDist)
                                                 ||(TrkStartMCEndDist < TrackToMCDist && TrkEndMCStartDist < TrackToMCDist)
@@ -887,7 +893,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                         }
 //                                         std::cout << trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] << " " << NumberOfMCTracks << " " << TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]] << std::endl;
                                         // If track is of neutrino origin and if the muon is reconstructed
-//                                         if( MCTrackCandidate > -1 && TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]] > -1 
+//                                         if( MCTrackCandidate > -1 && TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]] > -1
 //                                             && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1 && PDG_truth[ TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]] ] == 13 )
 //                                         {
 //                                             EventsTruelyReco++;

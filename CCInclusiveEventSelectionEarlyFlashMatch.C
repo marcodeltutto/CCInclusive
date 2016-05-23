@@ -544,6 +544,7 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
             unsigned int NumberOfBgrNumuBarTruthSel = 0;
             unsigned int NumberOfBgrNueTruthSel = 0;
             unsigned int NumberOfBgrCosmicSel = 0;
+            unsigned int NumberOfBgrNuOutFVSel = 0;
 
 
             TBranch* BrTrackCand = SelectionTree->Branch("TrackCand",&TrackCandidate,"TrackCand/I");
@@ -857,6 +858,11 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
                                     EventsTrackLong++;
                                     if(NuMuCCTrackCandidate > -1)
                                         MCEventsTrackLong++;
+                                    
+                                    if(!inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]) && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
+                                    {
+                                        NumberOfBgrNuOutFVSel++;
+                                    }
 
                                     if(MCTrackCandidate > -1 && ccnc_truth[0] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                                     {
