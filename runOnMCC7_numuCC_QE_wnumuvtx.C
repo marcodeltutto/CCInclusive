@@ -629,6 +629,7 @@ int runOnMCC7_numuCC_QE_wnumuvtx(std::string GeneratorName, unsigned int ThreadN
                 if(MCTrackCandidate > -1 && ccnc_truth[0] == 0 && PDG_truth[MCTrackCandidate] == 13)
                 {
                     NumberOfSignalTruth++;
+                    NuMuCCTrackCandidate = MCTrackCandidate;
                 }
 
                 // If there is a POT entry or we are not looking at beam data
