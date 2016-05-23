@@ -858,17 +858,16 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
                                     EventsTrackLong++;
                                     if(NuMuCCTrackCandidate > -1)
                                         MCEventsTrackLong++;
-                                    
-                                    if(!inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]) && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
-                                    {
-                                        NumberOfBgrNuOutFVSel++;
-                                    }
 
                                     if(MCTrackCandidate > -1 && ccnc_truth[0] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                                     {
-                                        if(PDG_truth[MCTrackCandidate] == 13)
+                                        if(PDG_truth[MCTrackCandidate] == 13 && inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
                                         {
                                             NumberOfSignalTruthSel++;
+                                        }
+                                        else if(NuMuCCTrackCandidate > -1 && !inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
+                                        {
+                                              NumberOfBgrNuOutFVSel++;
                                         }
                                         else if(PDG_truth[MCTrackCandidate] == -13)
                                         {
@@ -1003,6 +1002,7 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
             std::cout << "number of anti-Neutrino events selected : " << NumberOfBgrNumuBarTruthSel << std::endl;
             std::cout << "number of Nu_e events selected : " << NumberOfBgrNueTruthSel << std::endl;
             std::cout << "number of events selected cosmic : " << NumberOfBgrCosmicSel << std::endl;
+            std::cout << "number of nu_mu events out of FV : " << NumberOfBgrNuOutFVSel <<std::endl;
             std::cout << "event selection efficiency : " <<  (float)NumberOfSignalTruthSel/(float)NumberOfSignalTruth << std::endl;
 //             std::cout << "event selection purity : " << (float)NumberOfSignalTruthSel/(float)(NumberOfBgrNCTruthSel+NumberOfBgrNumuBarTruthSel+NumberOfBgrNueTruthSel)
             std::cout << "event selection correctness : " <<  (float)EventsTruelyReco/(float)EventsTrackLong << std::endl;
