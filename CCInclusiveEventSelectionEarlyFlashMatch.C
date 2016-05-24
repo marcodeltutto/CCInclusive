@@ -219,7 +219,8 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
     Float_t	   XMCTrackEnd[maxtracks];
     Float_t	   YMCTrackEnd[maxtracks];
     Float_t	   ZMCTrackEnd[maxtracks];
-
+    
+    Int_t          MCTrackID[maxtracks];
 
     //define cut variables
     double flashwidth = 80; //cm. Distance flash-track
@@ -276,6 +277,7 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
             treenc -> SetBranchAddress("EndPointx", XMCTrackEnd);
             treenc -> SetBranchAddress("EndPointy", YMCTrackEnd);
             treenc -> SetBranchAddress("EndPointz", ZMCTrackEnd);
+            treenc -> SetBranchAddress("TrackId", MCTrackID);
 
             // Product specific stuff
             treenc -> SetBranchAddress(("ntracks_"+TrackingName).c_str(),&ntracks_reco);
@@ -921,9 +923,10 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
                                     }
 
                                     // If track end or start are close to montecarlo vertex
-                                    if(   (TrkStartMCStartDist < TrackToMCDist && TrkEndMCEndDist < TrackToMCDist)
-                                            ||(TrkStartMCEndDist < TrackToMCDist && TrkEndMCStartDist < TrackToMCDist)
-                                      )
+//                                     if(   (TrkStartMCStartDist < TrackToMCDist && TrkEndMCEndDist < TrackToMCDist)
+//                                             ||(TrkStartMCEndDist < TrackToMCDist && TrkEndMCStartDist < TrackToMCDist)
+//                                       )
+                                    if( MCTrackID[NuMuCCTrackCandidate] == TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]])
                                     {
                                         EventsTruelyReco++;
                                     }

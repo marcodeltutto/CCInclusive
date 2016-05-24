@@ -219,6 +219,8 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
     Float_t	   XMCTrackEnd[maxtracks];
     Float_t	   YMCTrackEnd[maxtracks];
     Float_t	   ZMCTrackEnd[maxtracks];
+    
+    Int_t          MCTrackID[maxtracks];
 
     //define cut variables
     double flashwidth = 80; //cm. Distance flash-track
@@ -275,6 +277,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
             treenc -> SetBranchAddress("EndPointx", XMCTrackEnd);
             treenc -> SetBranchAddress("EndPointy", YMCTrackEnd);
             treenc -> SetBranchAddress("EndPointz", ZMCTrackEnd);
+            treenc -> SetBranchAddress("TrackId", MCTrackID);
 
             // Product specific stuff
             treenc -> SetBranchAddress(("ntracks_"+TrackingName).c_str(),&ntracks_reco);
@@ -885,19 +888,13 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                                         }
 
                                         // If track end or start are close to montecarlo vertex
-                                        if(   (TrkStartMCStartDist < TrackToMCDist && TrkEndMCEndDist < TrackToMCDist)
-                                                ||(TrkStartMCEndDist < TrackToMCDist && TrkEndMCStartDist < TrackToMCDist)
-                                          )
+//                                         if(   (TrkStartMCStartDist < TrackToMCDist && TrkEndMCEndDist < TrackToMCDist)
+//                                                 ||(TrkStartMCEndDist < TrackToMCDist && TrkEndMCStartDist < TrackToMCDist)
+//                                           )
+                                        if( MCTrackID[NuMuCCTrackCandidate] == TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]])
                                         {
                                             EventsTruelyReco++;
                                         }
-//                                         std::cout << trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] << " " << NumberOfMCTracks << " " << TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]] << std::endl;
-                                        // If track is of neutrino origin and if the muon is reconstructed
-//                                         if( MCTrackCandidate > -1 && TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]] > -1
-//                                             && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1 && PDG_truth[ TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]] ] == 13 )
-//                                         {
-//                                             EventsTruelyReco++;
-//                                         }
                                     }
                                 }
                                 // Set track contained flag false
