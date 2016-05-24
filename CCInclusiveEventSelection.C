@@ -4,7 +4,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include <map>
 
 #include <TCanvas.h>
 #include <TChain.h>
@@ -13,7 +12,7 @@
 #include <TLine.h>
 #include <TTree.h>
 
-// using namespace std;
+using namespace std;
 
 //This defines our current settings for the fiducial volume
 double FVx = 256.35;
@@ -45,18 +44,18 @@ double FlashTrackDist(double flash, double start, double end) {
 int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned int NumberOfThreads)
 {
 
-    std::string Version = "v05_08_00";
+    string Version = "v05_08_00";
 
-//     std::string GeneratorName = "prodgenie_bnb_nu_cosmic";
-//     std::string GeneratorName = "prodgenie_bnb_nu";
-//     std::string GeneratorName = "prodcosmics_corsika_inTime";
-//     std::string GeneratorName = "prodgenie_bnb_nu_cosmic_sc_uboone";
-//     std::string GeneratorName = "data_onbeam_bnb";
-//     std::string GeneratorName = "data_offbeam_bnbext";
-//     std::string GeneratorName = "prodgenie_bnb_nu_cosmic_uboone";
+//     string GeneratorName = "prodgenie_bnb_nu_cosmic";
+//     string GeneratorName = "prodgenie_bnb_nu";
+//     string GeneratorName = "prodcosmics_corsika_inTime";
+//     string GeneratorName = "data_onbeam_bnb";
+//     string GeneratorName = "data_offbeam_bnbext";
+//     string GeneratorName = "prodgenie_bnb_nu_cosmic_uboone";
+//     string GeneratorName = "prodgenie_bnb_nu_cosmic_sc_uboone";
 
     // Initialize and fill track reco product names
-    std::vector<std::string> TrackProdNameVec;
+    std::vector<string> TrackProdNameVec;
 
 //     TrackProdNameVec.push_back("pandoraNuKHit");
 //     TrackProdNameVec.push_back("pandoraCosmic");
@@ -66,15 +65,15 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
 //     TrackProdNameVec.push_back("trackkalmanhit");
 
     // Initialize and fill vertex reco product names
-    std::vector<std::string> VertexProdNameVec;
+    std::vector<string> VertexProdNameVec;
 
 //     VertexProdNameVec.push_back("nuvtx");
 //     VertexProdNameVec.push_back("pandoraCosmic");
     VertexProdNameVec.push_back("pandoraNu");
 //     VertexProdNameVec.push_back("pmtrack");
-
+    
     std::string FileNumberStr;
-
+    
     if(NumberOfThreads > 1)
     {
         FileNumberStr = "_" + std::to_string(ThreadNumber);
@@ -84,27 +83,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
         FileNumberStr = "";
     }
 
-    TChain *treenc = new TChain("analysistree/anatree");
-
-    if(GeneratorName == "data_onbeam_bnb")
-    {
-        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
-    }
-    else if(GeneratorName == "data_offbeam_bnbext")
-    {
-        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
-    }
-    else if(GeneratorName == "prodgenie_bnb_nu_cosmic_uboone")
-    {
-        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/MC_BNB_Cosmic/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
-    }
-    else
-    {
-        treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
-    }
-//     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
-
-    std::vector<std::string> SelectionNames;
+    std::vector<string> SelectionNames;
 
     SelectionNames.push_back("NumberOfEvents_");
     SelectionNames.push_back("FlashCut_");
@@ -121,16 +100,16 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
     SelectionNames.push_back("N_bg_numubar_sel_");
     SelectionNames.push_back("N_bg_nue_sel_");
     SelectionNames.push_back("N_bg_cosmicbnb_sel_");
-
+    
 
     // Initialize table file vector
-    std::vector<std::ofstream*> EventSelectionCuts;
+    std::vector<ofstream*> EventSelectionCuts;
 
 //     // Create files and write first line
     for(const auto& SelName : SelectionNames)
     {
         // Fill vector of fstreams
-        EventSelectionCuts.push_back(new ofstream("cvsfiles/"+SelName+GeneratorName+"_"+Version+".cvs",std::ios::trunc));
+        EventSelectionCuts.push_back(new ofstream("cvsfiles/"+SelName+GeneratorName+"_"+Version+".cvs",ios::trunc));
 
         // Fill Title
         *EventSelectionCuts.back() << SelName + GeneratorName << "\n";
@@ -147,6 +126,31 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
         *EventSelectionCuts.back() << "\n";
     } // Table file loop
 
+
+    TChain *treenc = new TChain("analysistree/anatree");
+    
+    if(GeneratorName == "data_onbeam_bnb")
+    {
+        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    }
+    else if(GeneratorName == "data_offbeam_bnbext")
+    {
+        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    }
+    else if(GeneratorName == "prodgenie_bnb_nu_cosmic_uboone")
+    {
+        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/MC_BNB_Cosmic/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    }
+    else
+    {
+        treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+    }
+    
+//     treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+//     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+//     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/MC_BNB_Cosmic/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 
     //maximum array sizes
     const int maxentries = 35000;
@@ -219,6 +223,9 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
     Float_t	   XMCTrackEnd[maxtracks];
     Float_t	   YMCTrackEnd[maxtracks];
     Float_t	   ZMCTrackEnd[maxtracks];
+    
+    Int_t          MCTrackID[maxtracks];
+
 
     //define cut variables
     double flashwidth = 80; //cm. Distance flash-track
@@ -249,7 +256,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
         for(const auto& VertexingName : VertexProdNameVec)
         {
             // Open output file
-            TFile* OutputFile = new TFile(("rootfiles/Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+"_"+Version+FileNumberStr+".root").c_str(),"RECREATE");
+            TFile* OutputFile = new TFile(("rootfiles/Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+"_"+Version+FileNumberStr+"_Old.root").c_str(),"RECREATE");
             // Make a clone tree which gets filled
             TTree *SelectionTree = treenc->CloneTree(0);
 
@@ -275,10 +282,10 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             treenc -> SetBranchAddress("EndPointx", XMCTrackEnd);
             treenc -> SetBranchAddress("EndPointy", YMCTrackEnd);
             treenc -> SetBranchAddress("EndPointz", ZMCTrackEnd);
+            treenc -> SetBranchAddress("TrackId", MCTrackID);
 
             // Product specific stuff
             treenc -> SetBranchAddress(("ntracks_"+TrackingName).c_str(),&ntracks_reco);
-            treenc -> SetBranchAddress(("trklen_"+TrackingName).c_str(), trklen);
             treenc -> SetBranchAddress(("trkstartx_"+TrackingName).c_str(),trkstartx);
             treenc -> SetBranchAddress(("trkstarty_"+TrackingName).c_str(),trkstarty);
             treenc -> SetBranchAddress(("trkstartz_"+TrackingName).c_str(),trkstartz);
@@ -290,7 +297,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             treenc -> SetBranchAddress(("trkorigin_"+TrackingName).c_str(),trkorigin);
             treenc -> SetBranchAddress(("trkidtruth_"+TrackingName).c_str(),TrackIDTruth);
             treenc -> SetBranchAddress(("trkpidbestplane_"+TrackingName).c_str(), trkbestplane);
-
+            
             // Program hack to apply for non uniform naming of nuvtx
             if(VertexingName != "nuvtx")
             {
@@ -510,7 +517,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
 
             double diststart = 0;
             double distend = 0;
-            double TrackRange = 0;
+            double length = 0;
 
             int ntrue = 0;
 
@@ -536,7 +543,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             unsigned int MCEventsTracksInFV = 0;
             unsigned int MCEventsNearVtx = 0;
             unsigned int MCEventsTrackLong = 0;
-
+            
             unsigned int NumberOfSignalTruth = 0;
             unsigned int NumberOfSignalTruthSel = 0;
             unsigned int NumberOfBgrNCTruthSel = 0;
@@ -545,28 +552,26 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             unsigned int NumberOfBgrCosmicSel = 0;
             unsigned int NumberOfBgrNuOutFVSel = 0;
 
-
             TBranch* BrTrackCand = SelectionTree->Branch("TrackCand",&TrackCandidate,"TrackCand/I");
             TBranch* BrVtxCand = SelectionTree->Branch("VertexCand",&VertexCandidate,"VertexCand/I");
             TBranch* BrMCTrackCand = SelectionTree->Branch("MCTrackCand",&MCTrackCandidate,"MCTrackCand/I");
 
             double TotalPOT = 0.0;
 
-            unsigned long int Size = treenc -> GetEntries();
-
-            // Set start and end event number for multiple threads
-            unsigned long int StartEvent = Size*(ThreadNumber - 1)/NumberOfThreads;
-            unsigned long int EndEvent = Size*ThreadNumber/NumberOfThreads;
-
-
+            int Size = treenc -> GetEntries();
+            
 //             if(Size > 20000) Size = 20000;
 //             Size = 200000;
-
-            std::cout << "number of events used is: " << EndEvent-StartEvent << " of " << Size << std::endl;
+            
+            // Set start and end event number for multiple threads
+            unsigned long int StartEvent = Size*(ThreadNumber - 1)/NumberOfThreads; 
+            unsigned long int EndEvent = Size*ThreadNumber/NumberOfThreads;
+            
+            cout << "number of events used is: " << Size << endl;
             //Event Loop
             for(int i = StartEvent; i < EndEvent; i++)
             {
-                if(i%1000 == 0) std::cout << "\t... " << i << std::endl;
+                if(i%1000 == 0) cout << "\t... " << i << endl;
 
                 // Get tree entries
                 treenc -> GetEntry(i);
@@ -597,7 +602,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
 
                 MCTrackCandidate = -1;
                 NuMuCCTrackCandidate = -1;
-                float MCTrackCandRange = 0;
+                float MCTrackCandLength = 0;
 
                 // Loop over all MC neutrino vertices
                 for(unsigned vertex_no = 0; vertex_no < mcevts_truth; vertex_no++)
@@ -616,7 +621,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
 //                                 && inFV(XMCTrackEnd[track_no],YMCTrackEnd[track_no],ZMCTrackEnd[track_no]) // Track end has to be in FV
                                 && sqrt(pow(XMCTrackStart[track_no] - nuvtxx_truth[vertex_no],2) + pow(YMCTrackStart[track_no] - nuvtxy_truth[vertex_no],2) + pow(ZMCTrackStart[track_no] - nuvtxz_truth[vertex_no],2)) < MCTrackToMCVtxDist // Track has to start at vertex
 //                                 && MCTrackLength > lengthcut // Track has to be long
-//                                 && MCTrackLength > MCTrackCandRange // If the current candidate length is shorter than the new length
+//                                 && MCTrackLength > MCTrackCandLength // If the current candidate length is shorter than the new length
                           )
                         {
                             // Fill new length and candidate index
@@ -649,128 +654,85 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                         if(NuMuCCTrackCandidate > -1)
                             MCEventsWithFlash++;
 
+                        // Initialize Track Candidate properties
+                        TrackCandidate = -1;
+                        float TrackCandLength = 0;
 
-                        // Initialize a vertex and associated track collection
-                        std::map< int,std::vector<int> > VertexTrackCollection;
+                        VertexCandidate = -1;
 
                         // Loop over all vertices
                         for(int v = 0; v < nvtx; v++)
                         {
-                            // Reset track at vertex count
-                            unsigned int TrackCountAtVertex = 0;
+                            // Fill vertex position to histogram
+                            hXVertexPosition->Fill(vtxx[v]);
+                            hYVertexPosition->Fill(vtxy[v]);
+                            hZVertexPosition->Fill(vtxz[v]);
 
-                            // Loop over all reconstructed tracks
-                            for(int j = 0; j < ntracks_reco; j++)
+                            // If the vertex is contained
+                            if(inFV(vtxx[v], vtxy[v], vtxz[v]))
                             {
-                                // Calculate distances from track start/end to vertex and calculate track lenth
-                                diststart = sqrt((vtxx[v] - trkstartx[j])*(vtxx[v] - trkstartx[j]) + (vtxy[v] - trkstarty[j])*(vtxy[v] - trkstarty[j]) + (vtxz[v] - trkstartz[j])*(vtxz[v] - trkstartz[j]));
-                                distend = sqrt((vtxx[v] - trkendx[j])*(vtxx[v] - trkendx[j]) + (vtxy[v] - trkendy[j])*(vtxy[v] - trkendy[j]) + (vtxz[v] - trkendz[j])*(vtxz[v] - trkendz[j]));
-                                TrackRange = sqrt(pow(trkstartx[j] - trkendx[j],2) + pow(trkstarty[j] - trkendy[j],2) + pow(trkstartz[j] - trkendz[j],2));
-
-                                // If the track vertex distance is within cut, increase track count
-                                if(diststart < distcut || distend < distcut)
+                                // Increase count of events with a vertex in FV
+                                if(VertexInFVFlag)
                                 {
-                                    // Increase count of events with a distance to vertex < 5 cm
-                                    if(TrackDistanceFlag)
-                                    {
-                                        EventsTrackNearVertex++;
-                                        if(NuMuCCTrackCandidate > -1)
-                                            MCEventsTrackNearVertex++;
+                                    EventsVtxInFV++;
+                                    if(NuMuCCTrackCandidate > -1)
+                                        MCEventsVtxInFV++;
 
-                                        TrackDistanceFlag = false;
-                                    }
-
-                                    // If we are looking at the first track which fulfills the distance to vertex cut
-                                    if(!TrackCountAtVertex)
-                                    {
-                                        // Fill vertex ID into the collection map
-                                        VertexTrackCollection.insert(std::pair< int,std::vector<int> >(v,std::vector<int>()));
-                                    }
-
-                                    // Push back track ID for vertex v
-                                    VertexTrackCollection.at(v).push_back(j);
-
-                                    // Increase track at vertex count
-                                    TrackCountAtVertex++;
+                                    VertexInFVFlag = false;
                                 }
-                            } // track loop
 
-                            // Fill vertex related histograms
-                            hTrackMultip->Fill(TrackCountAtVertex);
-                            hFlashVertexDist->Fill(fabs(flash_zcenter[theflash]-vtxz[v]));
+                                unsigned int TrackCountAtVertex = 0;
 
+                                // Loop over all reconstructed tracks
+                                for(int j = 0; j < ntracks_reco; j++)
+                                {
+                                    // Calculate distances from track start/end to vertex and calculate track lenth
+                                    diststart = sqrt((vtxx[v] - trkstartx[j])*(vtxx[v] - trkstartx[j]) + (vtxy[v] - trkstarty[j])*(vtxy[v] - trkstarty[j]) + (vtxz[v] - trkstartz[j])*(vtxz[v] - trkstartz[j]));
+                                    distend = sqrt((vtxx[v] - trkendx[j])*(vtxx[v] - trkendx[j]) + (vtxy[v] - trkendy[j])*(vtxy[v] - trkendy[j]) + (vtxz[v] - trkendz[j])*(vtxz[v] - trkendz[j]));
+                                    length = sqrt(pow(trkstartx[j] - trkendx[j],2) + pow(trkstarty[j] - trkendy[j],2) + pow(trkstartz[j] - trkendz[j],2));
+
+                                    if(diststart < distend)
+                                    {
+                                        hVertexTrackDist->Fill(diststart);
+                                    }
+                                    else
+                                    {
+                                        hVertexTrackDist->Fill(distend);
+                                    }
+
+                                    // If the track vertex distance is within cut, increase track count
+                                    if(diststart < distcut || distend < distcut)
+                                    {
+                                        // Increase count of events with a distance to vertex < 5 cm
+                                        if(TrackDistanceFlag)
+                                        {
+                                            EventsTrackNearVertex++;
+                                            if(NuMuCCTrackCandidate > -1)
+                                                MCEventsTrackNearVertex++;
+                                            
+                                            TrackDistanceFlag = false;
+                                        }
+
+                                        // Increase track at vertex count
+                                        TrackCountAtVertex++;
+
+                                        // Find the longest track from this vertex
+                                        if(length > TrackCandLength)
+                                        {
+                                            TrackCandLength = length;
+                                            TrackCandidate = j;
+                                            VertexCandidate = v;
+                                        }
+                                    } // if track vertex distance is within cut distance
+                                } // reco track loop
+
+                                // Fill vertex related histograms
+                                hTrackMultip->Fill(TrackCountAtVertex);
+                                hFlashVertexDist->Fill(fabs(flash_zcenter[theflash]-vtxz[v]));
+                            } // if vertex is contained
                         } // vertex loop
 
-                        // Vertex candidate properties
-                        VertexCandidate = -1;
-                        float VertexCosTheta = 0.0;
-
-                        // Loop over the collection of vertices
-                        for(auto const& VtxTrack : VertexTrackCollection)
-                        {
-                            // Get vertexID
-                            int VertexID = VtxTrack.first;
-
-                            // Weighted cos theta average
-                            float WeightedCosTheta = 0.0;
-
-                            // Normalization factor
-                            float NormFactor = 0.0;
-
-                            // Loop over all associated track IDs of this vertex
-                            for(auto const& TrackID : VtxTrack.second)
-                            {
-                                // Add up numbers
-                                NormFactor += trklen[TrackID];
-                                WeightedCosTheta += trklen[TrackID]*cos(trktheta[TrackID]);
-                            }// track loop
-
-                            // Make average
-                            WeightedCosTheta /= NormFactor;
-
-                            // Check for flatest angle (also backwards pointing)
-                            if(fabs(WeightedCosTheta) > VertexCosTheta)
-                            {
-                                VertexCandidate = VertexID;
-                                VertexCosTheta = fabs(WeightedCosTheta);
-                            }
-                        }// vertex collection loop
-
-                        // Fill vertex position to histogram
-                        hXVertexPosition->Fill(vtxx[VertexCandidate]);
-                        hYVertexPosition->Fill(vtxy[VertexCandidate]);
-                        hZVertexPosition->Fill(vtxz[VertexCandidate]);
-
-                        // Initialize Track Candidate properties
-                        TrackCandidate = -1;
-                        float TrackCandLength = 0.0;
-
-                        // Check if vertex candidate is contained in FV
-                        if(inFV(vtxx[VertexCandidate], vtxy[VertexCandidate], vtxz[VertexCandidate]))
-                        {
-                            // Increase count of events with a vertex in FV
-                            if(VertexInFVFlag)
-                            {
-                                EventsVtxInFV++;
-                                if(NuMuCCTrackCandidate > -1)
-                                    MCEventsVtxInFV++;
-                                VertexInFVFlag = false;
-                            }
-
-                            // Looping over track IDs of tracks associated with the vertex candidate
-                            for(auto const& TrackID : VertexTrackCollection.find(VertexCandidate)->second)
-                            {
-                                // Check for if track is longer
-                                if(trklen[TrackID] > TrackCandLength)
-                                {
-                                    TrackCandidate = TrackID;
-                                    TrackCandLength = trklen[TrackID];
-                                }
-                            }
-
-                        } // if vertex is contained in FV
-
-                        // If there is a track candidate
+                        // If the longest track length is filled
                         if(TrackCandidate > -1)
                         {
                             // Fill histograms
@@ -791,6 +753,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                     EventsFlashMatched++;
                                     if(NuMuCCTrackCandidate > -1)
                                         MCEventsFlashMatched++;
+                                    
                                     FlashMatchFlag = false;
                                     // Set track contained flag true, so the other cuts can be applied on this vertex
                                     TrackContainedFlag = true;
@@ -822,37 +785,39 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                         EventsTrackLong++;
                                         if(NuMuCCTrackCandidate > -1)
                                             MCEventsTrackLong++;
-
+                                        
+                                        // If the event is a CC interaction and the selected track is of neutrino origin
                                         if(ccnc_truth[0] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                                         {
+                                            // If there is a track candidate 
                                             if(MCTrackCandidate > -1 && PDG_truth[MCTrackCandidate] == 13 && inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
                                             {
                                                 NumberOfSignalTruthSel++;
                                             }
-                                            else if(MCTrackCandidate > -1 && PDG_truth[MCTrackCandidate] == -13)
+                                            else if(MCTrackCandidate > -1 && PDG_truth[MCTrackCandidate] == -13) // if anti-neutrino
                                             {
                                                 NumberOfBgrNumuBarTruthSel++;
                                             }
-                                            else if(MCTrackCandidate > -1 && abs(PDG_truth[MCTrackCandidate]) == 11)
+                                            else if(MCTrackCandidate > -1 && abs(PDG_truth[MCTrackCandidate]) == 11) // if electron like neutrino
                                             {
                                                 NumberOfBgrNueTruthSel++;
                                             }
-                                            else if(!inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
+                                            else if(!inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0])) // if not in fiducial volume
                                             {
                                                 NumberOfBgrNuOutFVSel++;
                                             }
                                             hSelectionCCTheta->Fill(trktheta[TrackCandidate]);
                                             hSelectionCCPhi->Fill(trkphi[TrackCandidate]);
                                             hSelectionCCTrackRange->Fill(TrackCandLength);
-                                        }
-                                        else if(ccnc_truth[0] == 1 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
+                                        } // if CC interaction
+                                        else if(ccnc_truth[0] == 1 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1) // else if NC interaction
                                         {
                                             NumberOfBgrNCTruthSel++;
                                             hSelectionNCTheta->Fill(trktheta[TrackCandidate]);
                                             hSelectionNCPhi->Fill(trkphi[TrackCandidate]);
                                             hSelectionNCTrackRange->Fill(TrackCandLength);
                                         }
-                                        else if(trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] != 1)
+                                        else if(trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] != 1) // If selected track is not associated to a neutrino
                                         {
                                             NumberOfBgrCosmicSel++;
                                         }
@@ -883,27 +848,22 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                             hTrackStartDist->Fill(TrkEndMCStartDist);
                                             hTrackEndDist->Fill(TrkStartMCEndDist);
                                         }
-
+                                        
                                         // If track end or start are close to montecarlo vertex
-                                        if(   (TrkStartMCStartDist < TrackToMCDist && TrkEndMCEndDist < TrackToMCDist)
-                                                ||(TrkStartMCEndDist < TrackToMCDist && TrkEndMCStartDist < TrackToMCDist)
-                                          )
+//                                         if(   (TrkStartMCStartDist < TrackToMCDist && TrkEndMCEndDist < TrackToMCDist)
+//                                                 ||(TrkStartMCEndDist < TrackToMCDist && TrkEndMCStartDist < TrackToMCDist)
+//                                           )
+                                        // if the muon track of the NuMuCC interaction is matched correctly
+                                        if( MCTrackID[NuMuCCTrackCandidate] == TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]])
                                         {
                                             EventsTruelyReco++;
                                         }
-//                                         std::cout << trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] << " " << NumberOfMCTracks << " " << TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]] << std::endl;
-                                        // If track is of neutrino origin and if the muon is reconstructed
-//                                         if( MCTrackCandidate > -1 && TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]] > -1
-//                                             && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1 && PDG_truth[ TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]] ] == 13 )
-//                                         {
-//                                             EventsTruelyReco++;
-//                                         }
-                                    }
-                                }
+                                    } // if track is longer than 75 cm
+                                } // if track is contained
                                 // Set track contained flag false
                                 TrackContainedFlag = false;
-                            } // if track candidate is flash matched
-                        } // if there is a track candidate
+                            } // If flash matched
+                        } // If there is a longest track
                     } // if flashtag
 
                     // Increase the neutrino count
@@ -957,8 +917,8 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             std::cout << "Total POT : " << TotalPOT*1e12 << std::endl;
             std::cout << "number of CC events with vertex in FV : " << ntrue << std::endl;
             std::cout << "number of events with flash > 50 PE : " << EventsWithFlash << " " << MCEventsWithFlash << std::endl;
-            std::cout << "number of events with track start/end within 5cm to vtx : " << EventsTrackNearVertex << " " << MCEventsTrackNearVertex << std::endl;
             std::cout << "number of events with vtx in FV : " << EventsVtxInFV << " " << MCEventsVtxInFV << std::endl;
+            std::cout << "number of events with track start/end within 5cm to vtx : " << EventsTrackNearVertex << " " << MCEventsTrackNearVertex << std::endl;
             std::cout << "number of events with tracks matched within 80cm to flash : " << EventsFlashMatched << " " << MCEventsFlashMatched << std::endl;
             std::cout << "number of events with contained tracks : " << EventsTracksInFV << " " << MCEventsTracksInFV << std::endl;
             std::cout << "number of events with longest track > 75cm : " << EventsTrackLong << " " << MCEventsTrackLong << std::endl;
@@ -1025,7 +985,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             delete hAllXTrackStartEnd;
             delete hAllYTrackStartEnd;
             delete hAllZTrackStartEnd;
-
+            
             delete BrMCTrackCand;
             delete BrTrackCand;
             delete BrVtxCand;

@@ -930,13 +930,6 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
                                     {
                                         EventsTruelyReco++;
                                     }
-//                                         std::cout << trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] << " " << NumberOfMCTracks << " " << TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]] << std::endl;
-                                    // If track is of neutrino origin and if the muon is reconstructed
-//                                         if( MCTrackCandidate > -1 && TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]] > -1
-//                                             && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1 && PDG_truth[ TrackIDTruth[TrackCandidate][trkbestplane[TrackCandidate]] ] == 13 )
-//                                         {
-//                                             EventsTruelyReco++;
-//                                         }
                                 } // if track is longer than 75 cm
                             } // if track is contained
                         } // if there is a track candidate
