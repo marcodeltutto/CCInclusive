@@ -652,7 +652,7 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
                         // Initialize vertex candidates for flash matched clusters
                         std::vector<int> VertexCandidateVec;
 
-                        // Here an early flash match is performed on all tracks. If the matched tracks have vertices in their vicinity the vertices are stored as candidates 
+                        // Here an early flash match is performed on all tracks. If the matched tracks have vertices in their vicinity the vertices are stored as candidates
                         // Loop over all tracks
                         for(int j = 0; j < ntracks_reco; j++)
                         {
@@ -692,7 +692,7 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
 
                         // Initialize a vertex and associated track collection
                         std::map< int,std::vector<int> > VertexTrackCollection;
-                        
+
                         // Here starts the track candidate selection, startig with the vertex candidates.
                         // First the flatness of all tracks originating in a vertex is calculated
                         // The flatest (lowest theta average) cluster is picked
@@ -814,7 +814,7 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
                             }
 
                         } // if vertex is contained in FV
-                        
+
                         // If there is a track candidate further cuts are applied on it
                         // First it has to be contained in the FV
                         // Second it has to be longer than 75 cm
@@ -859,23 +859,23 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
                                     if(NuMuCCTrackCandidate > -1)
                                         MCEventsTrackLong++;
 
-                                    if(MCTrackCandidate > -1 && ccnc_truth[0] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
+                                    if(ccnc_truth[0] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                                     {
-                                        if(PDG_truth[MCTrackCandidate] == 13 && inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
+                                        if(MCTrackCandidate > -1 && PDG_truth[MCTrackCandidate] == 13 && inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
                                         {
                                             NumberOfSignalTruthSel++;
                                         }
-                                        else if(NuMuCCTrackCandidate > -1 && !inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
-                                        {
-                                              NumberOfBgrNuOutFVSel++;
-                                        }
-                                        else if(PDG_truth[MCTrackCandidate] == -13)
+                                        else if(MCTrackCandidate > -1 && PDG_truth[MCTrackCandidate] == -13)
                                         {
                                             NumberOfBgrNumuBarTruthSel++;
                                         }
-                                        else if(abs(PDG_truth[MCTrackCandidate]) == 11)
+                                        else if(MCTrackCandidate > -1 && abs(PDG_truth[MCTrackCandidate]) == 11)
                                         {
                                             NumberOfBgrNueTruthSel++;
+                                        }
+                                        else if(!inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
+                                        {
+                                            NumberOfBgrNuOutFVSel++;
                                         }
                                         hSelectionCCTheta->Fill(trktheta[TrackCandidate]);
                                         hSelectionCCPhi->Fill(trkphi[TrackCandidate]);

@@ -781,23 +781,23 @@ int runOnMCC7_numuCC_QE_wnumuvtx(std::string GeneratorName, unsigned int ThreadN
                                         if(NuMuCCTrackCandidate > -1)
                                             MCEventsTrackLong++;
                                         
-                                        if(MCTrackCandidate > -1 && ccnc_truth[0] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
+                                        if(ccnc_truth[0] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                                         {
-                                            if(PDG_truth[MCTrackCandidate] == 13 && inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
+                                            if(MCTrackCandidate > -1 && PDG_truth[MCTrackCandidate] == 13 && inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
                                             {
                                                 NumberOfSignalTruthSel++;
                                             }
-                                            else if(NuMuCCTrackCandidate > -1 && !inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
-                                            {
-                                                NumberOfBgrNuOutFVSel++;
-                                            }
-                                            else if(PDG_truth[MCTrackCandidate] == -13)
+                                            else if(MCTrackCandidate > -1 && PDG_truth[MCTrackCandidate] == -13)
                                             {
                                                 NumberOfBgrNumuBarTruthSel++;
                                             }
-                                            else if(abs(PDG_truth[MCTrackCandidate]) == 11)
+                                            else if(MCTrackCandidate > -1 && abs(PDG_truth[MCTrackCandidate]) == 11)
                                             {
                                                 NumberOfBgrNueTruthSel++;
+                                            }
+                                            else if(!inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
+                                            {
+                                                NumberOfBgrNuOutFVSel++;
                                             }
                                             hSelectionCCTheta->Fill(trktheta[TrackCandidate]);
                                             hSelectionCCPhi->Fill(trkphi[TrackCandidate]);
