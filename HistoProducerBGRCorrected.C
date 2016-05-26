@@ -694,7 +694,7 @@ void HistoProducerBGRCorrected()
     TCanvas *Canvas0 = new TCanvas("Track Range of Selected Track", "Track Range of Selected Track", 1400, 1000);
     Canvas0->cd();
     PhiBgrScale->Draw("HIST" );
-    Canvas0->SaveAs("PhiBgrScale.png");
+    Canvas0->SaveAs("PhiBgrScale.pdf");
 
     for(unsigned int hist_no = 0; hist_no < DataLabel.size()-1; hist_no++)
     {
@@ -710,7 +710,7 @@ void HistoProducerBGRCorrected()
     SelectionTrackRange.at(1)->SetLineColor(2);
     SelectionTrackRange.at(1)->DrawNormalized("SAME");
     LegendData->Draw();
-    Canvas1->SaveAs("DataSelRangeNorm.png");
+    Canvas1->SaveAs("DataSelRangeNorm.pdf");
 
     TCanvas *Canvas2 = new TCanvas("Theta-Angle of Selected Track", "Theta-Angle of Selected Track", 1400, 1000);
     Canvas2->cd();
@@ -720,7 +720,7 @@ void HistoProducerBGRCorrected()
     SelectionTheta.at(1)->SetLineColor(2);
     SelectionTheta.at(1)->DrawNormalized("SAME");
     LegendData->Draw();
-    Canvas2->SaveAs("DataSelThetaNorm.png");
+    Canvas2->SaveAs("DataSelThetaNorm.pdf");
 
     TCanvas *Canvas2a = new TCanvas("Cos Theta-Angle of Selected Track", "Cos Theta-Angle of Selected Track", 1400, 1000);
     Canvas2a->cd();
@@ -730,7 +730,7 @@ void HistoProducerBGRCorrected()
     SelectionCosTheta.at(1)->SetLineColor(2);
     SelectionCosTheta.at(1)->DrawNormalized("SAME");
     LegendData->Draw();
-    Canvas2a->SaveAs("DataSelCosThetaNorm.png");
+    Canvas2a->SaveAs("DataSelCosThetaNorm.pdf");
 
     TCanvas *Canvas3 = new TCanvas("Phi-Angle of Selected Track", "Phi-Angle of Selected Track", 1400, 1000);
     Canvas3->cd();
@@ -740,7 +740,7 @@ void HistoProducerBGRCorrected()
     SelectionPhi.at(1)->SetLineColor(2);
     SelectionPhi.at(1)->DrawNormalized("SAME");
     LegendData->Draw();
-    Canvas3->SaveAs("DataSelPhiNorm.png");
+    Canvas3->SaveAs("DataSelPhiNorm.pdf");
 
     TCanvas *Canvas4 = new TCanvas("Energy of Selected Track", "Energy of Selected Track", 1400, 1000);
     Canvas4->cd();
@@ -750,7 +750,7 @@ void HistoProducerBGRCorrected()
     SelectionEnergy.at(1)->SetLineColor(2);
     SelectionEnergy.at(1)->DrawNormalized("SAME");
     LegendData->Draw();
-    Canvas4->SaveAs("DataSelEnergy.png");
+    Canvas4->SaveAs("DataSelEnergy.pdf");
 
     TCanvas *Canvas5 = new TCanvas("X Start & End Point Selected Track", "X Start & End Point Selected Track", 1400, 1000);
     Canvas5->cd();
@@ -760,7 +760,7 @@ void HistoProducerBGRCorrected()
     SelXTrackStartEnd.at(1)->SetLineColor(2);
     SelXTrackStartEnd.at(1)->DrawNormalized("SAME");
     LegendData->Draw();
-    Canvas5->SaveAs("DataSelXTrackNorm.png");
+    Canvas5->SaveAs("DataSelXTrackNorm.pdf");
 
     TCanvas *Canvas6 = new TCanvas("Y Start & End Point Selected Track", "Y Start & End Point Selected Track", 1400, 1000);
     Canvas6->cd();
@@ -770,7 +770,7 @@ void HistoProducerBGRCorrected()
     SelYTrackStartEnd.at(1)->SetLineColor(2);
     SelYTrackStartEnd.at(1)->DrawNormalized("SAME");
     LegendData->Draw();
-    Canvas6->SaveAs("DataSelYTrackNorm.png");
+    Canvas6->SaveAs("DataSelYTrackNorm.pdf");
 
     TCanvas *Canvas7 = new TCanvas("Z Start & End Point Selected Track", "Z Start & End Point Selected Track", 1400, 1000);
     Canvas7->cd();
@@ -780,7 +780,7 @@ void HistoProducerBGRCorrected()
     SelZTrackStartEnd.at(1)->SetLineColor(2);
     SelZTrackStartEnd.at(1)->DrawNormalized("SAME");
     LegendData->Draw();
-    Canvas7->SaveAs("DataSelZTrackNorm.png");
+    Canvas7->SaveAs("DataSelZTrackNorm.pdf");
 
     TCanvas *Canvas8 = new TCanvas("X Vertex Postion", "X Vertex Postion", 1400, 1000);
     Canvas8->cd();
@@ -790,7 +790,7 @@ void HistoProducerBGRCorrected()
     SelXVtxPosition.at(1)->SetLineColor(2);
     SelXVtxPosition.at(1)->DrawNormalized("SAME");
     LegendData->Draw();
-    Canvas8->SaveAs("DataSelXVertexNorm.png");
+    Canvas8->SaveAs("DataSelXVertexNorm.pdf");
 
     TCanvas *Canvas9 = new TCanvas("Y Vertex Postion", "Y Vertex Postion", 1400, 1000);
     Canvas9->cd();
@@ -800,7 +800,7 @@ void HistoProducerBGRCorrected()
     SelYVtxPosition.at(1)->SetLineColor(2);
     SelYVtxPosition.at(1)->DrawNormalized("SAME");
     LegendData->Draw();
-    Canvas9->SaveAs("DataSelYVertexNorm.png");
+    Canvas9->SaveAs("DataSelYVertexNorm.pdf");
 
     TCanvas *Canvas10 = new TCanvas("Z Vertex Postion", "Z Vertex Postion", 1400, 1000);
     Canvas10->cd();
@@ -810,17 +810,17 @@ void HistoProducerBGRCorrected()
     SelZVtxPosition.at(1)->SetLineColor(2);
     SelZVtxPosition.at(1)->DrawNormalized("SAME");
     LegendData->Draw();
-    Canvas10->SaveAs("DataSelZVertexNorm.png");
+    Canvas10->SaveAs("DataSelZVertexNorm.pdf");
 
     TCanvas *Canvas101 = new TCanvas("Range Vs YPos OnBeam", "Range Vs YPos OnBeam", 1400, 1000);
     Canvas101->cd();
     RangeVsYPos.at(0)->Draw("COLZ");
-    Canvas101->SaveAs("PhiVsFlashTrackDisOnBeam.png");
+    Canvas101->SaveAs("PhiVsFlashTrackDisOnBeam.pdf");
 
     TCanvas *Canvas102 = new TCanvas("Range Vs YPos OffBeam", "Range Vs YPos OffBeam", 1400, 1000);
     Canvas102->cd();
     RangeVsYPos.at(1)->Draw("COLZ");
-    Canvas102->SaveAs("PhiVsFlashTrackDisOffBeam.png");
+    Canvas102->SaveAs("PhiVsFlashTrackDisOffBeam.pdf");
 
     AddFirstTwoHistograms(SelectionTrackRange,-1.);
     AddFirstTwoHistograms(SelectionTheta,-1.);
@@ -862,7 +862,7 @@ void HistoProducerBGRCorrected()
     SelectionTrackRange.at(0)->SetLineColor(1);
     SelectionTrackRange.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-//     Canvas11->SaveAs("On-OffBeamSelRange.png");
+//     Canvas11->SaveAs("On-OffBeamSelRange.pdf");
 
     TCanvas *Canvas12 = new TCanvas("OnBeam Minus OffBeam Theta-Angle", "OnBeam Minus OffBeam Theta-Angle", 1400, 1000);
     Canvas12->cd();
@@ -875,7 +875,7 @@ void HistoProducerBGRCorrected()
     SelectionTheta.at(0)->SetLineColor(1);
     SelectionTheta.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-//     Canvas12->SaveAs("On-OffBeamSelTheta.png");
+//     Canvas12->SaveAs("On-OffBeamSelTheta.pdf");
 
 
     for(auto& BgrThetaHist :BgrTheta)
@@ -907,7 +907,7 @@ void HistoProducerBGRCorrected()
     SelectionTheta.at(0)->SetLineColor(1);
     SelectionTheta.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-//     Canvas12a->SaveAs("On-OffBeamSelThetaOmega.png");
+//     Canvas12a->SaveAs("On-OffBeamSelThetaOmega.pdf");
 
     TCanvas *Canvas12b = new TCanvas("OnBeam Minus OffBeam Cos Theta-Angle", "OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000);
     Canvas12b->cd();
@@ -920,7 +920,7 @@ void HistoProducerBGRCorrected()
     SelectionCosTheta.at(0)->SetLineColor(1);
     SelectionCosTheta.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-//     Canvas12b->SaveAs("On-OffBeamSelCosTheta.png");
+//     Canvas12b->SaveAs("On-OffBeamSelCosTheta.pdf");
 
     TCanvas *Canvas13 = new TCanvas("OnBeam Minus OffBeam Phi-Angle", "OnBeam Minus OffBeam Phi-Angle", 1400, 1000);
     Canvas13->cd();
@@ -933,7 +933,7 @@ void HistoProducerBGRCorrected()
     SelectionPhi.at(0)->SetLineColor(1);
     SelectionPhi.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-//     Canvas13->SaveAs("On-OffBeamSelPhi.png");
+//     Canvas13->SaveAs("On-OffBeamSelPhi.pdf");
 
     TCanvas *Canvas14 = new TCanvas("Energy", "Energy", 1400, 1000);
     Canvas14->cd();
@@ -946,7 +946,7 @@ void HistoProducerBGRCorrected()
     SelectionEnergy.at(0)->SetLineColor(1);
     SelectionEnergy.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-//     Canvas14->SaveAs("On-OffBeamSelEnergy.png");
+//     Canvas14->SaveAs("On-OffBeamSelEnergy.pdf");
 
     TCanvas *Canvas15 = new TCanvas("OnBeam Minus OffBeam X Start & End Point ", "OnBeam Minus OffBeam X Start & End Point ", 1400, 1000);
     Canvas15->cd();
@@ -959,7 +959,7 @@ void HistoProducerBGRCorrected()
     SelXTrackStartEnd.at(0)->SetLineColor(1);
     SelXTrackStartEnd.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-//     Canvas15->SaveAs("On-OffBeamSelXTrack.png");
+//     Canvas15->SaveAs("On-OffBeamSelXTrack.pdf");
 
     TCanvas *Canvas16 = new TCanvas("OnBeam Minus OffBeam Y Start & End Point ", "OnBeam Minus OffBeam Y Start & End Point ", 1400, 1000);
     Canvas16->cd();
@@ -972,7 +972,7 @@ void HistoProducerBGRCorrected()
     SelYTrackStartEnd.at(0)->SetLineColor(1);
     SelYTrackStartEnd.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-//     Canvas16->SaveAs("On-OffBeamSelYTrack.png");
+//     Canvas16->SaveAs("On-OffBeamSelYTrack.pdf");
 
     TCanvas *Canvas17 = new TCanvas("OnBeam Minus OffBeam Z Start & End Point ", "OnBeam Minus OffBeam Z Start & End Point ", 1400, 1000);
     Canvas17->cd();
@@ -985,7 +985,7 @@ void HistoProducerBGRCorrected()
     SelZTrackStartEnd.at(0)->SetLineColor(1);
     SelZTrackStartEnd.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-//     Canvas17->SaveAs("On-OffBeamSelZTrack.png");
+//     Canvas17->SaveAs("On-OffBeamSelZTrack.pdf");
 
     TCanvas *Canvas18 = new TCanvas("OnBeam Minus OffBeam X Vertex Postion", "OnBeam Minus OffBeam X Vertex Postion", 1400, 1000);
     Canvas18->cd();
@@ -998,7 +998,7 @@ void HistoProducerBGRCorrected()
     SelXVtxPosition.at(0)->SetLineColor(1);
     SelXVtxPosition.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-//     Canvas18->SaveAs("On-OffBeamSelXVertex.png");
+//     Canvas18->SaveAs("On-OffBeamSelXVertex.pdf");
 
     TCanvas *Canvas19 = new TCanvas("OnBeam Minus OffBeam Y Vertex Postion", "OnBeam Minus OffBeam Y Vertex Postion", 1400, 1000);
     Canvas19->cd();
@@ -1011,7 +1011,7 @@ void HistoProducerBGRCorrected()
     SelYVtxPosition.at(0)->SetLineColor(1);
     SelYVtxPosition.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-//     Canvas19->SaveAs("On-OffBeamSelYVertex.png");
+//     Canvas19->SaveAs("On-OffBeamSelYVertex.pdf");
 
     TCanvas *Canvas20 = new TCanvas("OnBeam Minus OffBeam Z Vertex Postion", "OnBeam Minus OffBeam Z Vertex Postion", 1400, 1000);
     Canvas20->cd();
@@ -1024,57 +1024,57 @@ void HistoProducerBGRCorrected()
     SelZVtxPosition.at(0)->SetLineColor(1);
     SelZVtxPosition.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-//     Canvas20->SaveAs("On-OffBeamSelZVertex.png");
+//     Canvas20->SaveAs("On-OffBeamSelZVertex.pdf");
 
     TCanvas *Canvas21 = new TCanvas("Phi Vs Theta", "Phi Vs Theta", 1400, 1000);
     Canvas21->cd();
     PhiVsTheta.at(0)->Draw("COLZ");
-//     Canvas21->SaveAs("PhiVsTheta.png");
+//     Canvas21->SaveAs("PhiVsTheta.pdf");
 
     TCanvas *Canvas22a = new TCanvas("Phi Vs XPos", "Phi Vs XPos", 1400, 1000);
     Canvas22a->cd();
     PhiVsXPos.at(0)->Draw("COLZ");
-//     Canvas22a->SaveAs("PhiVsXPosition.png");
+//     Canvas22a->SaveAs("PhiVsXPosition.pdf");
     
     TCanvas *Canvas22b = new TCanvas("Phi Vs YPos", "Phi Vs YPos", 1400, 1000);
     Canvas22b->cd();
     PhiVsYPos.at(0)->Draw("COLZ");
-//     Canvas22b->SaveAs("PhiVsYPosition.png");
+//     Canvas22b->SaveAs("PhiVsYPosition.pdf");
     
     TCanvas *Canvas22c = new TCanvas("Phi Vs ZPos", "Phi Vs ZPos", 1400, 1000);
     Canvas22c->cd();
     PhiVsZPos.at(0)->Draw("COLZ");
-//     Canvas22c->SaveAs("PhiVsZPosition.png");
+//     Canvas22c->SaveAs("PhiVsZPosition.pdf");
 
     TCanvas *Canvas23 = new TCanvas("Range Vs PE Data", "Range Vs PE Data", 1400, 1000);
     Canvas23->cd();
     RangeVsPE.at(0)->Draw("COLZ");
-//     Canvas23->SaveAs("RangeVsPEData.png");
+//     Canvas23->SaveAs("RangeVsPEData.pdf");
 
     TCanvas *Canvas24 = new TCanvas("Range Vs PE MC", "Range Vs PE MC", 1400, 1000);
     Canvas24->cd();
     RangeVsPE.at(1)->Draw("COLZ");
-//     Canvas24->SaveAs("RangeVsPEMC.png");
+//     Canvas24->SaveAs("RangeVsPEMC.pdf");
 
     TCanvas *Canvas25 = new TCanvas("XPos Vs YPos", "XPos Vs YPos", 1400, 1000);
     Canvas25->cd();
     XPosVsYPos.at(0)->Draw("COLZ");
-//     Canvas25->SaveAs("XPosVsYPos.png");
+//     Canvas25->SaveAs("XPosVsYPos.pdf");
     
     TCanvas *Canvas25a = new TCanvas("ZPos Vs YPos", "ZPos Vs YPos", 1400, 1000);
     Canvas25a->cd();
     ZPosVsYPos.at(0)->Draw("COLZ");
-//     Canvas25a->SaveAs("ZPosVsYPos.png");
+//     Canvas25a->SaveAs("ZPosVsYPos.pdf");
 
     TCanvas *Canvas26 = new TCanvas("Range Vs YPos", "Range Vs YPos", 1400, 1000);
     Canvas26->cd();
     RangeVsYPos.at(0)->Draw("COLZ");
-//     Canvas26->SaveAs("RangeVsYPos.png");
+//     Canvas26->SaveAs("RangeVsYPos.pdf");
 
     TCanvas *Canvas27 = new TCanvas("Phi Vs FlashTrackDist", "Range Vs FlashTrackDist", 1400, 1000);
     Canvas27->cd();
     PhiVsFlashTrackDist.at(0)->Draw("COLZ");
-//     Canvas27->SaveAs("PhiVsFlashTrackDis.png");
+//     Canvas27->SaveAs("PhiVsFlashTrackDis.pdf");
 
 }
 

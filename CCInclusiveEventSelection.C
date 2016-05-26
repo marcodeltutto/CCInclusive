@@ -141,6 +141,14 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
     {
         treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/MC_BNB_Cosmic/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
     }
+    else if(GeneratorName == "TEM")
+    {
+        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/"+GeneratorName+"/*/anatree*.root").c_str() );
+    }
+    else if(GeneratorName == "MEC")
+    {
+        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/"+GeneratorName+"/*/anatree*.root").c_str() );
+    }
     else
     {
         treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );

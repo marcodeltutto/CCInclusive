@@ -99,8 +99,8 @@ void Draw_numuCC()
         FlashPEHist->Draw();
         FlashPEMinCut.Draw("same");
 
-        Canvas1->SaveAs(("FlashTime_Vertex_"+DataName+"_"+Version+".png").c_str());
-        Canvas2->SaveAs(("PECount_Vertex_"+DataName+"_"+Version+".png").c_str());
+        Canvas1->SaveAs(("FlashTime_Vertex_"+DataName+"_"+Version+".pdf").c_str());
+        Canvas2->SaveAs(("PECount_Vertex_"+DataName+"_"+Version+".pdf").c_str());
 
         // Clean up
         delete Canvas1;
@@ -186,7 +186,7 @@ void Draw_numuCC()
         XVertexMinCut.Draw("same");
         XVertexMaxCut.Draw("same");
         Legend->Draw();
-        Canvas3->SaveAs(("XVtxPosition_Vertex_"+DataName+"_"+Version+".png").c_str());
+        Canvas3->SaveAs(("XVtxPosition_Vertex_"+DataName+"_"+Version+".pdf").c_str());
 
         Canvas4->cd();
         TLine YVertexMinCut(-FVy/2+bordery, 0, -FVy/2+bordery, GetMaximum(YVtxHistVec));
@@ -196,7 +196,7 @@ void Draw_numuCC()
         YVertexMinCut.Draw("same");
         YVertexMaxCut.Draw("same");
         Legend->Draw();
-        Canvas4->SaveAs(("YVtxPosition_Vertex_"+DataName+"_"+Version+".png").c_str());
+        Canvas4->SaveAs(("YVtxPosition_Vertex_"+DataName+"_"+Version+".pdf").c_str());
 
         Canvas5->cd();
         Legend->Draw();
@@ -206,11 +206,11 @@ void Draw_numuCC()
         ZVertexMaxCut.SetLineColor(kRed);
         ZVertexMinCut.Draw("same");
         ZVertexMaxCut.Draw("same");
-        Canvas5->SaveAs(("ZVtxPosition_Vertex_"+DataName+"_"+Version+".png").c_str());
+        Canvas5->SaveAs(("ZVtxPosition_Vertex_"+DataName+"_"+Version+".pdf").c_str());
 
         Canvas6->cd();
         Legend->Draw();
-        Canvas6->SaveAs(("FlashVtxDist_Vertex_"+DataName+"_"+Version+".png").c_str());
+        Canvas6->SaveAs(("FlashVtxDist_Vertex_"+DataName+"_"+Version+".pdf").c_str());
 
         delete Canvas3;
         delete Canvas4;
@@ -350,25 +350,25 @@ void Draw_numuCC()
             FlashTrackMinCut.SetLineColor(kRed);
             FlashTrackMinCut.Draw("same");
             Legend->Draw();
-            Canvas7->SaveAs(("FlashTrackDist_Vertex_"+VertexName+"_"+DataName+"_"+Version+".png").c_str());
+            Canvas7->SaveAs(("FlashTrackDist_Vertex_"+VertexName+"_"+DataName+"_"+Version+".pdf").c_str());
 
             Canvas8->cd();
             TLine VertexTrackMinCut(distcut, 0, distcut, GetMaximum(VertexTrackHistVec));
             VertexTrackMinCut.SetLineColor(kRed);
             VertexTrackMinCut.Draw("same");
             Legend->Draw();
-            Canvas8->SaveAs(("VtxTrackDist_Vertex_"+VertexName+"_"+DataName+"_"+Version+".png").c_str());
+            Canvas8->SaveAs(("VtxTrackDist_Vertex_"+VertexName+"_"+DataName+"_"+Version+".pdf").c_str());
 
             Canvas9->cd();
             Legend->Draw();
             TLine TrackLengthCut(lengthcut, 0, lengthcut, GetMaximum(TrackLengthHistVec));
             TrackLengthCut.SetLineColor(kRed);
             TrackLengthCut.Draw("same");
-            Canvas9->SaveAs(("TrackLength_Vertex_"+VertexName+"_"+DataName+"_"+Version+".png").c_str());
+            Canvas9->SaveAs(("TrackLength_Vertex_"+VertexName+"_"+DataName+"_"+Version+".pdf").c_str());
 
             Canvas10->cd();
             Legend->Draw();
-            Canvas10->SaveAs(("TrackMultiplicity_Vertex_"+VertexName+"_"+DataName+"_"+Version+".png").c_str());
+            Canvas10->SaveAs(("TrackMultiplicity_Vertex_"+VertexName+"_"+DataName+"_"+Version+".pdf").c_str());
 
             Canvas11->cd();
             TLine XTrackEndMinCut(borderx, 0, borderx, GetMaximum(XTrackStartEndVec));
@@ -378,7 +378,7 @@ void Draw_numuCC()
             XTrackEndMinCut.Draw("same");
             XTrackEndMaxCut.Draw("same");
             Legend->Draw();
-            Canvas11->SaveAs(("XTrackEndPos_Vertex_"+VertexName+"_"+DataName+"_"+Version+".png").c_str());
+            Canvas11->SaveAs(("XTrackEndPos_Vertex_"+VertexName+"_"+DataName+"_"+Version+".pdf").c_str());
 
             Canvas12->cd();
             TLine YTrackEndMinCut(-FVy/2+bordery, 0, -FVy/2+bordery, GetMaximum(YTrackStartEndVec));
@@ -388,7 +388,7 @@ void Draw_numuCC()
             YTrackEndMinCut.Draw("same");
             YTrackEndMaxCut.Draw("same");
             Legend->Draw();
-            Canvas12->SaveAs(("YTrackEndPos_Vertex_"+VertexName+"_"+DataName+"_"+Version+".png").c_str());
+            Canvas12->SaveAs(("YTrackEndPos_Vertex_"+VertexName+"_"+DataName+"_"+Version+".pdf").c_str());
 
             Canvas13->cd();
             TLine ZTrackEndMinCut(borderz, 0, borderz, GetMaximum(ZTrackStartEndVec));
@@ -398,7 +398,7 @@ void Draw_numuCC()
             ZTrackEndMinCut.Draw("same");
             ZTrackEndMaxCut.Draw("same");
             Legend->Draw();
-            Canvas13->SaveAs(("ZTrackEndPos_Vertex_"+VertexName+"_"+DataName+"_"+Version+".png").c_str());
+            Canvas13->SaveAs(("ZTrackEndPos_Vertex_"+VertexName+"_"+DataName+"_"+Version+".pdf").c_str());
 
             delete Canvas7;
             delete Canvas8;

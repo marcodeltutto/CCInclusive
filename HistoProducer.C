@@ -35,7 +35,7 @@ void HistoProducer()
     std::vector<std::string> MCLabel;
     std::vector<std::string> GenLabel;
     std::vector<std::string> BgrLabel;
-
+    
     std::vector<float> ScalingFactors;
     ScalingFactors.push_back(1/383519.);
 //     ScalingFactors.push_back(1/179041.);
@@ -95,6 +95,10 @@ void HistoProducer()
 //     std::string VertexProdName="pandoraCosmic";
     std::string VertexProdName = "pandoraNu";
 //     std::string VertexProdName = "pmtrack";
+    
+//     std::string SelectionLabel = "";
+    std::string SelectionLabel = "_Mod";
+//     std::string SelectionLabel = "_New";
 
     TF1* SinTheta = new TF1("const","sin(x)",0,3.142);
 
@@ -139,28 +143,15 @@ void HistoProducer()
     std::vector<unsigned int> ColorMap = {28,42,30,38};
 
     ChainVec.push_back(new TChain("anatree"));
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1.root").c_str());
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2.root").c_str());
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1_New.root").c_str());
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2_New.root").c_str());
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1.root").c_str());
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1"+ SelectionLabel +".root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2"+ SelectionLabel +".root").c_str());
 
     ChainVec.push_back(new TChain("anatree"));
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1.root").c_str());
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2.root").c_str());
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1_New.root").c_str());
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2_New.root").c_str());
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1.root").c_str());
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2.root").c_str());
-    
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1"+ SelectionLabel +".root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2"+ SelectionLabel +".root").c_str());
 
     ChainVec.push_back(new TChain("anatree"));
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str());
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00_New.root").c_str());
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str());
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_v05_08_00.root").c_str());
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_sc_uboone_v05_08_00.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00"+ SelectionLabel +".root").c_str());
 
     for(const auto& Label : GenLabel)
     {
@@ -740,7 +731,7 @@ void HistoProducer()
     SelectionTrackRange.at(1)->SetLineColor(2);
     SelectionTrackRange.at(1)->Draw("SAME");
     LegendData->Draw();
-    Canvas1->SaveAs("DataSelRange.png");
+    Canvas1->SaveAs(("DataSelRange"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas2 = new TCanvas("Theta-Angle of Selected Track", "Theta-Angle of Selected Track", 1400, 1000);
     Canvas2->cd();
@@ -749,7 +740,7 @@ void HistoProducer()
     SelectionTheta.at(1)->SetLineColor(2);
     SelectionTheta.at(1)->Draw("SAME");
     LegendData->Draw();
-    Canvas2->SaveAs("DataSelTheta.png");
+    Canvas2->SaveAs(("DataSelTheta"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas2a = new TCanvas("Cos Theta-Angle of Selected Track", "Cos Theta-Angle of Selected Track", 1400, 1000);
     Canvas2a->cd();
@@ -758,7 +749,7 @@ void HistoProducer()
     SelectionCosTheta.at(1)->SetLineColor(2);
     SelectionCosTheta.at(1)->Draw("SAME");
     LegendData->Draw();
-    Canvas2a->SaveAs("DataSelCosTheta.png");
+    Canvas2a->SaveAs(("DataSelCosTheta"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas3 = new TCanvas("Phi-Angle of Selected Track", "Phi-Angle of Selected Track", 1400, 1000);
     Canvas3->cd();
@@ -767,7 +758,7 @@ void HistoProducer()
     SelectionPhi.at(1)->SetLineColor(2);
     SelectionPhi.at(1)->Draw("SAME");
     LegendData->Draw();
-    Canvas3->SaveAs("DataSelPhi.png");
+    Canvas3->SaveAs(("DataSelPhi"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas4 = new TCanvas("Energy of Selected Track", "Energy of Selected Track", 1400, 1000);
     Canvas4->cd();
@@ -776,7 +767,7 @@ void HistoProducer()
     SelectionEnergy.at(1)->SetLineColor(2);
     SelectionEnergy.at(1)->Draw("SAME");
     LegendData->Draw();
-    Canvas4->SaveAs("DataSelEnergy.png");
+    Canvas4->SaveAs(("DataSelEnergy"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas5 = new TCanvas("X Start & End Point Selected Track", "X Start & End Point Selected Track", 1400, 1000);
     Canvas5->cd();
@@ -785,7 +776,7 @@ void HistoProducer()
     SelXTrackStartEnd.at(1)->SetLineColor(2);
     SelXTrackStartEnd.at(1)->Draw("SAME");
     LegendData->Draw();
-    Canvas5->SaveAs("DataSelXTrack.png");
+    Canvas5->SaveAs(("DataSelXTrack"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas6 = new TCanvas("Y Start & End Point Selected Track", "Y Start & End Point Selected Track", 1400, 1000);
     Canvas6->cd();
@@ -794,7 +785,7 @@ void HistoProducer()
     SelYTrackStartEnd.at(1)->SetLineColor(2);
     SelYTrackStartEnd.at(1)->Draw("SAME");
     LegendData->Draw();
-    Canvas6->SaveAs("DataSelYTrack.png");
+    Canvas6->SaveAs(("DataSelYTrack"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas7 = new TCanvas("Z Start & End Point Selected Track", "Z Start & End Point Selected Track", 1400, 1000);
     Canvas7->cd();
@@ -803,7 +794,7 @@ void HistoProducer()
     SelZTrackStartEnd.at(1)->SetLineColor(2);
     SelZTrackStartEnd.at(1)->Draw("SAME");
     LegendData->Draw();
-    Canvas7->SaveAs("DataSelZTrack.png");
+    Canvas7->SaveAs(("DataSelZTrack"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas8 = new TCanvas("X Vertex Postion", "X Vertex Postion", 1400, 1000);
     Canvas8->cd();
@@ -812,7 +803,7 @@ void HistoProducer()
     SelXVtxPosition.at(1)->SetLineColor(2);
     SelXVtxPosition.at(1)->Draw("SAME");
     LegendData->Draw();
-    Canvas8->SaveAs("DataSelXVertex.png");
+    Canvas8->SaveAs(("DataSelXVertex"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas9 = new TCanvas("Y Vertex Postion", "Y Vertex Postion", 1400, 1000);
     Canvas9->cd();
@@ -821,7 +812,7 @@ void HistoProducer()
     SelYVtxPosition.at(1)->SetLineColor(2);
     SelYVtxPosition.at(1)->Draw("SAME");
     LegendData->Draw();
-    Canvas9->SaveAs("DataSelYVertex.png");
+    Canvas9->SaveAs(("DataSelYVertex"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas10 = new TCanvas("Z Vertex Postion", "Z Vertex Postion", 1400, 1000);
     Canvas10->cd();
@@ -830,17 +821,17 @@ void HistoProducer()
     SelZVtxPosition.at(1)->SetLineColor(2);
     SelZVtxPosition.at(1)->Draw("SAME");
     LegendData->Draw();
-    Canvas10->SaveAs("DataSelZVertex.png");
+    Canvas10->SaveAs(("DataSelZVertex"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas101 = new TCanvas("Range Vs YPos OnBeam", "Range Vs YPos OnBeam", 1400, 1000);
     Canvas101->cd();
     RangeVsYPos.at(0)->Draw("COLZ");
-    Canvas101->SaveAs("PhiVsFlashTrackDisOnBeam.png");
+    Canvas101->SaveAs(("PhiVsFlashTrackDisOnBeam"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas102 = new TCanvas("Range Vs YPos OffBeam", "Range Vs YPos OffBeam", 1400, 1000);
     Canvas102->cd();
     RangeVsYPos.at(1)->Draw("COLZ");
-    Canvas102->SaveAs("PhiVsFlashTrackDisOffBeam.png");
+    Canvas102->SaveAs(("PhiVsFlashTrackDisOffBeam"+SelectionLabel+".pdf").c_str());
 
     AddFirstTwoHistograms(SelectionTrackRange,-1.);
     AddFirstTwoHistograms(SelectionTheta,-1.);
@@ -885,7 +876,7 @@ void HistoProducer()
     SelectionTrackRange.at(0)->SetLineColor(1);
     SelectionTrackRange.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas11->SaveAs("On-OffBeamSelRange.png");
+    Canvas11->SaveAs(("On-OffBeamSelRange"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas12 = new TCanvas("OnBeam Minus OffBeam Theta-Angle", "OnBeam Minus OffBeam Theta-Angle", 1400, 1000);
     Canvas12->cd();
@@ -898,7 +889,7 @@ void HistoProducer()
     SelectionTheta.at(0)->SetLineColor(1);
     SelectionTheta.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas12->SaveAs("On-OffBeamSelTheta.png");
+    Canvas12->SaveAs(("On-OffBeamSelTheta"+SelectionLabel+".pdf").c_str());
 
 
     for(auto& BgrThetaHist :BgrTheta)
@@ -930,7 +921,7 @@ void HistoProducer()
     SelectionTheta.at(0)->SetLineColor(1);
     SelectionTheta.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas12a->SaveAs("On-OffBeamSelThetaOmega.png");
+    Canvas12a->SaveAs(("On-OffBeamSelThetaOmega"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas12b = new TCanvas("OnBeam Minus OffBeam Cos Theta-Angle", "OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000);
     Canvas12b->cd();
@@ -943,7 +934,7 @@ void HistoProducer()
     SelectionCosTheta.at(0)->SetLineColor(1);
     SelectionCosTheta.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas12b->SaveAs("On-OffBeamSelCosTheta.png");
+    Canvas12b->SaveAs(("On-OffBeamSelCosTheta"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas13 = new TCanvas("OnBeam Minus OffBeam Phi-Angle", "OnBeam Minus OffBeam Phi-Angle", 1400, 1000);
     Canvas13->cd();
@@ -956,7 +947,7 @@ void HistoProducer()
     SelectionPhi.at(0)->SetLineColor(1);
     SelectionPhi.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas13->SaveAs("On-OffBeamSelPhi.png");
+    Canvas13->SaveAs(("On-OffBeamSelPhi"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas14 = new TCanvas("Energy", "Energy", 1400, 1000);
     Canvas14->cd();
@@ -969,7 +960,7 @@ void HistoProducer()
     SelectionEnergy.at(0)->SetLineColor(1);
     SelectionEnergy.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas14->SaveAs("On-OffBeamSelEnergy.png");
+    Canvas14->SaveAs(("On-OffBeamSelEnergy"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas15 = new TCanvas("OnBeam Minus OffBeam X Start & End Point ", "OnBeam Minus OffBeam X Start & End Point ", 1400, 1000);
     Canvas15->cd();
@@ -982,7 +973,7 @@ void HistoProducer()
     SelXTrackStartEnd.at(0)->SetLineColor(1);
     SelXTrackStartEnd.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas15->SaveAs("On-OffBeamSelXTrack.png");
+    Canvas15->SaveAs(("On-OffBeamSelXTrack"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas16 = new TCanvas("OnBeam Minus OffBeam Y Start & End Point ", "OnBeam Minus OffBeam Y Start & End Point ", 1400, 1000);
     Canvas16->cd();
@@ -995,7 +986,7 @@ void HistoProducer()
     SelYTrackStartEnd.at(0)->SetLineColor(1);
     SelYTrackStartEnd.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas16->SaveAs("On-OffBeamSelYTrack.png");
+    Canvas16->SaveAs(("On-OffBeamSelYTrack"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas17 = new TCanvas("OnBeam Minus OffBeam Z Start & End Point ", "OnBeam Minus OffBeam Z Start & End Point ", 1400, 1000);
     Canvas17->cd();
@@ -1008,7 +999,7 @@ void HistoProducer()
     SelZTrackStartEnd.at(0)->SetLineColor(1);
     SelZTrackStartEnd.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas17->SaveAs("On-OffBeamSelZTrack.png");
+    Canvas17->SaveAs(("On-OffBeamSelZTrack"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas18 = new TCanvas("OnBeam Minus OffBeam X Vertex Postion", "OnBeam Minus OffBeam X Vertex Postion", 1400, 1000);
     Canvas18->cd();
@@ -1021,7 +1012,7 @@ void HistoProducer()
     SelXVtxPosition.at(0)->SetLineColor(1);
     SelXVtxPosition.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas18->SaveAs("On-OffBeamSelXVertex.png");
+    Canvas18->SaveAs(("On-OffBeamSelXVertex"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas19 = new TCanvas("OnBeam Minus OffBeam Y Vertex Postion", "OnBeam Minus OffBeam Y Vertex Postion", 1400, 1000);
     Canvas19->cd();
@@ -1034,7 +1025,7 @@ void HistoProducer()
     SelYVtxPosition.at(0)->SetLineColor(1);
     SelYVtxPosition.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas19->SaveAs("On-OffBeamSelYVertex.png");
+    Canvas19->SaveAs(("On-OffBeamSelYVertex"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas20 = new TCanvas("OnBeam Minus OffBeam Z Vertex Postion", "OnBeam Minus OffBeam Z Vertex Postion", 1400, 1000);
     Canvas20->cd();
@@ -1047,57 +1038,57 @@ void HistoProducer()
     SelZVtxPosition.at(0)->SetLineColor(1);
     SelZVtxPosition.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas20->SaveAs("On-OffBeamSelZVertex.png");
+    Canvas20->SaveAs(("On-OffBeamSelZVertex"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas21 = new TCanvas("Phi Vs Theta", "Phi Vs Theta", 1400, 1000);
     Canvas21->cd();
     PhiVsTheta.at(0)->Draw("COLZ");
-    Canvas21->SaveAs("PhiVsTheta.png");
+    Canvas21->SaveAs(("PhiVsTheta"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas22a = new TCanvas("Phi Vs XPos", "Phi Vs XPos", 1400, 1000);
     Canvas22a->cd();
     PhiVsXPos.at(0)->Draw("COLZ");
-    Canvas22a->SaveAs("PhiVsXPosition.png");
+    Canvas22a->SaveAs(("PhiVsXPosition"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas22b = new TCanvas("Phi Vs YPos", "Phi Vs YPos", 1400, 1000);
     Canvas22b->cd();
     PhiVsYPos.at(0)->Draw("COLZ");
-    Canvas22b->SaveAs("PhiVsYPosition.png");
+    Canvas22b->SaveAs(("PhiVsYPosition"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas22c = new TCanvas("Phi Vs ZPos", "Phi Vs ZPos", 1400, 1000);
     Canvas22c->cd();
     PhiVsZPos.at(0)->Draw("COLZ");
-    Canvas22c->SaveAs("PhiVsZPosition.png");
+    Canvas22c->SaveAs(("PhiVsZPosition"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas23 = new TCanvas("Range Vs PE Data", "Range Vs PE Data", 1400, 1000);
     Canvas23->cd();
     RangeVsPE.at(0)->Draw("COLZ");
-    Canvas23->SaveAs("RangeVsPEData.png");
+    Canvas23->SaveAs(("RangeVsPEData"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas24 = new TCanvas("Range Vs PE MC", "Range Vs PE MC", 1400, 1000);
     Canvas24->cd();
     RangeVsPE.at(1)->Draw("COLZ");
-    Canvas24->SaveAs("RangeVsPEMC.png");
+    Canvas24->SaveAs(("RangeVsPEMC"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas25 = new TCanvas("XPos Vs YPos", "XPos Vs YPos", 1400, 1000);
     Canvas25->cd();
     XPosVsYPos.at(0)->Draw("COLZ");
-    Canvas25->SaveAs("XPosVsYPos.png");
+    Canvas25->SaveAs(("XPosVsYPos"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas25a = new TCanvas("ZPos Vs YPos", "ZPos Vs YPos", 1400, 1000);
     Canvas25a->cd();
     ZPosVsYPos.at(0)->Draw("COLZ");
-    Canvas25a->SaveAs("ZPosVsYPos.png");
+    Canvas25a->SaveAs(("ZPosVsYPos"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas26 = new TCanvas("Range Vs YPos", "Range Vs YPos", 1400, 1000);
     Canvas26->cd();
     RangeVsYPos.at(0)->Draw("COLZ");
-    Canvas26->SaveAs("RangeVsYPos.png");
+    Canvas26->SaveAs(("RangeVsYPos"+SelectionLabel+".pdf").c_str());
 
     TCanvas *Canvas27 = new TCanvas("Phi Vs FlashTrackDist", "Range Vs FlashTrackDist", 1400, 1000);
     Canvas27->cd();
     PhiVsFlashTrackDist.at(0)->Draw("COLZ");
-    Canvas27->SaveAs("PhiVsFlashTrackDis.png");
+    Canvas27->SaveAs(("PhiVsFlashTrackDis"+SelectionLabel+".pdf").c_str());
 
 }
 

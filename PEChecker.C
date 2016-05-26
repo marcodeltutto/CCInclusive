@@ -347,7 +347,7 @@ void PEChecker()
         SelectionTrackRange.at(cut_index).at(1)->Draw("SAME");
     }
     LegendData->Draw();
-    Canvas1->SaveAs("MCRangeByPE.png");
+    Canvas1->SaveAs("MCRangeByPE.pdf");
     
     TCanvas *Canvas2 = new TCanvas("Track Theta of Selected Track", "Track Theta of Selected Track", 1400, 1000);
     Canvas2->cd();
@@ -360,7 +360,7 @@ void PEChecker()
         SelectionTheta.at(cut_index).at(1)->Draw("SAME");
     }
     LegendData->Draw();
-    Canvas2->SaveAs("MCThetaByPE.png");
+    Canvas2->SaveAs("MCThetaByPE.pdf");
     
     TCanvas *Canvas3 = new TCanvas("Track Phi of Selected Track", "Track Phi of Selected Track", 1400, 1000);
     Canvas3->cd();
@@ -373,7 +373,7 @@ void PEChecker()
         SelectionPhi.at(cut_index).at(1)->Draw("SAME");
     }
     LegendData->Draw();
-    Canvas3->SaveAs("MCPhiByPE.png");
+    Canvas3->SaveAs("MCPhiByPE.pdf");
 
 
     for(unsigned int cut_index = PECutValueVec.size()-1; cut_index > 0; cut_index--)
@@ -394,7 +394,7 @@ void PEChecker()
         SelectionTrackRange.at(cut_index).at(1)->SetLineColor(cut_index+1);
         SelectionTrackRange.at(cut_index).at(1)->Draw("SAME");
     }
-    Canvas10->SaveAs("MCRangeByPERatio.png");
+    Canvas10->SaveAs("MCRangeByPERatio.pdf");
     
     TCanvas *Canvas11 = new TCanvas("Track Theta of Selected Track Ratio", "Track Theta of Selected Track Ratio", 1400, 1000);
     Canvas11->cd();
@@ -407,7 +407,7 @@ void PEChecker()
         SelectionTheta.at(cut_index).at(1)->SetLineColor(cut_index+1);
         SelectionTheta.at(cut_index).at(1)->Draw("SAME");
     }
-    Canvas11->SaveAs("MCThetaByPERatio.png");
+    Canvas11->SaveAs("MCThetaByPERatio.pdf");
     
     TCanvas *Canvas12 = new TCanvas("Track Phi of Selected Track Ratio", "Track Phi of Selected Track Ratio", 1400, 1000);
     Canvas12->cd();
@@ -420,7 +420,7 @@ void PEChecker()
         SelectionPhi.at(cut_index).at(1)->SetLineColor(cut_index+1);
         SelectionPhi.at(cut_index).at(1)->Draw("SAME");
     }
-    Canvas12->SaveAs("MCPhiByPERatio.png");
+    Canvas12->SaveAs("MCPhiByPERatio.pdf");
 
 //     LegendMC->AddEntry( SelectionTrackRange.at(0), (MCLabel.at(0)).c_str(),"lep" );
 //     LegendMC->AddEntry( SelectionTrackRange.at(1), (MCLabel.at(1)).c_str(),"f" );
@@ -440,7 +440,7 @@ void PEChecker()
 //     SelectionTrackRange.at(0)->SetLineColor(1);
 //     SelectionTrackRange.at(0)->DrawNormalized("SAME");
 //     LegendMC->Draw();
-//     Canvas11->SaveAs("On-OffBeamSelRange.png");
+//     Canvas11->SaveAs("On-OffBeamSelRange.pdf");
 }
 
 float GetMaximum(const std::vector<TH1F*>& HistVector)
