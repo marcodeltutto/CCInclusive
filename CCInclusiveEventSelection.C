@@ -125,6 +125,8 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
         // Jump to next line
         *EventSelectionCuts.back() << "\n";
     } // Table file loop
+    
+    std::cout << "Data Sample : " << GeneratorName << std::endl;
 
 
     TChain *treenc = new TChain("analysistree/anatree");
