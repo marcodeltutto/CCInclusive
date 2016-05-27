@@ -145,11 +145,11 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
     }
     else if(GeneratorName == "TEM")
     {
-        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/"+GeneratorName+"/*/anatree*.root").c_str() );
+        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/"+GeneratorName+"/TEMmerge.root").c_str() );
     }
     else if(GeneratorName == "MEC")
     {
-        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/"+GeneratorName+"/*/anatree*.root").c_str() );
+        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/"+GeneratorName+"/MECmerge.root").c_str() );
     }
     else
     {
