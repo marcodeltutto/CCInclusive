@@ -83,6 +83,8 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
     {
         FileNumberStr = "";
     }
+    
+    std::cout << "Data Sample : " << GeneratorName << std::endl;
 
     TChain *treenc = new TChain("analysistree/anatree");
 

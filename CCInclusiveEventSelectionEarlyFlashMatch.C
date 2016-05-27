@@ -83,6 +83,8 @@ int CCInclusiveEventSelectionEarlyFlashMatch(std::string GeneratorName, unsigned
     {
         FileNumberStr = "";
     }
+    
+    std::cout << "Data Sample : " << GeneratorName << std::endl;
 
     TChain *treenc = new TChain("analysistree/anatree");
 
