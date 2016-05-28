@@ -112,7 +112,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
     {
         for(unsigned int index = 1; index < 8; index++)
         {
-            treenc -> Add( "/uboone/data/users/aschu/FilterTestFiles/ana_hist_"+std::to_string(index)+".root" );
+            treenc -> Add( ("/uboone/data/users/aschu/FilterTestFiles/ana_hist_"+std::to_string(index)+".root").c_str() );
         }
     }
     else
