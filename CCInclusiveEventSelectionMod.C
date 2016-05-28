@@ -108,6 +108,13 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
     {
         treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/"+GeneratorName+"/MECmerge.root").c_str() );
     }
+    else if(GeneratorName == "test")
+    {
+        for(unsigned int index = 1; index < 8; index++)
+        {
+            treenc -> Add( "/uboone/data/users/aschu/FilterTestFiles/ana_hist_"+std::to_string(index)+".root" );
+        }
+    }
     else
     {
         treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
