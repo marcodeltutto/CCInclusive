@@ -581,6 +581,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             //Event Loop
             for(int i = StartEvent; i < EndEvent; i++)
             {
+                if(i == 121558 && GeneratorName == "MEC")
                 if(i%1000 == 0) cout << "\t... " << i << endl;
 
                 // Get tree entries
