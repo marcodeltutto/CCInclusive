@@ -87,12 +87,6 @@ void HistoProducer()
     std::vector<TH2F*> RangeVsYPos;
     std::vector<TH2F*> PhiVsFlashTrackDist;
 
-    TH1F* TrackRangeSys = new TH1F("Track Range Systematics","Track Range Systematics",NumberOfBins,0,1036.8);
-    TrackRangeSys->SetStats(0);
-    TrackRangeSys->SetFillColor(41);
-    TrackRangeSys->GetXaxis()->SetTitle("Track Range [cm]");
-    TrackRangeSys->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
-
 
 //     std::string TrackProdName="pandoraNuKHit";
 //     std::string TrackProdName = "pandoraCosmic";
@@ -788,6 +782,21 @@ void HistoProducer()
         SelYVtxPosition.at(file_no)->Sumw2();
         SelZVtxPosition.at(file_no)->Sumw2();
 
+        if(file_no == 2)
+        {
+            AdjustSysError(SelectionTrackRange);
+            AdjustSysError(SelectionTheta);
+            AdjustSysError(SelectionCosTheta);
+            AdjustSysError(SelectionPhi);
+            AdjustSysError(SelectionEnergy);
+            AdjustSysError(SelXTrackStartEnd);
+            AdjustSysError(SelYTrackStartEnd);
+            AdjustSysError(SelZTrackStartEnd);
+            AdjustSysError(SelXVtxPosition);
+            AdjustSysError(SelYVtxPosition);
+            AdjustSysError(SelZVtxPosition);
+        }
+        
         SelectionTrackRange.at(file_no)->Scale(ScalingFactors.at(file_no));
         SelectionTheta.at(file_no)->Scale(ScalingFactors.at(file_no));
         SelectionCosTheta.at(file_no)->Scale(ScalingFactors.at(file_no));
@@ -800,6 +809,7 @@ void HistoProducer()
         SelYVtxPosition.at(file_no)->Scale(ScalingFactors.at(file_no));
         SelZVtxPosition.at(file_no)->Scale(ScalingFactors.at(file_no));
 
+
         PhiVsTheta.at(file_no)->Scale(ScalingFactors.at(file_no));
         PhiVsXPos.at(file_no)->Scale(ScalingFactors.at(file_no));
         PhiVsYPos.at(file_no)->Scale(ScalingFactors.at(file_no));
@@ -811,6 +821,18 @@ void HistoProducer()
         RangeVsYPos.at(file_no)->Scale(ScalingFactors.at(file_no));
         PhiVsFlashTrackDist.at(file_no)->Scale(ScalingFactors.at(file_no));
     }
+
+    AdjustSysError(SelectionTrackRange);
+    AdjustSysError(SelectionTheta);
+    AdjustSysError(SelectionCosTheta);
+    AdjustSysError(SelectionPhi);
+    AdjustSysError(SelectionEnergy);
+    AdjustSysError(SelXTrackStartEnd);
+    AdjustSysError(SelYTrackStartEnd);
+    AdjustSysError(SelZTrackStartEnd);
+    AdjustSysError(SelXVtxPosition);
+    AdjustSysError(SelYVtxPosition);
+    AdjustSysError(SelZVtxPosition);
 
     for(unsigned int hist_no = 0; hist_no < DataLabel.size(); hist_no++)
     {
@@ -947,18 +969,6 @@ void HistoProducer()
     AddFirstTwoHistograms2D(ZPosVsYPos,-1);
     AddFirstTwoHistograms2D(RangeVsYPos,-1);
     AddFirstTwoHistograms2D(PhiVsFlashTrackDist,-1);
-
-    AdjustSysError(SelectionTrackRange);
-    AdjustSysError(SelectionTheta);
-    AdjustSysError(SelectionCosTheta);
-    AdjustSysError(SelectionPhi);
-    AdjustSysError(SelectionEnergy);
-    AdjustSysError(SelXTrackStartEnd);
-    AdjustSysError(SelYTrackStartEnd);
-    AdjustSysError(SelZTrackStartEnd);
-    AdjustSysError(SelXVtxPosition);
-    AdjustSysError(SelYVtxPosition);
-    AdjustSysError(SelZVtxPosition);
 
     std::cout << "Theta KS significance: " << SelectionTheta.at(1)->KolmogorovTest(SelectionTheta.at(0)) << std::endl;
     std::cout << "Phi KS significance: " << SelectionPhi.at(1)->KolmogorovTest(SelectionPhi.at(0)) << std::endl;
@@ -1359,9 +1369,9 @@ std::vector<TSpline5> Systematics()
 
 void AdjustSysError(std::vector<TH1F*>& HistVector)
 {
-    for(unsigned int bin_no = 0; bin_no < HistVector.back()->GetNbinsX(); bin_no++)
+    for(unsigned int bin_no = 1; bin_no < HistVector.back()->GetNbinsX()+1; bin_no++)
     {
-        HistVector.back()->SetBinError( bin_no, HistVector.back()->GetBinContent(bin_no) - HistVector.at(1)->GetBinContent(bin_no) + HistVector.at(1)->GetBinError(bin_no) );
-        HistVector.back()->SetBinContent( bin_no, HistVector.at(1)->GetBinContent(bin_no) );
+        HistVector.back()->SetBinError( bin_no, HistVector.back()->GetBinContent(bin_no) - HistVector.at(2)->GetBinContent(bin_no) + HistVector.at(2)->GetBinError(bin_no) );
+        HistVector.back()->SetBinContent( bin_no, HistVector.at(2)->GetBinContent(bin_no) );
     }
 }
