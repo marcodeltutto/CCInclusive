@@ -106,8 +106,8 @@ void HistoProducer()
     std::string VertexProdName = "pandoraNu";
 //     std::string VertexProdName = "pmtrack";
 
-    std::string SelectionLabel = "";
-//     std::string SelectionLabel = "_Mod";
+//     std::string SelectionLabel = "";
+    std::string SelectionLabel = "_Mod";
 //     std::string SelectionLabel = "_New";
 
     TF1* SinTheta = new TF1("const","sin(x)",0,3.142);
@@ -1322,14 +1322,8 @@ std::vector<TSpline5> Systematics()
         // If not a header line
         if(FileLine[0] != 'E')
         {
-            // First column entry gets filled with a factor 1000 for conversion to MeV
-            if(SysFile >> Cell)
-            {
-                BeamSystematics.at(0).push_back(1000*std::stof(Cell));
-            }
-
             // Loop over all columns
-            for(unsigned column_no = 1; column_no < NumberOfColumns; column_no++)
+            for(unsigned column_no = 0; column_no < NumberOfColumns; column_no++)
             {
                 // Only read data if data stream works
                 if(SysFile >> Cell)
