@@ -10,6 +10,7 @@
 #include <TChain.h>
 #include <TCanvas.h>
 #include <TFile.h>
+#include <TGraph.h>
 #include <TH1.h>
 #include <TH2.h>
 #include <THStack.h>
@@ -17,7 +18,7 @@
 #include <TLegend.h>
 #include <TLine.h>
 #include <TAxis.h>
-
+#include <TSpline.h>
 
 float GetMaximum(const std::vector<TH1F*>& HistVector);
 void AddFirstTwoHistograms(std::vector<TH1F*>& HistVector, float Weight);
@@ -25,6 +26,8 @@ void AddFirstTwoHistograms2D(std::vector<TH2F*>& HistVector, float Weight);
 float CalcLength(const float& x_1, const float& y_1, const float& z_1, const float& x_2, const float& y_2, const float& z_2);
 double FlashTrackDist(double flash, double start, double end);
 bool inDeadRegion(double y, double z);
+std::vector<TSpline5> Systematics();
+void AdjustSysError(std::vector<TH1F*>& HistVector);
 
 void HistoProducer()
 {
@@ -83,7 +86,14 @@ void HistoProducer()
     std::vector<TH2F*> RangeVsPE;
     std::vector<TH2F*> RangeVsYPos;
     std::vector<TH2F*> PhiVsFlashTrackDist;
-
+    
+    TH1F* TrackRangeSys = new TH1F("Track Range Systematics","Track Range Systematics",NumberOfBins,0,1036.8);
+    TrackRangeSys->SetStats(0);
+    TrackRangeSys->SetFillColor(41);
+    TrackRangeSys->GetXaxis()->SetTitle("Track Range [cm]");
+    TrackRangeSys->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
+    
+    
 //     std::string TrackProdName="pandoraNuKHit";
 //     std::string TrackProdName = "pandoraCosmic";
     std::string TrackProdName="pandoraNu";
@@ -125,6 +135,7 @@ void HistoProducer()
 
     MCLabel.push_back("On-Beam Minus Off-Beam Sample");
     MCLabel.push_back("Selection on MC BNB+Cosmic with Stat. Error");
+    MCLabel.push_back("MC BNB+Cosmic Sys. Error");
 
     TLegend* FlashLabel = new TLegend(0.7,0.7,0.9,0.9);
 //     FlashLabel->SetHeader("Generator Type");
@@ -132,6 +143,7 @@ void HistoProducer()
     GenLabel.push_back("Data On-Beam BNB");
     GenLabel.push_back("Data Off-Beam BNBEXT");
     GenLabel.push_back("MC Prodgenie BNB Nu Cosmic");
+    GenLabel.push_back("MC Systematic Errors");
 //     GenLabel.push_back("MC Prodgenie BNB Nu");
 //     GenLabel.push_back("MC Prodcosmic Corsika in-Time");
 
@@ -139,6 +151,8 @@ void HistoProducer()
     BgrLabel.push_back("Bgr #nu_{e} Events MC BNB+Cosmic");
     BgrLabel.push_back("Bgr NC Events MC BNB+Cosmic");
     BgrLabel.push_back("Bgr Cosmic Events MC BNB+Cosmic");
+    
+    std::vector<TSpline5> SystematicErrors = Systematics();
 
     std::vector<unsigned int> ColorMap = {28,42,30,38};
 
@@ -364,6 +378,7 @@ void HistoProducer()
     int CCNCFlag[10];
     int TruthMode[10];
     int PDGTruth[5000];
+    float NuEnergyTruth[10];
 
     short TrkBestPlane[5000];
     short TrkOrigin[5000][3];
@@ -419,6 +434,7 @@ void HistoProducer()
         ChainVec.at(file_no) -> SetBranchAddress("ccnc_truth", CCNCFlag);
         ChainVec.at(file_no) -> SetBranchAddress("mode_truth", TruthMode);
         ChainVec.at(file_no) -> SetBranchAddress("pdg", PDGTruth);
+        ChainVec.at(file_no) -> SetBranchAddress("enu_truth", NuEnergyTruth);
         ChainVec.at(file_no) -> SetBranchAddress(("trkorigin_"+TrackProdName).c_str(), TrkOrigin);
         ChainVec.at(file_no) -> SetBranchAddress(("trkpidbestplane_"+TrackProdName).c_str(), TrkBestPlane);
 
@@ -543,7 +559,29 @@ void HistoProducer()
                     RangeVsYPos.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),YTrackStart[TrkID]);
                     RangeVsYPos.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),YTrackEnd[TrkID]);
                 }
-
+                
+                // Fill systematic errors independet of CC or NC
+                if(file_no == 2 && MCTrkID > -1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
+                {
+                    if(PDGTruth[MCTrkID] == 13)
+                    {
+                        SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
+                    }
+                    else if(PDGTruth[MCTrkID] == -13)
+                    {
+                        SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
+                    }
+                    else if(PDGTruth[MCTrkID] == 11)
+                    {
+                        SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
+                    }
+                    else if(PDGTruth[MCTrkID] == -11)
+                    {
+                        SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
+                    }
+                }
+                
+                // Fill Bgr
                 if(file_no == 2 && MCTrkID > -1 && CCNCFlag[0] == 0 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
                     if(PDGTruth[MCTrkID] == -13)
@@ -854,6 +892,18 @@ void HistoProducer()
     AddFirstTwoHistograms2D(ZPosVsYPos,-1);
     AddFirstTwoHistograms2D(RangeVsYPos,-1);
     AddFirstTwoHistograms2D(PhiVsFlashTrackDist,-1);
+    
+    AdjustSysError(SelectionTrackRange);
+    AdjustSysError(SelectionTheta);
+    AdjustSysError(SelectionCosTheta);
+    AdjustSysError(SelectionPhi);
+    AdjustSysError(SelectionEnergy);
+    AdjustSysError(SelXTrackStartEnd);
+    AdjustSysError(SelYTrackStartEnd);
+    AdjustSysError(SelZTrackStartEnd);
+    AdjustSysError(SelXVtxPosition);
+    AdjustSysError(SelYVtxPosition);
+    AdjustSysError(SelZVtxPosition);
 
     std::cout << "Theta KS significance: " << SelectionTheta.at(1)->KolmogorovTest(SelectionTheta.at(0)) << std::endl;
     std::cout << "Phi KS significance: " << SelectionPhi.at(1)->KolmogorovTest(SelectionPhi.at(0)) << std::endl;
@@ -911,11 +961,13 @@ void HistoProducer()
 
     TCanvas *Canvas12a = new TCanvas("OnBeam Minus OffBeam Theta-Angle Omega", "OnBeam Minus OffBeam Theta-Angle Omega", 1400, 1000);
     Canvas12a->cd();
-    SelectionTheta.at(1)->SetMaximum(1.5*SelectionTheta.at(1)->GetBinContent(SelectionTheta.at(1)->GetMaximumBin()));
-    SelectionTheta.at(1)->SetMinimum(0.0);
+    SelectionTheta.at(2)->SetMaximum(1.5*SelectionTheta.at(1)->GetBinContent(SelectionTheta.at(1)->GetMaximumBin()));
+    SelectionTheta.at(2)->SetMinimum(0.0);
+    SelectionTheta.at(2)->SetFillColor(41);
+    SelectionTheta.at(2)->GetYaxis()->SetTitle("Weighted #frac{dn}{d#Omega}");
+    SelectionTheta.at(2)->DrawNormalized("E2");
     SelectionTheta.at(1)->SetFillColor(46);
-    SelectionTheta.at(1)->GetYaxis()->SetTitle("Weighted #frac{dn}{d#Omega}");
-    SelectionTheta.at(1)->DrawNormalized("E2");
+    SelectionTheta.at(1)->DrawNormalized("E2SAME");
     StackBgrTheta->Draw("SAME");
     SelectionTheta.at(0)->SetLineWidth(2);
     SelectionTheta.at(0)->SetLineColor(1);
@@ -1163,4 +1215,83 @@ bool inDeadRegion(double y, double z)
     else if((y > (-0.63*z+429.3)) && (y < (-0.63*z+476.5))) return true;
     else if(z > 700 && z < 750) return true;
     else return false;
+}
+
+std::vector<TSpline5> Systematics()
+{
+    // Number of columns in file
+    unsigned short NumberOfColumns = 5;
+
+    // Initialize data structure
+    std::vector <std::vector<float>> BeamSystematics;
+    BeamSystematics.resize(NumberOfColumns);
+    
+    // Line and cell string for ifstream
+    std::string FileLine;
+    std::string Cell;
+
+    // Open field systematic error file
+    std::ifstream SysFile ("bnb_sys_error_uboone.txt");
+
+    // check file
+    if(SysFile.bad())
+    {
+        std::cout << "No such file or directory: " << "bnb_sys_error_uboone.txt" << std::endl;
+        exit(-1);
+    }
+
+    // Loop over lines until files end
+    while(std::getline(SysFile,FileLine))
+    {
+        // If not a header line
+        if(FileLine[0] != 'E')
+        {
+            // First column entry gets filled with a factor 1000 for conversion to MeV
+            if(SysFile >> Cell)
+            {
+                BeamSystematics.at(0).push_back(1000*std::stof(Cell));
+            }
+            
+            // Loop over all columns
+            for(unsigned column_no = 1; column_no < NumberOfColumns; column_no++)
+            {
+                // Only read data if data stream works
+                if(SysFile >> Cell)
+                {
+                    // Fill systematic error data into data structure
+                    BeamSystematics.at(column_no).push_back(std::stof(Cell));
+                }
+            } // End of column loop
+        } // if not header
+    } // line loop
+    
+    // Initialize Graph vector
+    std::vector<TGraph*> GraphVector;
+    
+    // Fill graphs with beam systematic data
+    for(unsigned int entry_no = 1; entry_no < NumberOfColumns; entry_no++)
+    {
+        GraphVector.push_back( new TGraph(BeamSystematics.at(0).size(),BeamSystematics.at(0).data(),BeamSystematics.at(entry_no).data()) );
+    }
+    
+    // Initialize spline vector
+    std::vector<TSpline5> SplineVector;
+    
+    // Produce spline vector by fitting all graphs
+    for(const auto& Graph : GraphVector)
+    {
+        SplineVector.push_back(TSpline5("",Graph));
+        delete Graph;
+    }
+    
+    return SplineVector;
+}
+
+void AdjustSysError(std::vector<TH1F*>& HistVector)
+{
+    for(unsigned int bin_no = 0; bin_no < HistVector.back()->GetNbinsX(); bin_no++)
+    {
+        HistVector.back()->SetBinError( bin_no, HistVector.back()->GetBinContent(bin_no) - HistVector.at(1)->GetBinContent(bin_no) + HistVector.at(1)->GetBinError(bin_no) );
+        HistVector.back()->SetBinContent( bin_no, HistVector.at(1)->GetBinContent(bin_no) );
+    }
 }

@@ -43,8 +43,14 @@ void ReadBeamErrors()
         // If not a header line
         if(FileLine[0] != 'E')
         {
-            // Loop over all columns
-            for(unsigned column_no = 0; column_no < NumberOfColumns; column_no++)
+            // First column entry gets filled with a factor 1000 for conversion to MeV
+            if(SysFile >> Cell)
+            {
+                BeamSystematics.at(0).push_back(1000*std::stof(Cell));
+            }
+            
+            // Loop over all remaining columns
+            for(unsigned column_no = 1; column_no < NumberOfColumns; column_no++)
             {
                 // Only read data if data stream works
                 if(SysFile >> Cell)
@@ -75,14 +81,14 @@ void ReadBeamErrors()
     TSpline3 *Spline3NueBar = new TSpline3("Spline3NueBar",NueBarGraph);
     TSpline5 *Spline5NueBar = new TSpline5("Spline5NueBar",NueBarGraph);
     
-    Spline3NuMu->SetLineColor(3);
+    Spline3NuMu->SetLineColor(2);
     Spline5NuMu->SetLineColor(4);
     Spline3NuMuBar->SetLineColor(2);
-    Spline5NuMuBar->SetLineColor(3);
+    Spline5NuMuBar->SetLineColor(4);
     Spline3Nue->SetLineColor(2);
-    Spline5Nue->SetLineColor(3);
+    Spline5Nue->SetLineColor(4);
     Spline3NueBar->SetLineColor(2);
-    Spline5NueBar->SetLineColor(3);
+    Spline5NueBar->SetLineColor(4);
     
     TCanvas *Canvas0 = new TCanvas("NuMu", "NuMu", 1400, 1000);
     NuMuGraph->Draw("A*");
