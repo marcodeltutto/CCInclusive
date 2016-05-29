@@ -44,6 +44,7 @@ void HistoProducer()
 //     ScalingFactors.push_back(1/179041.);
     ScalingFactors.push_back(1/400675.);
     ScalingFactors.push_back(1/550000.);
+    ScalingFactors.push_back(1/550000.);
 
     // Binning
     unsigned int NumberOfBins = 20;
@@ -782,33 +783,20 @@ void HistoProducer()
         SelYVtxPosition.at(file_no)->Sumw2();
         SelZVtxPosition.at(file_no)->Sumw2();
 
-        if(file_no == 2)
+        if(file_no < 2)
         {
-            AdjustSysError(SelectionTrackRange);
-            AdjustSysError(SelectionTheta);
-            AdjustSysError(SelectionCosTheta);
-            AdjustSysError(SelectionPhi);
-            AdjustSysError(SelectionEnergy);
-            AdjustSysError(SelXTrackStartEnd);
-            AdjustSysError(SelYTrackStartEnd);
-            AdjustSysError(SelZTrackStartEnd);
-            AdjustSysError(SelXVtxPosition);
-            AdjustSysError(SelYVtxPosition);
-            AdjustSysError(SelZVtxPosition);
+            SelectionTrackRange.at(file_no)->Scale(ScalingFactors.at(file_no));
+            SelectionTheta.at(file_no)->Scale(ScalingFactors.at(file_no));
+            SelectionCosTheta.at(file_no)->Scale(ScalingFactors.at(file_no));
+            SelectionPhi.at(file_no)->Scale(ScalingFactors.at(file_no));
+            SelectionEnergy.at(file_no)->Scale(ScalingFactors.at(file_no));
+            SelXTrackStartEnd.at(file_no)->Scale(ScalingFactors.at(file_no));
+            SelYTrackStartEnd.at(file_no)->Scale(ScalingFactors.at(file_no));
+            SelZTrackStartEnd.at(file_no)->Scale(ScalingFactors.at(file_no));
+            SelXVtxPosition.at(file_no)->Scale(ScalingFactors.at(file_no));
+            SelYVtxPosition.at(file_no)->Scale(ScalingFactors.at(file_no));
+            SelZVtxPosition.at(file_no)->Scale(ScalingFactors.at(file_no));
         }
-        
-        SelectionTrackRange.at(file_no)->Scale(ScalingFactors.at(file_no));
-        SelectionTheta.at(file_no)->Scale(ScalingFactors.at(file_no));
-        SelectionCosTheta.at(file_no)->Scale(ScalingFactors.at(file_no));
-        SelectionPhi.at(file_no)->Scale(ScalingFactors.at(file_no));
-        SelectionEnergy.at(file_no)->Scale(ScalingFactors.at(file_no));
-        SelXTrackStartEnd.at(file_no)->Scale(ScalingFactors.at(file_no));
-        SelYTrackStartEnd.at(file_no)->Scale(ScalingFactors.at(file_no));
-        SelZTrackStartEnd.at(file_no)->Scale(ScalingFactors.at(file_no));
-        SelXVtxPosition.at(file_no)->Scale(ScalingFactors.at(file_no));
-        SelYVtxPosition.at(file_no)->Scale(ScalingFactors.at(file_no));
-        SelZVtxPosition.at(file_no)->Scale(ScalingFactors.at(file_no));
-
 
         PhiVsTheta.at(file_no)->Scale(ScalingFactors.at(file_no));
         PhiVsXPos.at(file_no)->Scale(ScalingFactors.at(file_no));
@@ -821,6 +809,18 @@ void HistoProducer()
         RangeVsYPos.at(file_no)->Scale(ScalingFactors.at(file_no));
         PhiVsFlashTrackDist.at(file_no)->Scale(ScalingFactors.at(file_no));
     }
+
+    AdjustSysError(SelectionTrackRange);
+    AdjustSysError(SelectionTheta);
+    AdjustSysError(SelectionCosTheta);
+    AdjustSysError(SelectionPhi);
+    AdjustSysError(SelectionEnergy);
+    AdjustSysError(SelXTrackStartEnd);
+    AdjustSysError(SelYTrackStartEnd);
+    AdjustSysError(SelZTrackStartEnd);
+    AdjustSysError(SelXVtxPosition);
+    AdjustSysError(SelYVtxPosition);
+    AdjustSysError(SelZVtxPosition);
 
     for(unsigned int hist_no = 0; hist_no < DataLabel.size(); hist_no++)
     {
@@ -1021,7 +1021,7 @@ void HistoProducer()
     Canvas12a->cd();
     SelectionTheta.at(2)->SetMaximum(1.5*SelectionTheta.at(2)->GetBinContent(SelectionTheta.at(2)->GetMaximumBin()));
     SelectionTheta.at(2)->SetMinimum(0.0);
-    SelectionTheta.at(2)->SetFillColor(41);
+    SelectionTheta.at(2)->SetFillColor(42);
     SelectionTheta.at(2)->GetYaxis()->SetTitle("Weighted #frac{dn}{d#Omega}");
     SelectionTheta.at(2)->DrawNormalized("E2");
     SelectionTheta.at(1)->SetFillColor(46);
