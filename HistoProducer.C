@@ -869,7 +869,7 @@ void HistoProducer()
     Canvas11->cd();
     SelectionTrackRange.at(1)->SetMaximum(1.4*SelectionTrackRange.at(1)->GetBinContent(SelectionTrackRange.at(1)->GetMaximumBin()));
     SelectionTrackRange.at(1)->SetMinimum(0.0);
-    SelectionTrackRange.at(1)->SetFillColorAlpha(46,0.5);
+    SelectionTrackRange.at(1)->SetFillColor(46);
     SelectionTrackRange.at(1)->DrawNormalized("E2");
     StackBgrTrackRange->Draw("SAME");
     SelectionTrackRange.at(0)->SetLineWidth(2);
@@ -882,7 +882,7 @@ void HistoProducer()
     Canvas12->cd();
     SelectionTheta.at(1)->SetMaximum(1.5*SelectionTheta.at(1)->GetBinContent(SelectionTheta.at(1)->GetMaximumBin()));
     SelectionTheta.at(1)->SetMinimum(0.0);
-    SelectionTheta.at(1)->SetFillColorAlpha(46,0.5);
+    SelectionTheta.at(1)->SetFillColor(46);
     SelectionTheta.at(1)->DrawNormalized("E2");
     StackBgrTheta->Draw("SAME");
     SelectionTheta.at(0)->SetLineWidth(2);
@@ -913,7 +913,7 @@ void HistoProducer()
     Canvas12a->cd();
     SelectionTheta.at(1)->SetMaximum(1.5*SelectionTheta.at(1)->GetBinContent(SelectionTheta.at(1)->GetMaximumBin()));
     SelectionTheta.at(1)->SetMinimum(0.0);
-    SelectionTheta.at(1)->SetFillColorAlpha(46,0.5);
+    SelectionTheta.at(1)->SetFillColor(46);
     SelectionTheta.at(1)->GetYaxis()->SetTitle("Weighted #frac{dn}{d#Omega}");
     SelectionTheta.at(1)->DrawNormalized("E2");
     StackBgrTheta->Draw("SAME");
@@ -927,7 +927,7 @@ void HistoProducer()
     Canvas12b->cd();
     SelectionCosTheta.at(1)->SetMaximum(1.5*SelectionCosTheta.at(1)->GetBinContent(SelectionCosTheta.at(1)->GetMaximumBin()));
     SelectionCosTheta.at(1)->SetMinimum(0.0);
-    SelectionCosTheta.at(1)->SetFillColorAlpha(46,0.5);
+    SelectionCosTheta.at(1)->SetFillColor(46);
     SelectionCosTheta.at(1)->DrawNormalized("E2");
     StackBgrCosTheta->Draw("SAME");
     SelectionCosTheta.at(0)->SetLineWidth(2);
@@ -940,7 +940,7 @@ void HistoProducer()
     Canvas13->cd();
     SelectionPhi.at(1)->SetMaximum(1.9*SelectionPhi.at(1)->GetBinContent(SelectionPhi.at(1)->GetMaximumBin()));
     SelectionPhi.at(1)->SetMinimum(0.0);
-    SelectionPhi.at(1)->SetFillColorAlpha(46,0.5);
+    SelectionPhi.at(1)->SetFillColor(46);
     SelectionPhi.at(1)->DrawNormalized("E2");
     StackBgrPhi->Draw("SAME");
     SelectionPhi.at(0)->SetLineWidth(2);
@@ -953,7 +953,7 @@ void HistoProducer()
     Canvas14->cd();
     SelectionEnergy.at(1)->SetMaximum(1.2*SelectionEnergy.at(1)->GetBinContent(SelectionEnergy.at(1)->GetMaximumBin()));
     SelectionEnergy.at(1)->SetMinimum(0.0);
-    SelectionEnergy.at(1)->SetFillColorAlpha(46,0.5);
+    SelectionEnergy.at(1)->SetFillColor(46);
     SelectionEnergy.at(1)->DrawNormalized("E2");
     StackBgrEnergy->Draw("SAME");
     SelectionEnergy.at(0)->SetLineWidth(2);
@@ -966,7 +966,7 @@ void HistoProducer()
     Canvas15->cd();
     SelXTrackStartEnd.at(1)->SetMaximum(1.5*SelXTrackStartEnd.at(1)->GetBinContent(SelXTrackStartEnd.at(1)->GetMaximumBin()));
     SelXTrackStartEnd.at(1)->SetMinimum(0.0);
-    SelXTrackStartEnd.at(1)->SetFillColorAlpha(46,0.5);
+    SelXTrackStartEnd.at(1)->SetFillColor(46);
     SelXTrackStartEnd.at(1)->DrawNormalized("E2");
     StackBgrXTrackStartEnd->Draw("SAME");
     SelXTrackStartEnd.at(0)->SetLineWidth(2);
@@ -979,7 +979,7 @@ void HistoProducer()
     Canvas16->cd();
     SelYTrackStartEnd.at(1)->SetMaximum(1.8*SelYTrackStartEnd.at(1)->GetBinContent(SelYTrackStartEnd.at(1)->GetMaximumBin()));
     SelYTrackStartEnd.at(1)->SetMinimum(0.0);
-    SelYTrackStartEnd.at(1)->SetFillColorAlpha(46,0.5);
+    SelYTrackStartEnd.at(1)->SetFillColor(46);
     SelYTrackStartEnd.at(1)->DrawNormalized("E2");
     StackBgrYTrackStartEnd->Draw("SAME");
     SelYTrackStartEnd.at(0)->SetLineWidth(2);
@@ -992,7 +992,7 @@ void HistoProducer()
     Canvas17->cd();
     SelZTrackStartEnd.at(1)->SetMaximum(1.5*SelZTrackStartEnd.at(1)->GetBinContent(SelZTrackStartEnd.at(1)->GetMaximumBin()));
     SelZTrackStartEnd.at(1)->SetMinimum(0.0);
-    SelZTrackStartEnd.at(1)->SetFillColorAlpha(46,0.5);
+    SelZTrackStartEnd.at(1)->SetFillColor(46);
     SelZTrackStartEnd.at(1)->DrawNormalized("E2");
     StackBgrZTrackStartEnd->Draw("SAME");
     SelZTrackStartEnd.at(0)->SetLineWidth(2);
@@ -1005,7 +1005,7 @@ void HistoProducer()
     Canvas18->cd();
     SelXVtxPosition.at(1)->SetMaximum(1.5*SelXVtxPosition.at(1)->GetBinContent(SelXVtxPosition.at(1)->GetMaximumBin()));
     SelXVtxPosition.at(1)->SetMinimum(0.0);
-    SelXVtxPosition.at(1)->SetFillColorAlpha(46,0.5);
+    SelXVtxPosition.at(1)->SetFillColor(46);
     SelXVtxPosition.at(1)->DrawNormalized("E2");
     StackBgrXVtxPosition->Draw("SAME");
     SelXVtxPosition.at(0)->SetLineWidth(2);
@@ -1018,7 +1018,7 @@ void HistoProducer()
     Canvas19->cd();
     SelYVtxPosition.at(1)->SetMaximum(1.8*SelYVtxPosition.at(1)->GetBinContent(SelYVtxPosition.at(1)->GetMaximumBin()));
     SelYVtxPosition.at(1)->SetMinimum(0.0);
-    SelYVtxPosition.at(1)->SetFillColorAlpha(46,0.5);
+    SelYVtxPosition.at(1)->SetFillColor(46);
     SelYVtxPosition.at(1)->DrawNormalized("E2");
     StackBgrYVtxPosition->Draw("SAME");
     SelYVtxPosition.at(0)->SetLineWidth(2);
@@ -1031,7 +1031,7 @@ void HistoProducer()
     Canvas20->cd();
     SelZVtxPosition.at(1)->SetMaximum(1.5*SelZVtxPosition.at(1)->GetBinContent(SelZVtxPosition.at(1)->GetMaximumBin()));
     SelZVtxPosition.at(1)->SetMinimum(0.0);
-    SelZVtxPosition.at(1)->SetFillColorAlpha(46,0.5);
+    SelZVtxPosition.at(1)->SetFillColor(46);
     SelZVtxPosition.at(1)->DrawNormalized("E2");
     StackBgrZVtxPosition->Draw("SAME");
     SelZVtxPosition.at(0)->SetLineWidth(2);
