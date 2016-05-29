@@ -822,18 +822,6 @@ void HistoProducer()
         PhiVsFlashTrackDist.at(file_no)->Scale(ScalingFactors.at(file_no));
     }
 
-    AdjustSysError(SelectionTrackRange);
-    AdjustSysError(SelectionTheta);
-    AdjustSysError(SelectionCosTheta);
-    AdjustSysError(SelectionPhi);
-    AdjustSysError(SelectionEnergy);
-    AdjustSysError(SelXTrackStartEnd);
-    AdjustSysError(SelYTrackStartEnd);
-    AdjustSysError(SelZTrackStartEnd);
-    AdjustSysError(SelXVtxPosition);
-    AdjustSysError(SelYVtxPosition);
-    AdjustSysError(SelZVtxPosition);
-
     for(unsigned int hist_no = 0; hist_no < DataLabel.size(); hist_no++)
     {
         LegendData->AddEntry( SelectionTrackRange.at(hist_no), (DataLabel.at(hist_no)).c_str(),"l" );
