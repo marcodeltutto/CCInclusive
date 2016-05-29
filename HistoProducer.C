@@ -38,7 +38,7 @@ void HistoProducer()
     std::vector<std::string> MCLabel;
     std::vector<std::string> GenLabel;
     std::vector<std::string> BgrLabel;
-    
+
     std::vector<float> ScalingFactors;
     ScalingFactors.push_back(1/383519.);
 //     ScalingFactors.push_back(1/179041.);
@@ -86,14 +86,14 @@ void HistoProducer()
     std::vector<TH2F*> RangeVsPE;
     std::vector<TH2F*> RangeVsYPos;
     std::vector<TH2F*> PhiVsFlashTrackDist;
-    
+
     TH1F* TrackRangeSys = new TH1F("Track Range Systematics","Track Range Systematics",NumberOfBins,0,1036.8);
     TrackRangeSys->SetStats(0);
     TrackRangeSys->SetFillColor(41);
     TrackRangeSys->GetXaxis()->SetTitle("Track Range [cm]");
     TrackRangeSys->GetYaxis()->SetTitle("Weighted #frac{dn}{dx}");
-    
-    
+
+
 //     std::string TrackProdName="pandoraNuKHit";
 //     std::string TrackProdName = "pandoraCosmic";
     std::string TrackProdName="pandoraNu";
@@ -105,9 +105,9 @@ void HistoProducer()
 //     std::string VertexProdName="pandoraCosmic";
     std::string VertexProdName = "pandoraNu";
 //     std::string VertexProdName = "pmtrack";
-    
-//     std::string SelectionLabel = "";
-    std::string SelectionLabel = "_Mod";
+
+    std::string SelectionLabel = "";
+//     std::string SelectionLabel = "_Mod";
 //     std::string SelectionLabel = "_New";
 
     TF1* SinTheta = new TF1("const","sin(x)",0,3.142);
@@ -151,10 +151,10 @@ void HistoProducer()
     BgrLabel.push_back("Bgr #nu_{e} Events MC BNB+Cosmic");
     BgrLabel.push_back("Bgr NC Events MC BNB+Cosmic");
     BgrLabel.push_back("Bgr Cosmic Events MC BNB+Cosmic");
-    
+
     std::vector<TSpline5> SystematicErrors = Systematics();
 
-    std::vector<unsigned int> ColorMap = {28,42,30,38};
+    std::vector<unsigned int> ColorMap = {28,41,30,38};
 
     ChainVec.push_back(new TChain("anatree"));
     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1"+ SelectionLabel +".root").c_str());
@@ -474,7 +474,7 @@ void HistoProducer()
         unsigned int nuRES = 0;
         unsigned int nuDIS = 0;
         unsigned int nuCOH = 0;
-        
+
         unsigned int negPhi = 0;
         unsigned int posPhi = 0;
 
@@ -534,7 +534,6 @@ void HistoProducer()
                 SelYTrackStartEnd.at(file_no)->Fill(YTrackEnd[TrkID]);
                 SelZTrackStartEnd.at(file_no)->Fill(ZTrackStart[TrkID]);
                 SelZTrackStartEnd.at(file_no)->Fill(ZTrackEnd[TrkID]);
-
                 SelXVtxPosition.at(file_no)->Fill(XVertexPosition[VtxID]);
                 SelYVtxPosition.at(file_no)->Fill(YVertexPosition[VtxID]);
                 SelZVtxPosition.at(file_no)->Fill(ZVertexPosition[VtxID]);
@@ -546,7 +545,7 @@ void HistoProducer()
                 PhiVsYPos.at(file_no)->Fill(TrackPhi[TrkID],YTrackEnd[TrkID]);
                 PhiVsZPos.at(file_no)->Fill(TrackPhi[TrkID],ZTrackStart[TrkID]);
                 PhiVsZPos.at(file_no)->Fill(TrackPhi[TrkID],ZTrackEnd[TrkID]);
-                
+
                 if(TrackPhi[TrkID] < 0) negPhi++;
                 else posPhi++;
 
@@ -559,28 +558,84 @@ void HistoProducer()
                     RangeVsYPos.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),YTrackStart[TrkID]);
                     RangeVsYPos.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),YTrackEnd[TrkID]);
                 }
-                
+
                 // Fill systematic errors independet of CC or NC
                 if(file_no == 2 && MCTrkID > -1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
                     if(PDGTruth[MCTrkID] == 13)
                     {
                         SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
+                        SelectionTheta.at(file_no)->Fill(TrackTheta[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
+                        SelectionCosTheta.at(file_no)->Fill(cos(TrackTheta[TrkID]),1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
+                        SelectionPhi.at(file_no)->Fill(TrackPhi[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
+                        SelectionEnergy.at(file_no)->Fill(KineticEnergy[TrkID][2],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
+
+                        SelXTrackStartEnd.at(file_no)->Fill(XTrackStart[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
+                        SelXTrackStartEnd.at(file_no)->Fill(XTrackEnd[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
+                        SelYTrackStartEnd.at(file_no)->Fill(YTrackStart[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
+                        SelYTrackStartEnd.at(file_no)->Fill(YTrackEnd[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
+                        SelZTrackStartEnd.at(file_no)->Fill(ZTrackStart[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
+                        SelZTrackStartEnd.at(file_no)->Fill(ZTrackEnd[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
+                        SelXVtxPosition.at(file_no)->Fill(XVertexPosition[VtxID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
+                        SelYVtxPosition.at(file_no)->Fill(YVertexPosition[VtxID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
+                        SelZVtxPosition.at(file_no)->Fill(ZVertexPosition[VtxID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
                     }
                     else if(PDGTruth[MCTrkID] == -13)
                     {
                         SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
+                        SelectionTheta.at(file_no)->Fill(TrackTheta[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
+                        SelectionCosTheta.at(file_no)->Fill(cos(TrackTheta[TrkID]),1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
+                        SelectionPhi.at(file_no)->Fill(TrackPhi[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
+                        SelectionEnergy.at(file_no)->Fill(KineticEnergy[TrkID][2],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
+
+                        SelXTrackStartEnd.at(file_no)->Fill(XTrackStart[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
+                        SelXTrackStartEnd.at(file_no)->Fill(XTrackEnd[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
+                        SelYTrackStartEnd.at(file_no)->Fill(YTrackStart[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
+                        SelYTrackStartEnd.at(file_no)->Fill(YTrackEnd[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
+                        SelZTrackStartEnd.at(file_no)->Fill(ZTrackStart[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
+                        SelZTrackStartEnd.at(file_no)->Fill(ZTrackEnd[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
+                        SelXVtxPosition.at(file_no)->Fill(XVertexPosition[VtxID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
+                        SelYVtxPosition.at(file_no)->Fill(YVertexPosition[VtxID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
+                        SelZVtxPosition.at(file_no)->Fill(ZVertexPosition[VtxID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
                     }
                     else if(PDGTruth[MCTrkID] == 11)
                     {
                         SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
+                        SelectionTheta.at(file_no)->Fill(TrackTheta[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
+                        SelectionCosTheta.at(file_no)->Fill(cos(TrackTheta[TrkID]),1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
+                        SelectionPhi.at(file_no)->Fill(TrackPhi[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
+                        SelectionEnergy.at(file_no)->Fill(KineticEnergy[TrkID][2],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
+
+                        SelXTrackStartEnd.at(file_no)->Fill(XTrackStart[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
+                        SelXTrackStartEnd.at(file_no)->Fill(XTrackEnd[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
+                        SelYTrackStartEnd.at(file_no)->Fill(YTrackStart[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
+                        SelYTrackStartEnd.at(file_no)->Fill(YTrackEnd[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
+                        SelZTrackStartEnd.at(file_no)->Fill(ZTrackStart[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
+                        SelZTrackStartEnd.at(file_no)->Fill(ZTrackEnd[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
+                        SelXVtxPosition.at(file_no)->Fill(XVertexPosition[VtxID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
+                        SelYVtxPosition.at(file_no)->Fill(YVertexPosition[VtxID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
+                        SelZVtxPosition.at(file_no)->Fill(ZVertexPosition[VtxID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
                     }
                     else if(PDGTruth[MCTrkID] == -11)
                     {
                         SelectionTrackRange.back()->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
+                        SelectionTheta.at(file_no)->Fill(TrackTheta[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
+                        SelectionCosTheta.at(file_no)->Fill(cos(TrackTheta[TrkID]),1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
+                        SelectionPhi.at(file_no)->Fill(TrackPhi[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
+                        SelectionEnergy.at(file_no)->Fill(KineticEnergy[TrkID][2],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
+
+                        SelXTrackStartEnd.at(file_no)->Fill(XTrackStart[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
+                        SelXTrackStartEnd.at(file_no)->Fill(XTrackEnd[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
+                        SelYTrackStartEnd.at(file_no)->Fill(YTrackStart[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
+                        SelYTrackStartEnd.at(file_no)->Fill(YTrackEnd[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
+                        SelZTrackStartEnd.at(file_no)->Fill(ZTrackStart[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
+                        SelZTrackStartEnd.at(file_no)->Fill(ZTrackEnd[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
+                        SelXVtxPosition.at(file_no)->Fill(XVertexPosition[VtxID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
+                        SelYVtxPosition.at(file_no)->Fill(YVertexPosition[VtxID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
+                        SelZVtxPosition.at(file_no)->Fill(ZVertexPosition[VtxID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
                     }
                 }
-                
+
                 // Fill Bgr
                 if(file_no == 2 && MCTrkID > -1 && CCNCFlag[0] == 0 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
@@ -683,7 +738,7 @@ void HistoProducer()
         }
         std::cout << Signal << " " << nubar << " " << nue << " " << NCnu << " " << Cosmic << " " << UnknownOrigin << std::endl;
         std::cout << nuQE << " " << nuRES << " " << nuDIS << " " << nuCOH << std::endl;
-        
+
         std::cout << "Number of negative phi in " << GenLabel.at(file_no) << " : " << negPhi << std::endl;
         std::cout << "Number of positive phi in " << GenLabel.at(file_no) << " : " << posPhi << std::endl;
 
@@ -892,7 +947,7 @@ void HistoProducer()
     AddFirstTwoHistograms2D(ZPosVsYPos,-1);
     AddFirstTwoHistograms2D(RangeVsYPos,-1);
     AddFirstTwoHistograms2D(PhiVsFlashTrackDist,-1);
-    
+
     AdjustSysError(SelectionTrackRange);
     AdjustSysError(SelectionTheta);
     AdjustSysError(SelectionCosTheta);
@@ -910,6 +965,7 @@ void HistoProducer()
 
     LegendMC->AddEntry( SelectionTrackRange.at(0), (MCLabel.at(0)).c_str(),"lep" );
     LegendMC->AddEntry( SelectionTrackRange.at(1), (MCLabel.at(1)).c_str(),"f" );
+    LegendMC->AddEntry( SelectionTrackRange.at(2), (MCLabel.at(2)).c_str(),"f" );
     for(unsigned int bgrhist_no = 0; bgrhist_no < BgrLabel.size(); bgrhist_no++)
     {
         LegendMC->AddEntry( BgrTrackRange.at(bgrhist_no), (BgrLabel.at(bgrhist_no)).c_str(),"f" );
@@ -917,10 +973,12 @@ void HistoProducer()
 
     TCanvas *Canvas11 = new TCanvas("OnBeam Minus OffBeam Track Range", "OnBeam Minus OffBeam Track Range", 1400, 1000);
     Canvas11->cd();
-    SelectionTrackRange.at(1)->SetMaximum(1.4*SelectionTrackRange.at(1)->GetBinContent(SelectionTrackRange.at(1)->GetMaximumBin()));
-    SelectionTrackRange.at(1)->SetMinimum(0.0);
+    SelectionTrackRange.at(2)->SetMaximum(1.4*SelectionTrackRange.at(2)->GetBinContent(SelectionTrackRange.at(2)->GetMaximumBin()));
+    SelectionTrackRange.at(2)->SetMinimum(0.0);
+    SelectionTrackRange.at(2)->SetFillColor(42);
+    SelectionTrackRange.at(2)->DrawNormalized("E2");
     SelectionTrackRange.at(1)->SetFillColor(46);
-    SelectionTrackRange.at(1)->DrawNormalized("E2");
+    SelectionTrackRange.at(1)->DrawNormalized("E2SAME");
     StackBgrTrackRange->Draw("SAME");
     SelectionTrackRange.at(0)->SetLineWidth(2);
     SelectionTrackRange.at(0)->SetLineColor(1);
@@ -930,10 +988,12 @@ void HistoProducer()
 
     TCanvas *Canvas12 = new TCanvas("OnBeam Minus OffBeam Theta-Angle", "OnBeam Minus OffBeam Theta-Angle", 1400, 1000);
     Canvas12->cd();
-    SelectionTheta.at(1)->SetMaximum(1.5*SelectionTheta.at(1)->GetBinContent(SelectionTheta.at(1)->GetMaximumBin()));
-    SelectionTheta.at(1)->SetMinimum(0.0);
+    SelectionTheta.at(2)->SetMaximum(1.5*SelectionTheta.at(2)->GetBinContent(SelectionTheta.at(2)->GetMaximumBin()));
+    SelectionTheta.at(2)->SetMinimum(0.0);
+    SelectionTheta.at(2)->SetFillColor(42);
+    SelectionTheta.at(2)->DrawNormalized("E2");
     SelectionTheta.at(1)->SetFillColor(46);
-    SelectionTheta.at(1)->DrawNormalized("E2");
+    SelectionTheta.at(1)->DrawNormalized("E2SAME");
     StackBgrTheta->Draw("SAME");
     SelectionTheta.at(0)->SetLineWidth(2);
     SelectionTheta.at(0)->SetLineColor(1);
@@ -961,7 +1021,7 @@ void HistoProducer()
 
     TCanvas *Canvas12a = new TCanvas("OnBeam Minus OffBeam Theta-Angle Omega", "OnBeam Minus OffBeam Theta-Angle Omega", 1400, 1000);
     Canvas12a->cd();
-    SelectionTheta.at(2)->SetMaximum(1.5*SelectionTheta.at(1)->GetBinContent(SelectionTheta.at(1)->GetMaximumBin()));
+    SelectionTheta.at(2)->SetMaximum(1.5*SelectionTheta.at(2)->GetBinContent(SelectionTheta.at(2)->GetMaximumBin()));
     SelectionTheta.at(2)->SetMinimum(0.0);
     SelectionTheta.at(2)->SetFillColor(41);
     SelectionTheta.at(2)->GetYaxis()->SetTitle("Weighted #frac{dn}{d#Omega}");
@@ -977,10 +1037,12 @@ void HistoProducer()
 
     TCanvas *Canvas12b = new TCanvas("OnBeam Minus OffBeam Cos Theta-Angle", "OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000);
     Canvas12b->cd();
-    SelectionCosTheta.at(1)->SetMaximum(1.5*SelectionCosTheta.at(1)->GetBinContent(SelectionCosTheta.at(1)->GetMaximumBin()));
-    SelectionCosTheta.at(1)->SetMinimum(0.0);
+    SelectionCosTheta.at(2)->SetMaximum(1.5*SelectionCosTheta.at(2)->GetBinContent(SelectionCosTheta.at(2)->GetMaximumBin()));
+    SelectionCosTheta.at(2)->SetMinimum(0.0);
+    SelectionCosTheta.at(2)->SetFillColor(42);
+    SelectionCosTheta.at(2)->DrawNormalized("E2");
     SelectionCosTheta.at(1)->SetFillColor(46);
-    SelectionCosTheta.at(1)->DrawNormalized("E2");
+    SelectionCosTheta.at(1)->DrawNormalized("E2SAME");
     StackBgrCosTheta->Draw("SAME");
     SelectionCosTheta.at(0)->SetLineWidth(2);
     SelectionCosTheta.at(0)->SetLineColor(1);
@@ -990,10 +1052,12 @@ void HistoProducer()
 
     TCanvas *Canvas13 = new TCanvas("OnBeam Minus OffBeam Phi-Angle", "OnBeam Minus OffBeam Phi-Angle", 1400, 1000);
     Canvas13->cd();
-    SelectionPhi.at(1)->SetMaximum(1.9*SelectionPhi.at(1)->GetBinContent(SelectionPhi.at(1)->GetMaximumBin()));
-    SelectionPhi.at(1)->SetMinimum(0.0);
+    SelectionPhi.at(2)->SetMaximum(1.9*SelectionPhi.at(2)->GetBinContent(SelectionPhi.at(2)->GetMaximumBin()));
+    SelectionPhi.at(2)->SetMinimum(0.0);
+    SelectionPhi.at(2)->SetFillColor(42);
+    SelectionPhi.at(2)->DrawNormalized("E2");
     SelectionPhi.at(1)->SetFillColor(46);
-    SelectionPhi.at(1)->DrawNormalized("E2");
+    SelectionPhi.at(1)->DrawNormalized("E2SAME");
     StackBgrPhi->Draw("SAME");
     SelectionPhi.at(0)->SetLineWidth(2);
     SelectionPhi.at(0)->SetLineColor(1);
@@ -1003,10 +1067,12 @@ void HistoProducer()
 
     TCanvas *Canvas14 = new TCanvas("Energy", "Energy", 1400, 1000);
     Canvas14->cd();
-    SelectionEnergy.at(1)->SetMaximum(1.2*SelectionEnergy.at(1)->GetBinContent(SelectionEnergy.at(1)->GetMaximumBin()));
-    SelectionEnergy.at(1)->SetMinimum(0.0);
+    SelectionEnergy.at(2)->SetMaximum(1.2*SelectionEnergy.at(2)->GetBinContent(SelectionEnergy.at(2)->GetMaximumBin()));
+    SelectionEnergy.at(2)->SetMinimum(0.0);
+    SelectionEnergy.at(2)->SetFillColor(42);
+    SelectionEnergy.at(2)->DrawNormalized("E2");
     SelectionEnergy.at(1)->SetFillColor(46);
-    SelectionEnergy.at(1)->DrawNormalized("E2");
+    SelectionEnergy.at(1)->DrawNormalized("E2SAME");
     StackBgrEnergy->Draw("SAME");
     SelectionEnergy.at(0)->SetLineWidth(2);
     SelectionEnergy.at(0)->SetLineColor(1);
@@ -1019,7 +1085,7 @@ void HistoProducer()
     SelXTrackStartEnd.at(1)->SetMaximum(1.5*SelXTrackStartEnd.at(1)->GetBinContent(SelXTrackStartEnd.at(1)->GetMaximumBin()));
     SelXTrackStartEnd.at(1)->SetMinimum(0.0);
     SelXTrackStartEnd.at(1)->SetFillColor(46);
-    SelXTrackStartEnd.at(1)->DrawNormalized("E2");
+    SelXTrackStartEnd.at(1)->DrawNormalized("E2SAME");
     StackBgrXTrackStartEnd->Draw("SAME");
     SelXTrackStartEnd.at(0)->SetLineWidth(2);
     SelXTrackStartEnd.at(0)->SetLineColor(1);
@@ -1029,10 +1095,12 @@ void HistoProducer()
 
     TCanvas *Canvas16 = new TCanvas("OnBeam Minus OffBeam Y Start & End Point ", "OnBeam Minus OffBeam Y Start & End Point ", 1400, 1000);
     Canvas16->cd();
-    SelYTrackStartEnd.at(1)->SetMaximum(1.8*SelYTrackStartEnd.at(1)->GetBinContent(SelYTrackStartEnd.at(1)->GetMaximumBin()));
-    SelYTrackStartEnd.at(1)->SetMinimum(0.0);
+    SelYTrackStartEnd.at(2)->SetMaximum(1.8*SelYTrackStartEnd.at(2)->GetBinContent(SelYTrackStartEnd.at(2)->GetMaximumBin()));
+    SelYTrackStartEnd.at(2)->SetMinimum(0.0);
+    SelYTrackStartEnd.at(2)->SetFillColor(42);
+    SelYTrackStartEnd.at(2)->DrawNormalized("E2");
     SelYTrackStartEnd.at(1)->SetFillColor(46);
-    SelYTrackStartEnd.at(1)->DrawNormalized("E2");
+    SelYTrackStartEnd.at(1)->DrawNormalized("E2SAME");
     StackBgrYTrackStartEnd->Draw("SAME");
     SelYTrackStartEnd.at(0)->SetLineWidth(2);
     SelYTrackStartEnd.at(0)->SetLineColor(1);
@@ -1042,10 +1110,12 @@ void HistoProducer()
 
     TCanvas *Canvas17 = new TCanvas("OnBeam Minus OffBeam Z Start & End Point ", "OnBeam Minus OffBeam Z Start & End Point ", 1400, 1000);
     Canvas17->cd();
-    SelZTrackStartEnd.at(1)->SetMaximum(1.5*SelZTrackStartEnd.at(1)->GetBinContent(SelZTrackStartEnd.at(1)->GetMaximumBin()));
-    SelZTrackStartEnd.at(1)->SetMinimum(0.0);
+    SelZTrackStartEnd.at(2)->SetMaximum(1.5*SelZTrackStartEnd.at(2)->GetBinContent(SelZTrackStartEnd.at(2)->GetMaximumBin()));
+    SelZTrackStartEnd.at(2)->SetMinimum(0.0);
+    SelZTrackStartEnd.at(2)->SetFillColor(42);
+    SelZTrackStartEnd.at(2)->DrawNormalized("E2");
     SelZTrackStartEnd.at(1)->SetFillColor(46);
-    SelZTrackStartEnd.at(1)->DrawNormalized("E2");
+    SelZTrackStartEnd.at(1)->DrawNormalized("E2SAME");
     StackBgrZTrackStartEnd->Draw("SAME");
     SelZTrackStartEnd.at(0)->SetLineWidth(2);
     SelZTrackStartEnd.at(0)->SetLineColor(1);
@@ -1055,10 +1125,12 @@ void HistoProducer()
 
     TCanvas *Canvas18 = new TCanvas("OnBeam Minus OffBeam X Vertex Postion", "OnBeam Minus OffBeam X Vertex Postion", 1400, 1000);
     Canvas18->cd();
-    SelXVtxPosition.at(1)->SetMaximum(1.5*SelXVtxPosition.at(1)->GetBinContent(SelXVtxPosition.at(1)->GetMaximumBin()));
-    SelXVtxPosition.at(1)->SetMinimum(0.0);
+    SelXVtxPosition.at(2)->SetMaximum(1.5*SelXVtxPosition.at(2)->GetBinContent(SelXVtxPosition.at(2)->GetMaximumBin()));
+    SelXVtxPosition.at(2)->SetMinimum(0.0);
+    SelXVtxPosition.at(2)->SetFillColor(42);
+    SelXVtxPosition.at(2)->DrawNormalized("E2");
     SelXVtxPosition.at(1)->SetFillColor(46);
-    SelXVtxPosition.at(1)->DrawNormalized("E2");
+    SelXVtxPosition.at(1)->DrawNormalized("E2SAME");
     StackBgrXVtxPosition->Draw("SAME");
     SelXVtxPosition.at(0)->SetLineWidth(2);
     SelXVtxPosition.at(0)->SetLineColor(1);
@@ -1068,10 +1140,12 @@ void HistoProducer()
 
     TCanvas *Canvas19 = new TCanvas("OnBeam Minus OffBeam Y Vertex Postion", "OnBeam Minus OffBeam Y Vertex Postion", 1400, 1000);
     Canvas19->cd();
-    SelYVtxPosition.at(1)->SetMaximum(1.8*SelYVtxPosition.at(1)->GetBinContent(SelYVtxPosition.at(1)->GetMaximumBin()));
-    SelYVtxPosition.at(1)->SetMinimum(0.0);
+    SelYVtxPosition.at(2)->SetMaximum(1.8*SelYVtxPosition.at(2)->GetBinContent(SelYVtxPosition.at(2)->GetMaximumBin()));
+    SelYVtxPosition.at(2)->SetMinimum(0.0);
+    SelYVtxPosition.at(2)->SetFillColor(42);
+    SelYVtxPosition.at(2)->DrawNormalized("E2");
     SelYVtxPosition.at(1)->SetFillColor(46);
-    SelYVtxPosition.at(1)->DrawNormalized("E2");
+    SelYVtxPosition.at(1)->DrawNormalized("E2SAME");
     StackBgrYVtxPosition->Draw("SAME");
     SelYVtxPosition.at(0)->SetLineWidth(2);
     SelYVtxPosition.at(0)->SetLineColor(1);
@@ -1081,10 +1155,12 @@ void HistoProducer()
 
     TCanvas *Canvas20 = new TCanvas("OnBeam Minus OffBeam Z Vertex Postion", "OnBeam Minus OffBeam Z Vertex Postion", 1400, 1000);
     Canvas20->cd();
-    SelZVtxPosition.at(1)->SetMaximum(1.5*SelZVtxPosition.at(1)->GetBinContent(SelZVtxPosition.at(1)->GetMaximumBin()));
-    SelZVtxPosition.at(1)->SetMinimum(0.0);
+    SelZVtxPosition.at(2)->SetMaximum(1.5*SelZVtxPosition.at(2)->GetBinContent(SelZVtxPosition.at(2)->GetMaximumBin()));
+    SelZVtxPosition.at(2)->SetMinimum(0.0);
+    SelZVtxPosition.at(2)->SetFillColor(42);
+    SelZVtxPosition.at(2)->DrawNormalized("E2");
     SelZVtxPosition.at(1)->SetFillColor(46);
-    SelZVtxPosition.at(1)->DrawNormalized("E2");
+    SelZVtxPosition.at(1)->DrawNormalized("E2SAME");
     StackBgrZVtxPosition->Draw("SAME");
     SelZVtxPosition.at(0)->SetLineWidth(2);
     SelZVtxPosition.at(0)->SetLineColor(1);
@@ -1225,7 +1301,7 @@ std::vector<TSpline5> Systematics()
     // Initialize data structure
     std::vector <std::vector<float>> BeamSystematics;
     BeamSystematics.resize(NumberOfColumns);
-    
+
     // Line and cell string for ifstream
     std::string FileLine;
     std::string Cell;
@@ -1251,7 +1327,7 @@ std::vector<TSpline5> Systematics()
             {
                 BeamSystematics.at(0).push_back(1000*std::stof(Cell));
             }
-            
+
             // Loop over all columns
             for(unsigned column_no = 1; column_no < NumberOfColumns; column_no++)
             {
@@ -1264,26 +1340,26 @@ std::vector<TSpline5> Systematics()
             } // End of column loop
         } // if not header
     } // line loop
-    
+
     // Initialize Graph vector
     std::vector<TGraph*> GraphVector;
-    
+
     // Fill graphs with beam systematic data
     for(unsigned int entry_no = 1; entry_no < NumberOfColumns; entry_no++)
     {
         GraphVector.push_back( new TGraph(BeamSystematics.at(0).size(),BeamSystematics.at(0).data(),BeamSystematics.at(entry_no).data()) );
     }
-    
+
     // Initialize spline vector
     std::vector<TSpline5> SplineVector;
-    
+
     // Produce spline vector by fitting all graphs
     for(const auto& Graph : GraphVector)
     {
         SplineVector.push_back(TSpline5("",Graph));
         delete Graph;
     }
-    
+
     return SplineVector;
 }
 
