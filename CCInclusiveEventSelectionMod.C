@@ -268,7 +268,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
         for(const auto& VertexingName : VertexProdNameVec)
         {
             // Open output file
-            TFile* OutputFile = new TFile(("rootfiles/Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+"_"+Version+FileNumberStr+".root").c_str(),"RECREATE");
+            TFile* OutputFile = new TFile(("rootfiles/Hist_Track_"+TrackingName+ "_Vertex_" + VertexingName + "_"+GeneratorName+"_"+Version+FileNumberStr+"_Mod.root").c_str(),"RECREATE");
             // Make a clone tree which gets filled
             TTree *SelectionTree = treenc->CloneTree(0);
 
@@ -586,7 +586,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
             //Event Loop
             for(int i = StartEvent; i < EndEvent; i++)
             {
-                if(i == 121558 && GeneratorName == "MEC")
+                if(i == 121558 && GeneratorName == "MEC") continue;
                 if(i%1000 == 0) std::cout << "\t... " << i << std::endl;
 
                 // Get tree entries
