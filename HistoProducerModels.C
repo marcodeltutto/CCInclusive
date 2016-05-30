@@ -29,7 +29,7 @@ bool inDeadRegion(double y, double z);
 std::vector<TSpline5> Systematics();
 void AdjustSysError(std::vector<TH1F*>& HistVector);
 
-void HistoProducer()
+void HistoProducerModels()
 {
     TGaxis::SetMaxDigits(4);
     
