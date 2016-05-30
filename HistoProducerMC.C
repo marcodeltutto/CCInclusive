@@ -466,7 +466,7 @@ void HistoProducerMC()
         {
             if(!(tree_index % 1)) std::cout << "Event\t" << tree_index << "\t of \t" << ChainVec.at(file_no)->GetEntries() << std::endl;
             
-            if(!file_no && (tree_index == 11276 || tree_index == 11348)) continue;
+            if(!file_no && (tree_index == 11276 || tree_index == 11348 || tree_index == 13125)) continue;
 
             ChainVec.at(file_no)->GetEntry(tree_index);
 
