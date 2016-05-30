@@ -464,7 +464,7 @@ void HistoProducerMC()
 
         for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no)->GetEntries(); tree_index++)
         {
-            if(!(tree_index % 1)) std::cout << "Event\t" << tree_index << "\t of \t" << ChainVec.at(file_no)->GetEntries() << std::endl;
+            if(!(tree_index % 100)) std::cout << "Event\t" << tree_index << "\t of \t" << ChainVec.at(file_no)->GetEntries() << std::endl;
             
             if(!file_no && (tree_index == 11276 || tree_index == 11348 || tree_index == 13125 || tree_index == 32074 ||tree_index == 32115 || tree_index> 35000)) continue;
 
@@ -742,7 +742,7 @@ void HistoProducerMC()
     SelectionTrackRange.at(1)->DrawNormalized("E2SAME");
     StackBgrTrackRange->Draw("SAME");
     SelectionTrackRange.at(0)->SetLineWidth(2);
-    SelectionTrackRange.at(0)->SetLineColor(1);
+    SelectionTrackRange.at(0)->SetFillColor(1);
     SelectionTrackRange.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas11->SaveAs(("On-OffBeamSelRange"+SelectionLabel+"."+FileType).c_str());
@@ -757,7 +757,7 @@ void HistoProducerMC()
     SelectionTheta.at(1)->DrawNormalized("E2SAME");
     StackBgrTheta->Draw("SAME");
     SelectionTheta.at(0)->SetLineWidth(2);
-    SelectionTheta.at(0)->SetLineColor(1);
+    SelectionTheta.at(0)->SetFillColor(1);
     SelectionTheta.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas12->SaveAs(("On-OffBeamSelTheta"+SelectionLabel+"."+FileType).c_str());
@@ -791,7 +791,7 @@ void HistoProducerMC()
     SelectionTheta.at(1)->DrawNormalized("E2SAME");
     StackBgrTheta->Draw("SAME");
     SelectionTheta.at(0)->SetLineWidth(2);
-    SelectionTheta.at(0)->SetLineColor(1);
+    SelectionTheta.at(0)->SetFillColor(1);
     SelectionTheta.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas12a->SaveAs(("On-OffBeamSelThetaOmega"+SelectionLabel+"."+FileType).c_str());
@@ -806,7 +806,7 @@ void HistoProducerMC()
     SelectionCosTheta.at(1)->DrawNormalized("E2SAME");
     StackBgrCosTheta->Draw("SAME");
     SelectionCosTheta.at(0)->SetLineWidth(2);
-    SelectionCosTheta.at(0)->SetLineColor(1);
+    SelectionCosTheta.at(0)->SetFillColor(1);
     SelectionCosTheta.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas12b->SaveAs(("On-OffBeamSelCosTheta"+SelectionLabel+"."+FileType).c_str());
@@ -821,7 +821,7 @@ void HistoProducerMC()
     SelectionPhi.at(1)->DrawNormalized("E2SAME");
     StackBgrPhi->Draw("SAME");
     SelectionPhi.at(0)->SetLineWidth(2);
-    SelectionPhi.at(0)->SetLineColor(1);
+    SelectionPhi.at(0)->SetFillColor(1);
     SelectionPhi.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas13->SaveAs(("On-OffBeamSelPhi"+SelectionLabel+"."+FileType).c_str());
@@ -836,7 +836,7 @@ void HistoProducerMC()
     SelectionEnergy.at(1)->DrawNormalized("E2SAME");
     StackBgrEnergy->Draw("SAME");
     SelectionEnergy.at(0)->SetLineWidth(2);
-    SelectionEnergy.at(0)->SetLineColor(1);
+    SelectionEnergy.at(0)->SetFillColor(1);
     SelectionEnergy.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas14->SaveAs(("On-OffBeamSelEnergy"+SelectionLabel+"."+FileType).c_str());
@@ -851,7 +851,7 @@ void HistoProducerMC()
     SelXTrackStartEnd.at(1)->DrawNormalized("E2SAME");
     StackBgrXTrackStartEnd->Draw("SAME");
     SelXTrackStartEnd.at(0)->SetLineWidth(2);
-    SelXTrackStartEnd.at(0)->SetLineColor(1);
+    SelXTrackStartEnd.at(0)->SetFillColor(1);
     SelXTrackStartEnd.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas15->SaveAs(("On-OffBeamSelXTrack"+SelectionLabel+"."+FileType).c_str());
@@ -866,7 +866,7 @@ void HistoProducerMC()
     SelYTrackStartEnd.at(1)->DrawNormalized("E2SAME");
     StackBgrYTrackStartEnd->Draw("SAME");
     SelYTrackStartEnd.at(0)->SetLineWidth(2);
-    SelYTrackStartEnd.at(0)->SetLineColor(1);
+    SelYTrackStartEnd.at(0)->SetFillColor(1);
     SelYTrackStartEnd.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas16->SaveAs(("On-OffBeamSelYTrack"+SelectionLabel+"."+FileType).c_str());
@@ -881,7 +881,7 @@ void HistoProducerMC()
     SelZTrackStartEnd.at(1)->DrawNormalized("E2SAME");
     StackBgrZTrackStartEnd->Draw("SAME");
     SelZTrackStartEnd.at(0)->SetLineWidth(2);
-    SelZTrackStartEnd.at(0)->SetLineColor(1);
+    SelZTrackStartEnd.at(0)->SetFillColor(1);
     SelZTrackStartEnd.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas17->SaveAs(("On-OffBeamSelZTrack"+SelectionLabel+"."+FileType).c_str());
@@ -896,7 +896,7 @@ void HistoProducerMC()
     SelXVtxPosition.at(1)->DrawNormalized("E2SAME");
     StackBgrXVtxPosition->Draw("SAME");
     SelXVtxPosition.at(0)->SetLineWidth(2);
-    SelXVtxPosition.at(0)->SetLineColor(1);
+    SelXVtxPosition.at(0)->SetFillColor(1);
     SelXVtxPosition.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas18->SaveAs(("On-OffBeamSelXVertex"+SelectionLabel+"."+FileType).c_str());
@@ -911,7 +911,7 @@ void HistoProducerMC()
     SelYVtxPosition.at(1)->DrawNormalized("E2SAME");
     StackBgrYVtxPosition->Draw("SAME");
     SelYVtxPosition.at(0)->SetLineWidth(2);
-    SelYVtxPosition.at(0)->SetLineColor(1);
+    SelYVtxPosition.at(0)->SetFillColor(1);
     SelYVtxPosition.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas19->SaveAs(("On-OffBeamSelYVertex"+SelectionLabel+"."+FileType).c_str());
@@ -926,7 +926,7 @@ void HistoProducerMC()
     SelZVtxPosition.at(1)->DrawNormalized("E2SAME");
     StackBgrZVtxPosition->Draw("SAME");
     SelZVtxPosition.at(0)->SetLineWidth(2);
-    SelZVtxPosition.at(0)->SetLineColor(1);
+    SelZVtxPosition.at(0)->SetFillColor(1);
     SelZVtxPosition.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas20->SaveAs(("On-OffBeamSelZVertex"+SelectionLabel+"."+FileType).c_str());
