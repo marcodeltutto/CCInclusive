@@ -1022,7 +1022,7 @@ void HistoProducerModels()
     {
         SelectionTrackRange.at(iter)->SetLineWidth(2);
         SelectionTrackRange.at(iter)->SetLineColor(iter);
-        SelectionTrackRange.at(iter)->DrawNormalized("SAME");
+        SelectionTrackRange.at(iter)->DrawNormalized("HISTSAME");
     }
     SelectionTrackRange.at(0)->SetLineWidth(2);
     SelectionTrackRange.at(0)->SetLineColor(1);
@@ -1043,7 +1043,7 @@ void HistoProducerModels()
     {
         SelectionTheta.at(iter)->SetLineWidth(2);
         SelectionTheta.at(iter)->SetLineColor(iter);
-        SelectionTheta.at(iter)->DrawNormalized("SAME");
+        SelectionTheta.at(iter)->DrawNormalized("HISTSAME");
     }
     SelectionTheta.at(0)->SetLineWidth(2);
     SelectionTheta.at(0)->SetLineColor(1);
@@ -1083,7 +1083,7 @@ void HistoProducerModels()
     {
         SelectionTheta.at(iter)->SetLineWidth(2);
         SelectionTheta.at(iter)->SetLineColor(iter);
-        SelectionTheta.at(iter)->DrawNormalized("SAME");
+        SelectionTheta.at(iter)->DrawNormalized("HISTSAME");
     }
     SelectionTheta.at(0)->SetLineWidth(2);
     SelectionTheta.at(0)->SetLineColor(1);
@@ -1104,7 +1104,7 @@ void HistoProducerModels()
     {
         SelectionCosTheta.at(iter)->SetLineWidth(2);
         SelectionCosTheta.at(iter)->SetLineColor(iter);
-        SelectionCosTheta.at(iter)->DrawNormalized("SAME");
+        SelectionCosTheta.at(iter)->DrawNormalized("HISTSAME");
     }
     SelectionCosTheta.at(0)->SetLineWidth(2);
     SelectionCosTheta.at(0)->SetLineColor(1);
@@ -1125,7 +1125,7 @@ void HistoProducerModels()
     {
         SelectionPhi.at(iter)->SetLineWidth(2);
         SelectionPhi.at(iter)->SetLineColor(iter);
-        SelectionPhi.at(iter)->DrawNormalized("SAME");
+        SelectionPhi.at(iter)->DrawNormalized("HISTSAME");
     }
     SelectionPhi.at(0)->SetLineWidth(2);
     SelectionPhi.at(0)->SetLineColor(1);
@@ -1146,7 +1146,7 @@ void HistoProducerModels()
     {
         SelectionEnergy.at(iter)->SetLineWidth(2);
         SelectionEnergy.at(iter)->SetLineColor(iter);
-        SelectionEnergy.at(iter)->DrawNormalized("SAME");
+        SelectionEnergy.at(iter)->DrawNormalized("HISTSAME");
     }
     SelectionEnergy.at(0)->SetLineWidth(2);
     SelectionEnergy.at(0)->SetLineColor(1);
