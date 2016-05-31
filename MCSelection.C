@@ -84,6 +84,7 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     Float_t         nuvtxz_truth[maxmc];
     Int_t           ccnc_truth[maxmc]; //CC = 0, NC = 1
     Int_t           nuPDG_truth[maxmc]; //true neutrino pdg code. numu = 14
+    Float_t         NuEnergyTruth[maxmc];
     Int_t           mode_truth[maxmc]; //QE = 0, RES = 1, DIS = 2
     Int_t	    PDG_truth[maxtracks];
 
@@ -110,6 +111,7 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     treenc -> SetBranchStatus("nuPDG_truth", 1);
     treenc -> SetBranchStatus("pdg", 1);
     treenc -> SetBranchStatus("mode_truth", 1);
+    treenc -> SetBranchStatus("enu_truth", 1);
     treenc -> SetBranchStatus("geant_list_size", 1);
     treenc -> SetBranchStatus("StartPointx", 1);
     treenc -> SetBranchStatus("StartPointy", 1);
@@ -129,6 +131,7 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     treenc -> SetBranchAddress("nuPDG_truth", nuPDG_truth);
     treenc -> SetBranchAddress("pdg", PDG_truth);
     treenc -> SetBranchAddress("mode_truth", mode_truth);
+    treenc -> SetBranchAddress("enu_truth", NuEnergyTruth);
     treenc -> SetBranchAddress("geant_list_size", &NumberOfMCTracks);
     treenc -> SetBranchAddress("StartPointx", XMCTrackStart);
     treenc -> SetBranchAddress("StartPointy", YMCTrackStart);
