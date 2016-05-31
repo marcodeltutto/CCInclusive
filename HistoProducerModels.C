@@ -46,11 +46,11 @@ void HistoProducerModels()
     std::string VertexProdName = "pandoraNu";
 //     std::string VertexProdName = "pmtrack";
 
-    std::string SelectionLabel = "_Old";
-//     std::string SelectionLabel = "_Mod";
+//     std::string SelectionLabel = "_Old";
+    std::string SelectionLabel = "_Mod";
 //     std::string SelectionLabel = "_New";
     
-    std::string FileType = "pdg";
+    std::string FileType = "png";
 //     std::string FileType = "pdf";
     
     std::vector<TChain*> ChainVec;
@@ -416,6 +416,8 @@ void HistoProducerModels()
 
     double beammin;
     double beammax;
+    
+    double HistogramWeight;
 
     std::ofstream DataToLookAt("SelectedData.txt",std::ios::trunc);
 
@@ -451,6 +453,7 @@ void HistoProducerModels()
         ChainVec.at(file_no) -> SetBranchAddress("enu_truth", NuEnergyTruth);
         ChainVec.at(file_no) -> SetBranchAddress(("trkorigin_"+TrackProdName).c_str(), TrkOrigin);
         ChainVec.at(file_no) -> SetBranchAddress(("trkpidbestplane_"+TrackProdName).c_str(), TrkBestPlane);
+        ChainVec.at(file_no) -> SetBranchAddress("eventWeight_MA", &HistogramWeight);
 
         ChainVec.at(file_no) -> SetBranchAddress(("trkke_"+TrackProdName).c_str(), KineticEnergy);
         ChainVec.at(file_no) -> SetBranchAddress(("trktheta_"+TrackProdName).c_str(), TrackTheta);
@@ -535,30 +538,32 @@ void HistoProducerModels()
                 {
                     PhiVsFlashTrackDist.at(file_no)->Fill(TrackPhi[TrkID],FlashTrackDist(ZFlashCenterMax,ZTrackStart[TrkID],ZTrackEnd[TrkID]));
                 }
+                
+                if(file_no != 3) HistogramWeight = 1;
+                
+                SelectionTrackRange.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),HistogramWeight);
+                SelectionTheta.at(file_no)->Fill(TrackTheta[TrkID],HistogramWeight);
+                SelectionCosTheta.at(file_no)->Fill(cos(TrackTheta[TrkID]),HistogramWeight);
+                SelectionPhi.at(file_no)->Fill(TrackPhi[TrkID],HistogramWeight);
+                SelectionEnergy.at(file_no)->Fill(KineticEnergy[TrkID][2],HistogramWeight);
 
-                SelectionTrackRange.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                SelectionTheta.at(file_no)->Fill(TrackTheta[TrkID]);
-                SelectionCosTheta.at(file_no)->Fill(cos(TrackTheta[TrkID]));
-                SelectionPhi.at(file_no)->Fill(TrackPhi[TrkID]);
-                SelectionEnergy.at(file_no)->Fill(KineticEnergy[TrkID][2]);
+                SelXTrackStartEnd.at(file_no)->Fill(XTrackStart[TrkID],HistogramWeight);
+                SelXTrackStartEnd.at(file_no)->Fill(XTrackEnd[TrkID],HistogramWeight);
+                SelYTrackStartEnd.at(file_no)->Fill(YTrackStart[TrkID],HistogramWeight);
+                SelYTrackStartEnd.at(file_no)->Fill(YTrackEnd[TrkID],HistogramWeight);
+                SelZTrackStartEnd.at(file_no)->Fill(ZTrackStart[TrkID],HistogramWeight);
+                SelZTrackStartEnd.at(file_no)->Fill(ZTrackEnd[TrkID],HistogramWeight);
+                SelXVtxPosition.at(file_no)->Fill(XVertexPosition[VtxID],HistogramWeight);
+                SelYVtxPosition.at(file_no)->Fill(YVertexPosition[VtxID],HistogramWeight);
+                SelZVtxPosition.at(file_no)->Fill(ZVertexPosition[VtxID],HistogramWeight);
 
-                SelXTrackStartEnd.at(file_no)->Fill(XTrackStart[TrkID]);
-                SelXTrackStartEnd.at(file_no)->Fill(XTrackEnd[TrkID]);
-                SelYTrackStartEnd.at(file_no)->Fill(YTrackStart[TrkID]);
-                SelYTrackStartEnd.at(file_no)->Fill(YTrackEnd[TrkID]);
-                SelZTrackStartEnd.at(file_no)->Fill(ZTrackStart[TrkID]);
-                SelZTrackStartEnd.at(file_no)->Fill(ZTrackEnd[TrkID]);
-                SelXVtxPosition.at(file_no)->Fill(XVertexPosition[VtxID]);
-                SelYVtxPosition.at(file_no)->Fill(YVertexPosition[VtxID]);
-                SelZVtxPosition.at(file_no)->Fill(ZVertexPosition[VtxID]);
-
-                PhiVsTheta.at(file_no)->Fill(TrackPhi[TrkID],TrackTheta[TrkID]);
-                PhiVsXPos.at(file_no)->Fill(TrackPhi[TrkID],XTrackStart[TrkID]);
-                PhiVsXPos.at(file_no)->Fill(TrackPhi[TrkID],XTrackEnd[TrkID]);
-                PhiVsYPos.at(file_no)->Fill(TrackPhi[TrkID],YTrackStart[TrkID]);
-                PhiVsYPos.at(file_no)->Fill(TrackPhi[TrkID],YTrackEnd[TrkID]);
-                PhiVsZPos.at(file_no)->Fill(TrackPhi[TrkID],ZTrackStart[TrkID]);
-                PhiVsZPos.at(file_no)->Fill(TrackPhi[TrkID],ZTrackEnd[TrkID]);
+                PhiVsTheta.at(file_no)->Fill(TrackPhi[TrkID],TrackTheta[TrkID],HistogramWeight);
+                PhiVsXPos.at(file_no)->Fill(TrackPhi[TrkID],XTrackStart[TrkID],HistogramWeight);
+                PhiVsXPos.at(file_no)->Fill(TrackPhi[TrkID],XTrackEnd[TrkID],HistogramWeight);
+                PhiVsYPos.at(file_no)->Fill(TrackPhi[TrkID],YTrackStart[TrkID],HistogramWeight);
+                PhiVsYPos.at(file_no)->Fill(TrackPhi[TrkID],YTrackEnd[TrkID],HistogramWeight);
+                PhiVsZPos.at(file_no)->Fill(TrackPhi[TrkID],ZTrackStart[TrkID],HistogramWeight);
+                PhiVsZPos.at(file_no)->Fill(TrackPhi[TrkID],ZTrackEnd[TrkID],HistogramWeight);
 
                 if(TrackPhi[TrkID] < 0) negPhi++;
                 else posPhi++;

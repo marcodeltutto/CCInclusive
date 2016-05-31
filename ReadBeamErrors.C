@@ -11,6 +11,7 @@
 #include <TFile.h>
 #include <TH1.h>
 #include <TLine.h>
+#include <TLegend.h>
 #include <TSpline.h>
 #include <TTree.h>
 
@@ -26,6 +27,8 @@ void ReadBeamErrors()
     // Line and cell string for ifstream
     std::string FileLine;
     std::string Cell;
+    
+    std::string FileType = "png";
 
     // Open field systematic error file
     std::ifstream SysFile ("bnb_sys_error_uboone.txt");
@@ -63,9 +66,17 @@ void ReadBeamErrors()
     } // line loop
     
     TGraph *NuMuGraph = new TGraph(BeamSystematics.at(0).size(),BeamSystematics.at(0).data(),BeamSystematics.at(1).data());
+    NuMuGraph->GetXaxis()->SetTitle("Neutrino Energy [MeV]");
+    NuMuGraph->GetYaxis()->SetTitle("Relative Systematic Error");
     TGraph *NuMuBarGraph = new TGraph(BeamSystematics.at(0).size(),BeamSystematics.at(0).data(),BeamSystematics.at(2).data());
+    NuMuBarGraph->GetXaxis()->SetTitle("Neutrino Energy [MeV]");
+    NuMuBarGraph->GetYaxis()->SetTitle("Relative Systematic Error");
     TGraph *NueGraph = new TGraph(BeamSystematics.at(0).size(),BeamSystematics.at(0).data(),BeamSystematics.at(3).data());
+    NueGraph->GetXaxis()->SetTitle("Neutrino Energy [MeV]");
+    NueGraph->GetYaxis()->SetTitle("Relative Systematic Error");
     TGraph *NueBarGraph = new TGraph(BeamSystematics.at(0).size(),BeamSystematics.at(0).data(),BeamSystematics.at(4).data());
+    NueBarGraph->GetXaxis()->SetTitle("Neutrino Energy [MeV]");
+    NueBarGraph->GetYaxis()->SetTitle("Relative Systematic Error");
     
     NuMuGraph->SetTitle("#nu_{#mu} Beam Systematics");
     NuMuBarGraph->SetTitle("#bar{#nu}_{#mu} Beam Systematics");
@@ -90,24 +101,37 @@ void ReadBeamErrors()
     Spline3NueBar->SetLineColor(2);
     Spline5NueBar->SetLineColor(4);
     
+    TLegend* SplineLegend = new TLegend(0.7,0.8,0.9,0.9);
+    SplineLegend->AddEntry( Spline3NuMu, "Spline 3","l" );
+    SplineLegend->AddEntry( Spline5NuMu, "Spline 5","l" );
+    
+    
     TCanvas *Canvas0 = new TCanvas("NuMu", "NuMu", 1400, 1000);
     NuMuGraph->Draw("A*");
     Spline3NuMu->Draw("same");
     Spline5NuMu->Draw("same");
+    SplineLegend->Draw("same");
+    Canvas0->SaveAs(("NuMuSys."+FileType).c_str());
     
     TCanvas *Canvas1 = new TCanvas("NuMuBar", "NuMuBar", 1400, 1000);
     NuMuBarGraph->Draw("A*");
     Spline3NuMuBar->Draw("same");
     Spline5NuMuBar->Draw("same");
+    SplineLegend->Draw("same");
+    Canvas1->SaveAs(("NuMuBarSys."+FileType).c_str());
     
     TCanvas *Canvas2 = new TCanvas("Nue", "Nue", 1400, 1000);
     NueGraph->Draw("A*");
     Spline3Nue->Draw("same");
     Spline5Nue->Draw("same");
+    SplineLegend->Draw("same");
+    Canvas2->SaveAs(("NueSys."+FileType).c_str());
     
     TCanvas *Canvas3 = new TCanvas("NueBar", "NueBar", 1400, 1000);
     NueBarGraph->Draw("A*");
     Spline3NueBar->Draw("same");
     Spline5NueBar->Draw("same");
+    SplineLegend->Draw("same");
+    Canvas3->SaveAs(("NueBarSys."+FileType).c_str());
 
 } // end main function
