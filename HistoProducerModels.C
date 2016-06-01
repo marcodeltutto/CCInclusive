@@ -476,7 +476,7 @@ void HistoProducerModels()
         ChainVec.at(file_no) -> SetBranchAddress("eventWeight_MA", &HistogramWeight);
 
         ChainVec.at(file_no) -> SetBranchAddress(("trkke_"+TrackProdName).c_str(), KineticEnergy);
-        ChainVec.at(file_no) -> SetBranchAddress(("trkmom"+TrackProdName).c_str(), TrackMomentum);
+        ChainVec.at(file_no) -> SetBranchAddress(("trkmom_"+TrackProdName).c_str(), TrackMomentum);
         ChainVec.at(file_no) -> SetBranchAddress(("trktheta_"+TrackProdName).c_str(), TrackTheta);
         ChainVec.at(file_no) -> SetBranchAddress(("trkphi_"+TrackProdName).c_str(),TrackPhi);
 
