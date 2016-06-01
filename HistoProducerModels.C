@@ -46,12 +46,12 @@ void HistoProducerModels()
     std::string VertexProdName = "pandoraNu";
 //     std::string VertexProdName = "pmtrack";
 
-//     std::string SelectionLabel = "_Old";
-    std::string SelectionLabel = "_Mod";
+    std::string SelectionLabel = "_Old";
+//     std::string SelectionLabel = "_Mod";
 //     std::string SelectionLabel = "_New";
     
-    std::string FileType = "png";
-//     std::string FileType = "pdf";
+//     std::string FileType = "png";
+    std::string FileType = "pdf";
     
     std::vector<TChain*> ChainVec;
 
