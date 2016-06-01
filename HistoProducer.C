@@ -455,7 +455,7 @@ void HistoProducer()
         ChainVec.at(file_no) -> SetBranchAddress(("trkpidbestplane_"+TrackProdName).c_str(), TrkBestPlane);
 
         ChainVec.at(file_no) -> SetBranchAddress(("trkke_"+TrackProdName).c_str(), KineticEnergy);
-        ChainVec.at(file_no) -> SetBranchAddress(("trkmom_"+TrackProdName).c_str(), TrackMomentum);
+        ChainVec.at(file_no) -> SetBranchAddress(("trkmomrange_"+TrackProdName).c_str(), TrackMomentum);
         ChainVec.at(file_no) -> SetBranchAddress(("trktheta_"+TrackProdName).c_str(), TrackTheta);
         ChainVec.at(file_no) -> SetBranchAddress(("trkphi_"+TrackProdName).c_str(),TrackPhi);
 
