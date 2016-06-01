@@ -46,8 +46,8 @@ void HistoProducer()
     std::string VertexProdName = "pandoraNu";
 //     std::string VertexProdName = "pmtrack";
 
-    std::string SelectionLabel = "_Old";
-//     std::string SelectionLabel = "_Mod";
+//     std::string SelectionLabel = "_Old";
+    std::string SelectionLabel = "_Mod";
 //     std::string SelectionLabel = "_New";
     
     std::string FileType = "pdg";
