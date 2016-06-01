@@ -59,8 +59,8 @@ void HistoProducerMC()
     std::string SelectionLabel = "_Mod";
 //     std::string SelectionLabel = "_New";
 
-    std::string FileType = "png";
-//     std::string FileType = "pdf";
+//     std::string FileType = "png";
+    std::string FileType = "pdf";
 
     std::vector<TChain*> ChainVec;
 
@@ -786,7 +786,7 @@ void HistoProducerMC()
 
     LegendMC->AddEntry( SelectionTrackRange.at(0), (MCLabel.at(0)).c_str(),"f" );
     LegendMC->AddEntry( SelectionTrackRange.at(1), (MCLabel.at(1)).c_str(),"f" );
-    LegendMC->AddEntry( SelectionTrackRange.at(2), (MCLabel.at(2)).c_str(),"f" );
+//     LegendMC->AddEntry( SelectionTrackRange.at(2), (MCLabel.at(2)).c_str(),"f" );
     for(unsigned int bgrhist_no = 0; bgrhist_no < BgrLabel.size(); bgrhist_no++)
     {
 //         LegendMC->AddEntry( BgrTrackRange.at(bgrhist_no), (BgrLabel.at(bgrhist_no)).c_str(),"f" );
@@ -801,8 +801,8 @@ void HistoProducerMC()
     SelectionTrackRange.at(1)->SetFillColor(46);
     SelectionTrackRange.at(1)->DrawNormalized("E2SAME");
 //     StackBgrTrackRange->Draw("SAME");
-    SelectionTrackRange.at(0)->SetFillColor(31);
-    SelectionTrackRange.at(0)->DrawNormalized("E2SAME");
+//     SelectionTrackRange.at(0)->SetFillColor(31);
+//     SelectionTrackRange.at(0)->DrawNormalized("E2SAME");
     LegendMC->Draw();
     Canvas11->SaveAs(("MCRange"+SelectionLabel+"."+FileType).c_str());
 
@@ -815,8 +815,8 @@ void HistoProducerMC()
     SelectionTheta.at(1)->SetFillColor(46);
     SelectionTheta.at(1)->DrawNormalized("E2SAME");
 //     StackBgrTheta->Draw("SAME");
-    SelectionTheta.at(0)->SetFillColor(31);
-    SelectionTheta.at(0)->DrawNormalized("E2SAME");
+//     SelectionTheta.at(0)->SetFillColor(31);
+//     SelectionTheta.at(0)->DrawNormalized("E2SAME");
     LegendMC->Draw();
     Canvas12->SaveAs(("MCTheta"+SelectionLabel+"."+FileType).c_str());
 
@@ -848,8 +848,8 @@ void HistoProducerMC()
     SelectionTheta.at(1)->SetFillColor(46);
     SelectionTheta.at(1)->DrawNormalized("E2SAME");
 //     StackBgrTheta->Draw("SAME");
-    SelectionTheta.at(0)->SetFillColor(31);
-    SelectionTheta.at(0)->DrawNormalized("E2SAME");
+//     SelectionTheta.at(0)->SetFillColor(31);
+//     SelectionTheta.at(0)->DrawNormalized("E2SAME");
     LegendMC->Draw();
     Canvas12a->SaveAs(("MCThetaOmega"+SelectionLabel+"."+FileType).c_str());
 
@@ -862,8 +862,8 @@ void HistoProducerMC()
     SelectionCosTheta.at(1)->SetFillColor(46);
     SelectionCosTheta.at(1)->DrawNormalized("E2SAME");
 //     StackBgrCosTheta->Draw("SAME");
-    SelectionCosTheta.at(0)->SetFillColor(31);
-    SelectionCosTheta.at(0)->DrawNormalized("E2SAME");
+//     SelectionCosTheta.at(0)->SetFillColor(31);
+//     SelectionCosTheta.at(0)->DrawNormalized("E2SAME");
     LegendMC->Draw();
     Canvas12b->SaveAs(("MCCosTheta"+SelectionLabel+"."+FileType).c_str());
 
@@ -876,8 +876,8 @@ void HistoProducerMC()
     SelectionPhi.at(1)->SetFillColor(46);
     SelectionPhi.at(1)->DrawNormalized("E2SAME");
 //     StackBgrPhi->Draw("SAME");
-    SelectionPhi.at(0)->SetFillColor(31);
-    SelectionPhi.at(0)->DrawNormalized("E2SAME");
+//     SelectionPhi.at(0)->SetFillColor(31);
+//     SelectionPhi.at(0)->DrawNormalized("E2SAME");
     LegendMC->Draw();
     Canvas13->SaveAs(("MCPhi"+SelectionLabel+"."+FileType).c_str());
     
@@ -904,8 +904,8 @@ void HistoProducerMC()
     SelectionMomentum.at(1)->SetFillColor(46);
     SelectionMomentum.at(1)->DrawNormalized("E2SAME");
 //     StackBgrMomentum->Draw("SAME");
-    SelectionMomentum.at(0)->SetFillColor(31);
-    SelectionMomentum.at(0)->DrawNormalized("E2SAME");
+//     SelectionMomentum.at(0)->SetFillColor(31);
+//     SelectionMomentum.at(0)->DrawNormalized("E2SAME");
     LegendMC->Draw();
     Canvas14a->SaveAs(("MCMomentum"+SelectionLabel+"."+FileType).c_str());
 
@@ -918,8 +918,8 @@ void HistoProducerMC()
     SelXTrackStartEnd.at(1)->SetFillColor(46);
     SelXTrackStartEnd.at(1)->DrawNormalized("E2SAME");
 //     StackBgrXTrackStartEnd->Draw("SAME");
-    SelXTrackStartEnd.at(0)->SetFillColor(31);
-    SelXTrackStartEnd.at(0)->DrawNormalized("E2SAME");
+//     SelXTrackStartEnd.at(0)->SetFillColor(31);
+//     SelXTrackStartEnd.at(0)->DrawNormalized("E2SAME");
     LegendMC->Draw();
     Canvas15->SaveAs(("MCXTrack"+SelectionLabel+"."+FileType).c_str());
 
@@ -932,8 +932,8 @@ void HistoProducerMC()
     SelYTrackStartEnd.at(1)->SetFillColor(46);
     SelYTrackStartEnd.at(1)->DrawNormalized("E2SAME");
 //     StackBgrYTrackStartEnd->Draw("SAME");
-    SelYTrackStartEnd.at(0)->SetFillColor(31);
-    SelYTrackStartEnd.at(0)->DrawNormalized("E2SAME");
+//     SelYTrackStartEnd.at(0)->SetFillColor(31);
+//     SelYTrackStartEnd.at(0)->DrawNormalized("E2SAME");
     LegendMC->Draw();
     Canvas16->SaveAs(("MCYTrack"+SelectionLabel+"."+FileType).c_str());
 
@@ -946,8 +946,8 @@ void HistoProducerMC()
     SelZTrackStartEnd.at(1)->SetFillColor(46);
     SelZTrackStartEnd.at(1)->DrawNormalized("E2SAME");
 //     StackBgrZTrackStartEnd->Draw("SAME");
-    SelZTrackStartEnd.at(0)->SetFillColor(31);
-    SelZTrackStartEnd.at(0)->DrawNormalized("E2SAME");
+//     SelZTrackStartEnd.at(0)->SetFillColor(31);
+//     SelZTrackStartEnd.at(0)->DrawNormalized("E2SAME");
     LegendMC->Draw();
     Canvas17->SaveAs(("MCZTrack"+SelectionLabel+"."+FileType).c_str());
 
@@ -960,8 +960,8 @@ void HistoProducerMC()
     SelXVtxPosition.at(1)->SetFillColor(46);
     SelXVtxPosition.at(1)->DrawNormalized("E2SAME");
 //     StackBgrXVtxPosition->Draw("SAME");
-    SelXVtxPosition.at(0)->SetFillColor(31);
-    SelXVtxPosition.at(0)->DrawNormalized("E2SAME");
+//     SelXVtxPosition.at(0)->SetFillColor(31);
+//     SelXVtxPosition.at(0)->DrawNormalized("E2SAME");
     LegendMC->Draw();
     Canvas18->SaveAs(("MCXVertex"+SelectionLabel+"."+FileType).c_str());
 
@@ -974,8 +974,8 @@ void HistoProducerMC()
     SelYVtxPosition.at(1)->SetFillColor(46);
     SelYVtxPosition.at(1)->DrawNormalized("E2SAME");
 //     StackBgrYVtxPosition->Draw("SAME");
-    SelYVtxPosition.at(0)->SetFillColor(31);
-    SelYVtxPosition.at(0)->DrawNormalized("E2SAME");
+//     SelYVtxPosition.at(0)->SetFillColor(31);
+//     SelYVtxPosition.at(0)->DrawNormalized("E2SAME");
     LegendMC->Draw();
     Canvas19->SaveAs(("MCYVertex"+SelectionLabel+"."+FileType).c_str());
 
@@ -988,8 +988,8 @@ void HistoProducerMC()
     SelZVtxPosition.at(1)->SetFillColor(46);
     SelZVtxPosition.at(1)->DrawNormalized("E2SAME");
 //     StackBgrZVtxPosition->Draw("SAME");
-    SelZVtxPosition.at(0)->SetFillColor(31);
-    SelZVtxPosition.at(0)->DrawNormalized("E2SAME");
+//     SelZVtxPosition.at(0)->SetFillColor(31);
+//     SelZVtxPosition.at(0)->DrawNormalized("E2SAME");
     LegendMC->Draw();
     Canvas20->SaveAs(("MCZVertex"+SelectionLabel+"."+FileType).c_str());
 }
