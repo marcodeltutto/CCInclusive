@@ -444,8 +444,8 @@ void HistoProducerMC()
         ChainVec.at(file_no) -> SetBranchStatus("ccnc_truth", 1);
         ChainVec.at(file_no) -> SetBranchStatus("mode_truth", 1);
         ChainVec.at(file_no) -> SetBranchStatus("pdg", 1);
-        ChainVec.at(file_no) -> SetBranchAddress("enu_truth", 1);
-        ChainVec.at(file_no) -> SetBranchAddress("lep_mom_truth", 1);
+        ChainVec.at(file_no) -> SetBranchStatus("enu_truth", 1);
+        ChainVec.at(file_no) -> SetBranchStatus("lep_mom_truth", 1);
         ChainVec.at(file_no) -> SetBranchStatus("mcevts_truth", 1);
         ChainVec.at(file_no) -> SetBranchStatus("nuvtxx_truth", 1);
         ChainVec.at(file_no) -> SetBranchStatus("nuvtxy_truth", 1);
