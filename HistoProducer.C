@@ -73,6 +73,7 @@ void HistoProducer()
 
     std::vector<TH1F*> SelectionTrackRange;
     std::vector<TH1F*> SelectionEnergy;
+    std::vector<TH1F*> SelectionMomentum;
     std::vector<TH1F*> SelectionTheta;
     std::vector<TH1F*> SelectionCosTheta;
     std::vector<TH1F*> SelectionPhi;
@@ -87,6 +88,7 @@ void HistoProducer()
 
     std::vector<TH1F*> BgrTrackRange;
     std::vector<TH1F*> BgrEnergy;
+    std::vector<TH1F*> BgrMomentum;
     std::vector<TH1F*> BgrTheta;
     std::vector<TH1F*> BgrCosTheta;
     std::vector<TH1F*> BgrPhi;
@@ -113,6 +115,7 @@ void HistoProducer()
 
     THStack* StackBgrTrackRange = new THStack("Bgr Track Range","Bgr Track Range");
     THStack* StackBgrEnergy = new THStack("Bgr Energy","Bgr Energy");
+    THStack* StackBgrMomentum = new THStack("Bgr Momentum","Bgr Momentum");
     THStack* StackBgrTheta = new THStack("Bgr Theta","Bgr Theta");
     THStack* StackBgrCosTheta = new THStack("Bgr Theta","Bgr Theta");
     THStack* StackBgrPhi = new THStack("Bgr Phi","Bgr Phi");
@@ -196,6 +199,12 @@ void HistoProducer()
         SelectionEnergy.back()->GetXaxis()->SetTitle("Muon Kinetic Energy [MeV]");
         SelectionEnergy.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dE}");
         SelectionEnergy.back()->GetYaxis()->SetTitleOffset(1.3);
+        
+        SelectionMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Momentum of Selected Track",NumberOfBins,0,3000));
+        SelectionMomentum.back()->SetStats(0);
+        SelectionMomentum.back()->GetXaxis()->SetTitle("Muon Momentum [GeV/c]");
+        SelectionMomentum.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dp}");
+        SelectionMomentum.back()->GetYaxis()->SetTitleOffset(1.3);
 
         SelXTrackStartEnd.push_back(new TH1F(("XTrack"+Label).c_str(),"X Track Start & End Positions",NumberOfBins,0,256));
         SelXTrackStartEnd.back()->SetStats(0);
@@ -315,6 +324,13 @@ void HistoProducer()
         BgrEnergy.back()->GetXaxis()->SetTitle("Muon Kinetic Energy [MeV]");
         BgrEnergy.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dE}");
         BgrEnergy.back()->GetYaxis()->SetTitleOffset(1.3);
+        
+        BgrMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Momentum of Selected Track",NumberOfBins,0,3000));
+        BgrMomentum.back()->SetStats(0);
+        BgrMomentum.back()->SetFillColor(ColorMap.at(BgrCount));
+        BgrMomentum.back()->GetXaxis()->SetTitle("Muon Momentum [GeV/c]");
+        BgrMomentum.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dp}");
+        BgrMomentum.back()->GetYaxis()->SetTitleOffset(1.3);
 
         BgrXTrackStartEnd.push_back(new TH1F(("XTrack"+Label).c_str(),"X Track Start & End Positions",NumberOfBins,0,256));
         BgrXTrackStartEnd.back()->SetStats(0);
@@ -384,6 +400,7 @@ void HistoProducer()
 
     float TrackTheta[5000];
     float TrackPhi[5000];
+    float TrackMomentum[5000];
 
     float XTrackStart[5000];
     float YTrackStart[5000];
@@ -438,6 +455,7 @@ void HistoProducer()
         ChainVec.at(file_no) -> SetBranchAddress(("trkpidbestplane_"+TrackProdName).c_str(), TrkBestPlane);
 
         ChainVec.at(file_no) -> SetBranchAddress(("trkke_"+TrackProdName).c_str(), KineticEnergy);
+        ChainVec.at(file_no) -> SetBranchAddress(("trkmom_"+TrackProdName).c_str(), TrackMomentum);
         ChainVec.at(file_no) -> SetBranchAddress(("trktheta_"+TrackProdName).c_str(), TrackTheta);
         ChainVec.at(file_no) -> SetBranchAddress(("trkphi_"+TrackProdName).c_str(),TrackPhi);
 
@@ -526,6 +544,7 @@ void HistoProducer()
                 SelectionCosTheta.at(file_no)->Fill(cos(TrackTheta[TrkID]));
                 SelectionPhi.at(file_no)->Fill(TrackPhi[TrkID]);
                 SelectionEnergy.at(file_no)->Fill(KineticEnergy[TrkID][2]);
+                SelectionMomentum.at(file_no)->Fill(TrackMomentum[TrkID]);
 
                 SelXTrackStartEnd.at(file_no)->Fill(XTrackStart[TrkID]);
                 SelXTrackStartEnd.at(file_no)->Fill(XTrackEnd[TrkID]);
@@ -568,6 +587,7 @@ void HistoProducer()
                         SelectionCosTheta.back()->Fill(cos(TrackTheta[TrkID]),1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
                         SelectionPhi.back()->Fill(TrackPhi[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
                         SelectionEnergy.back()->Fill(KineticEnergy[TrkID][2],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
+                        SelectionMomentum.back()->Fill(TrackMomentum[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
 
                         SelXTrackStartEnd.back()->Fill(XTrackStart[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
                         SelXTrackStartEnd.back()->Fill(XTrackEnd[TrkID],1+SystematicErrors.at(0).Eval(NuEnergyTruth[0]));
@@ -586,6 +606,7 @@ void HistoProducer()
                         SelectionCosTheta.back()->Fill(cos(TrackTheta[TrkID]),1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
                         SelectionPhi.back()->Fill(TrackPhi[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
                         SelectionEnergy.back()->Fill(KineticEnergy[TrkID][2],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
+                        SelectionMomentum.back()->Fill(TrackMomentum[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
 
                         SelXTrackStartEnd.back()->Fill(XTrackStart[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
                         SelXTrackStartEnd.back()->Fill(XTrackEnd[TrkID],1+SystematicErrors.at(1).Eval(NuEnergyTruth[0]));
@@ -604,6 +625,7 @@ void HistoProducer()
                         SelectionCosTheta.back()->Fill(cos(TrackTheta[TrkID]),1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
                         SelectionPhi.back()->Fill(TrackPhi[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
                         SelectionEnergy.back()->Fill(KineticEnergy[TrkID][2],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
+                        SelectionMomentum.back()->Fill(TrackMomentum[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
 
                         SelXTrackStartEnd.back()->Fill(XTrackStart[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
                         SelXTrackStartEnd.back()->Fill(XTrackEnd[TrkID],1+SystematicErrors.at(2).Eval(NuEnergyTruth[0]));
@@ -622,6 +644,7 @@ void HistoProducer()
                         SelectionCosTheta.back()->Fill(cos(TrackTheta[TrkID]),1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
                         SelectionPhi.back()->Fill(TrackPhi[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
                         SelectionEnergy.back()->Fill(KineticEnergy[TrkID][2],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
+                        SelectionMomentum.back()->Fill(TrackMomentum[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
 
                         SelXTrackStartEnd.back()->Fill(XTrackStart[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
                         SelXTrackStartEnd.back()->Fill(XTrackEnd[TrkID],1+SystematicErrors.at(3).Eval(NuEnergyTruth[0]));
@@ -641,6 +664,7 @@ void HistoProducer()
                     SelectionCosTheta.back()->Fill(cos(TrackTheta[TrkID]));
                     SelectionPhi.back()->Fill(TrackPhi[TrkID]);
                     SelectionEnergy.back()->Fill(KineticEnergy[TrkID][2]);
+                    SelectionMomentum.back()->Fill(TrackMomentum[TrkID]);
 
                     SelXTrackStartEnd.back()->Fill(XTrackStart[TrkID]);
                     SelXTrackStartEnd.back()->Fill(XTrackEnd[TrkID]);
@@ -664,6 +688,7 @@ void HistoProducer()
                         BgrCosTheta.at(0)->Fill(cos(TrackTheta[TrkID]));
                         BgrPhi.at(0)->Fill(TrackPhi[TrkID]);
                         BgrEnergy.at(0)->Fill(KineticEnergy[TrkID][2]);
+                        BgrMomentum.at(0)->Fill(TrackMomentum[TrkID]);
                         BgrXTrackStartEnd.at(0)->Fill(XTrackStart[TrkID]);
                         BgrXTrackStartEnd.at(0)->Fill(XTrackEnd[TrkID]);
                         BgrYTrackStartEnd.at(0)->Fill(YTrackStart[TrkID]);
@@ -682,6 +707,7 @@ void HistoProducer()
                         BgrCosTheta.at(1)->Fill(cos(TrackTheta[TrkID]));
                         BgrPhi.at(1)->Fill(TrackPhi[TrkID]);
                         BgrEnergy.at(1)->Fill(KineticEnergy[TrkID][2]);
+                        BgrMomentum.at(1)->Fill(TrackMomentum[TrkID]);
                         BgrXTrackStartEnd.at(1)->Fill(XTrackStart[TrkID]);
                         BgrXTrackStartEnd.at(1)->Fill(XTrackEnd[TrkID]);
                         BgrYTrackStartEnd.at(1)->Fill(YTrackStart[TrkID]);
@@ -717,6 +743,7 @@ void HistoProducer()
                     BgrCosTheta.at(2)->Fill(cos(TrackTheta[TrkID]));
                     BgrPhi.at(2)->Fill(TrackPhi[TrkID]);
                     BgrEnergy.at(2)->Fill(KineticEnergy[TrkID][2]);
+                    BgrMomentum.at(2)->Fill(TrackMomentum[TrkID]);
                     BgrXTrackStartEnd.at(2)->Fill(XTrackStart[TrkID]);
                     BgrXTrackStartEnd.at(2)->Fill(XTrackEnd[TrkID]);
                     BgrYTrackStartEnd.at(2)->Fill(YTrackStart[TrkID]);
@@ -735,6 +762,7 @@ void HistoProducer()
                     BgrCosTheta.at(3)->Fill(cos(TrackTheta[TrkID]));
                     BgrPhi.at(3)->Fill(TrackPhi[TrkID]);
                     BgrEnergy.at(3)->Fill(KineticEnergy[TrkID][2]);
+                    BgrMomentum.at(3)->Fill(TrackMomentum[TrkID]);
                     BgrXTrackStartEnd.at(3)->Fill(XTrackStart[TrkID]);
                     BgrXTrackStartEnd.at(3)->Fill(XTrackEnd[TrkID]);
                     BgrYTrackStartEnd.at(3)->Fill(YTrackStart[TrkID]);
@@ -771,6 +799,7 @@ void HistoProducer()
         BgrCosTheta.at(bgrhist_no)->Scale(1/SelectionCosTheta.at(2)->Integral());
         BgrPhi.at(bgrhist_no)->Scale(1/SelectionPhi.at(2)->Integral());
         BgrEnergy.at(bgrhist_no)->Scale(1/SelectionEnergy.at(2)->Integral());
+        BgrMomentum.at(bgrhist_no)->Scale(1/SelectionMomentum.at(2)->Integral());
         BgrXTrackStartEnd.at(bgrhist_no)->Scale(1/SelXTrackStartEnd.at(2)->Integral());
         BgrYTrackStartEnd.at(bgrhist_no)->Scale(1/SelYTrackStartEnd.at(2)->Integral());
         BgrZTrackStartEnd.at(bgrhist_no)->Scale(1/SelZTrackStartEnd.at(2)->Integral());
@@ -783,6 +812,7 @@ void HistoProducer()
         StackBgrCosTheta->Add(BgrCosTheta.at(bgrhist_no));
         StackBgrPhi->Add(BgrPhi.at(bgrhist_no));
         StackBgrEnergy->Add(BgrEnergy.at(bgrhist_no));
+        StackBgrMomentum->Add(BgrMomentum.at(bgrhist_no));
         StackBgrXTrackStartEnd->Add(BgrXTrackStartEnd.at(bgrhist_no));
         StackBgrYTrackStartEnd->Add(BgrYTrackStartEnd.at(bgrhist_no));
         StackBgrZTrackStartEnd->Add(BgrZTrackStartEnd.at(bgrhist_no));
@@ -812,6 +842,7 @@ void HistoProducer()
             SelectionCosTheta.at(file_no)->Scale(ScalingFactors.at(file_no));
             SelectionPhi.at(file_no)->Scale(ScalingFactors.at(file_no));
             SelectionEnergy.at(file_no)->Scale(ScalingFactors.at(file_no));
+            SelectionMomentum.at(file_no)->Scale(ScalingFactors.at(file_no));
             SelXTrackStartEnd.at(file_no)->Scale(ScalingFactors.at(file_no));
             SelYTrackStartEnd.at(file_no)->Scale(ScalingFactors.at(file_no));
             SelZTrackStartEnd.at(file_no)->Scale(ScalingFactors.at(file_no));
@@ -837,6 +868,7 @@ void HistoProducer()
     AdjustSysError(SelectionCosTheta);
     AdjustSysError(SelectionPhi);
     AdjustSysError(SelectionEnergy);
+    AdjustSysError(SelectionMomentum);
     AdjustSysError(SelXTrackStartEnd);
     AdjustSysError(SelYTrackStartEnd);
     AdjustSysError(SelZTrackStartEnd);
@@ -893,6 +925,15 @@ void HistoProducer()
     SelectionEnergy.at(1)->Draw("SAME");
     LegendData->Draw();
     Canvas4->SaveAs(("DataSelEnergy"+SelectionLabel+"."+FileType).c_str());
+    
+    TCanvas *Canvas4a = new TCanvas("Momentum of Selected Track", "Momentum of Selected Track", 1400, 1000);
+    Canvas4a->cd();
+    SelectionMomentum.at(0)->SetMaximum(1.1*GetMaximum(SelectionMomentum));
+    SelectionMomentum.at(0)->Draw();
+    SelectionMomentum.at(1)->SetLineColor(2);
+    SelectionMomentum.at(1)->Draw("SAME");
+    LegendData->Draw();
+    Canvas4a->SaveAs(("DataSelMomentum"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas5 = new TCanvas("X Start & End Point Selected Track", "X Start & End Point Selected Track", 1400, 1000);
     Canvas5->cd();
@@ -963,6 +1004,7 @@ void HistoProducer()
     AddFirstTwoHistograms(SelectionCosTheta,-1.);
     AddFirstTwoHistograms(SelectionPhi,-1.);
     AddFirstTwoHistograms(SelectionEnergy,-1);
+    AddFirstTwoHistograms(SelectionMomentum,-1);
     AddFirstTwoHistograms(SelXTrackStartEnd,-1);
     AddFirstTwoHistograms(SelYTrackStartEnd,-1);
     AddFirstTwoHistograms(SelZTrackStartEnd,-1);
@@ -1099,6 +1141,21 @@ void HistoProducer()
     SelectionEnergy.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas14->SaveAs(("On-OffBeamSelEnergy"+SelectionLabel+"."+FileType).c_str());
+    
+    TCanvas *Canvas14a = new TCanvas("Momentum", "Momentum", 1400, 1000);
+    Canvas14a->cd();
+    SelectionMomentum.at(2)->SetMaximum(1.2*SelectionMomentum.back()->GetBinContent(SelectionMomentum.back()->GetMaximumBin()));
+    SelectionMomentum.at(2)->SetMinimum(0.0);
+    SelectionMomentum.at(2)->SetFillColor(42);
+    SelectionMomentum.at(2)->DrawNormalized("E2");
+    SelectionMomentum.at(1)->SetFillColor(46);
+    SelectionMomentum.at(1)->DrawNormalized("E2SAME");
+    StackBgrMomentum->Draw("SAME");
+    SelectionMomentum.at(0)->SetLineWidth(2);
+    SelectionMomentum.at(0)->SetLineColor(1);
+    SelectionMomentum.at(0)->DrawNormalized("SAME");
+    LegendMC->Draw();
+    Canvas14a->SaveAs(("On-OffBeamSelMomentum"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas15 = new TCanvas("OnBeam Minus OffBeam X Start & End Point ", "OnBeam Minus OffBeam X Start & End Point ", 1400, 1000);
     Canvas15->cd();

@@ -837,6 +837,7 @@ void HistoProducerModels()
         StackBgrCosTheta->Add(BgrCosTheta.at(bgrhist_no));
         StackBgrPhi->Add(BgrPhi.at(bgrhist_no));
         StackBgrEnergy->Add(BgrEnergy.at(bgrhist_no));
+        StackBgrMomentum->Add(BgrMomentum.at(bgrhist_no));
         StackBgrXTrackStartEnd->Add(BgrXTrackStartEnd.at(bgrhist_no));
         StackBgrYTrackStartEnd->Add(BgrYTrackStartEnd.at(bgrhist_no));
         StackBgrZTrackStartEnd->Add(BgrZTrackStartEnd.at(bgrhist_no));
