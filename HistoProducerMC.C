@@ -869,7 +869,7 @@ void HistoProducerMC()
 
     TCanvas *Canvas13 = new TCanvas("OnBeam Minus OffBeam Phi-Angle", "OnBeam Minus OffBeam Phi-Angle", 1400, 1000);
     Canvas13->cd();
-    SelectionPhi->SetMaximum(1.9*SelectionPhi.at(2)->GetBinContent(SelectionPhi.at(2)->GetMaximumBin()));
+    SelectionPhi.at(2)->SetMaximum(1.9*SelectionPhi.at(2)->GetBinContent(SelectionPhi.at(2)->GetMaximumBin()));
     SelectionPhi.at(2)->SetMinimum(0.0);
     SelectionPhi.at(2)->SetFillColor(45);
     SelectionPhi.at(2)->DrawNormalized("E2");
