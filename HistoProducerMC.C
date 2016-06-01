@@ -55,8 +55,8 @@ void HistoProducerMC()
     std::string VertexProdName = "pandoraNu";
 //     std::string VertexProdName = "pmtrack";
 
-//     std::string SelectionLabel = "_Old";
-    std::string SelectionLabel = "_Mod";
+    std::string SelectionLabel = "_Old";
+//     std::string SelectionLabel = "_Mod";
 //     std::string SelectionLabel = "_New";
 
 //     std::string FileType = "png";
@@ -784,9 +784,9 @@ void HistoProducerMC()
     AdjustSysError(SelYVtxPosition);
     AdjustSysError(SelZVtxPosition);
 
-    LegendMC->AddEntry( SelectionTrackRange.at(0), (MCLabel.at(0)).c_str(),"f" );
+//     LegendMC->AddEntry( SelectionTrackRange.at(0), (MCLabel.at(0)).c_str(),"f" );
     LegendMC->AddEntry( SelectionTrackRange.at(1), (MCLabel.at(1)).c_str(),"f" );
-//     LegendMC->AddEntry( SelectionTrackRange.at(2), (MCLabel.at(2)).c_str(),"f" );
+    LegendMC->AddEntry( SelectionTrackRange.at(2), (MCLabel.at(2)).c_str(),"f" );
     for(unsigned int bgrhist_no = 0; bgrhist_no < BgrLabel.size(); bgrhist_no++)
     {
 //         LegendMC->AddEntry( BgrTrackRange.at(bgrhist_no), (BgrLabel.at(bgrhist_no)).c_str(),"f" );
