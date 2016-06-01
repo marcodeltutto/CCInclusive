@@ -824,7 +824,7 @@ void HistoProducerModels()
         BgrCosTheta.at(bgrhist_no)->Scale(1/SelectionCosTheta.at(2)->Integral());
         BgrPhi.at(bgrhist_no)->Scale(1/SelectionPhi.at(2)->Integral());
         BgrEnergy.at(bgrhist_no)->Scale(1/SelectionEnergy.at(2)->Integral());
-        BgrMomentum.at(bgrhist_no)->Scale(1/TrackMomentum.at(2)->Integral());
+        BgrMomentum.at(bgrhist_no)->Scale(1/SelectionMomentum.at(2)->Integral());
         BgrXTrackStartEnd.at(bgrhist_no)->Scale(1/SelXTrackStartEnd.at(2)->Integral());
         BgrYTrackStartEnd.at(bgrhist_no)->Scale(1/SelYTrackStartEnd.at(2)->Integral());
         BgrZTrackStartEnd.at(bgrhist_no)->Scale(1/SelZTrackStartEnd.at(2)->Integral());
