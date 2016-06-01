@@ -133,7 +133,7 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
     treenc -> SetBranchAddress("nuPDG_truth", nuPDG_truth);
     treenc -> SetBranchAddress("pdg", PDG_truth);
     treenc -> SetBranchAddress("mode_truth", mode_truth);
-    treenc -> SetBranchAddress("enu_truth", NuEnergyTruth);TrueLeptonMomentum
+    treenc -> SetBranchAddress("enu_truth", NuEnergyTruth);
     treenc -> SetBranchAddress("lep_mom_truth", TrueLeptonMomentum);
     treenc -> SetBranchAddress("geant_list_size", &NumberOfMCTracks);
     treenc -> SetBranchAddress("StartPointx", XMCTrackStart);
