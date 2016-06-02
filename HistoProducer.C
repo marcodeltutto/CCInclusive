@@ -20,6 +20,14 @@
 #include <TAxis.h>
 #include <TSpline.h>
 
+//This defines our current settings for the fiducial volume
+double FVx = 256.35;
+double FVy = 233;
+double FVz = 1036.8;
+double borderx = 10.;
+double bordery = 20.;
+double borderz = 10.;
+
 float GetMaximum(const std::vector<TH1F*>& HistVector);
 void AddFirstTwoHistograms(std::vector<TH1F*>& HistVector, float Weight);
 void AddFirstTwoHistograms2D(std::vector<TH2F*>& HistVector, float Weight);
@@ -28,6 +36,7 @@ double FlashTrackDist(double flash, double start, double end);
 bool inDeadRegion(double y, double z);
 std::vector<TSpline5> Systematics();
 void AdjustSysError(std::vector<TH1F*>& HistVector);
+bool inFV(double x, double y, double z);
 
 void HistoProducer()
 {
@@ -46,12 +55,12 @@ void HistoProducer()
     std::string VertexProdName = "pandoraNu";
 //     std::string VertexProdName = "pmtrack";
 
-//     std::string SelectionLabel = "_Old";
-    std::string SelectionLabel = "_Mod";
+    std::string SelectionLabel = "_Old";
+//     std::string SelectionLabel = "_Mod";
 //     std::string SelectionLabel = "_New";
     
-    std::string FileType = "pdg";
-//     std::string FileType = "pdf";
+//     std::string FileType = "png";
+    std::string FileType = "pdf";
     
     std::vector<TChain*> ChainVec;
 
@@ -61,11 +70,11 @@ void HistoProducer()
     std::vector<std::string> BgrLabel;
 
     std::vector<float> ScalingFactors;
-    ScalingFactors.push_back(1/383519.);
+    ScalingFactors.push_back(1);
 //     ScalingFactors.push_back(1/179041.);
-    ScalingFactors.push_back(1/400675.);
-    ScalingFactors.push_back(1/550000.);
-    ScalingFactors.push_back(1/550000.);
+    ScalingFactors.push_back(1.08426);
+    ScalingFactors.push_back(1/*/550000.*/);
+    ScalingFactors.push_back(1/*/550000.*/);
 
     // Binning
     unsigned int NumberOfBins = 20;
@@ -151,12 +160,13 @@ void HistoProducer()
 
     BgrLabel.push_back("Bgr #bar{#nu}_{#mu} Events MC BNB+Cosmic");
     BgrLabel.push_back("Bgr #nu_{e} Events MC BNB+Cosmic");
+    BgrLabel.push_back("Bgr #nu_{#mu} CC Out of FV, MC BNB+Cosmic");
     BgrLabel.push_back("Bgr NC Events MC BNB+Cosmic");
     BgrLabel.push_back("Bgr Cosmic Events MC BNB+Cosmic");
 
     std::vector<TSpline5> SystematicErrors = Systematics();
 
-    std::vector<unsigned int> ColorMap = {28,41,30,38};
+    std::vector<unsigned int> ColorMap = {13,28,42,30,38};
 
     ChainVec.push_back(new TChain("anatree"));
     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1"+ SelectionLabel +".root").c_str());
@@ -194,13 +204,13 @@ void HistoProducer()
         SelectionPhi.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#phi}");
         SelectionPhi.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        SelectionEnergy.push_back(new TH1F(("Energy"+Label).c_str(),"Energy of Selected Track",NumberOfBins,0,3000));
+        SelectionEnergy.push_back(new TH1F(("Energy"+Label).c_str(),"Energy of Selected Track",NumberOfBins,0,3));
         SelectionEnergy.back()->SetStats(0);
         SelectionEnergy.back()->GetXaxis()->SetTitle("Muon Kinetic Energy [MeV]");
         SelectionEnergy.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dE}");
         SelectionEnergy.back()->GetYaxis()->SetTitleOffset(1.3);
         
-        SelectionMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Momentum of Selected Track",NumberOfBins,0,3000));
+        SelectionMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Momentum of Selected Track",NumberOfBins,0,3));
         SelectionMomentum.back()->SetStats(0);
         SelectionMomentum.back()->GetXaxis()->SetTitle("Muon Momentum [GeV/c]");
         SelectionMomentum.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dp}");
@@ -318,14 +328,14 @@ void HistoProducer()
         BgrPhi.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{d#phi}");
         BgrPhi.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        BgrEnergy.push_back(new TH1F(("Energy"+Label).c_str(),"Energy of Selected Track",NumberOfBins,0,3000));
+        BgrEnergy.push_back(new TH1F(("Energy"+Label).c_str(),"Energy of Selected Track",NumberOfBins,0,3));
         BgrEnergy.back()->SetStats(0);
         BgrEnergy.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrEnergy.back()->GetXaxis()->SetTitle("Muon Kinetic Energy [MeV]");
         BgrEnergy.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dE}");
         BgrEnergy.back()->GetYaxis()->SetTitleOffset(1.3);
         
-        BgrMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Momentum of Selected Track",NumberOfBins,0,3000));
+        BgrMomentum.push_back(new TH1F(("Momentum"+Label).c_str(),"Momentum of Selected Track",NumberOfBins,0,3));
         BgrMomentum.back()->SetStats(0);
         BgrMomentum.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrMomentum.back()->GetXaxis()->SetTitle("Muon Momentum [GeV/c]");
@@ -394,6 +404,9 @@ void HistoProducer()
     int TruthMode[10];
     int PDGTruth[5000];
     float NuEnergyTruth[10];
+    float nuvtxx_truth[10]; //true vertex x (in cm)
+    float nuvtxy_truth[10];
+    float nuvtxz_truth[10];
 
     short TrkBestPlane[5000];
     short TrkOrigin[5000][3];
@@ -451,6 +464,9 @@ void HistoProducer()
         ChainVec.at(file_no) -> SetBranchAddress("mode_truth", TruthMode);
         ChainVec.at(file_no) -> SetBranchAddress("pdg", PDGTruth);
         ChainVec.at(file_no) -> SetBranchAddress("enu_truth", NuEnergyTruth);
+        ChainVec.at(file_no) -> SetBranchAddress("nuvtxx_truth", nuvtxx_truth);
+        ChainVec.at(file_no) -> SetBranchAddress("nuvtxy_truth", nuvtxy_truth);
+        ChainVec.at(file_no) -> SetBranchAddress("nuvtxz_truth", nuvtxz_truth);
         ChainVec.at(file_no) -> SetBranchAddress(("trkorigin_"+TrackProdName).c_str(), TrkOrigin);
         ChainVec.at(file_no) -> SetBranchAddress(("trkpidbestplane_"+TrackProdName).c_str(), TrkBestPlane);
 
@@ -482,6 +498,7 @@ void HistoProducer()
 
         unsigned int nubar = 0;
         unsigned int nue = 0;
+        unsigned int outFV = 0;
         unsigned int NCnu = 0;
         unsigned int Cosmic = 0;
         unsigned int UnknownOrigin = 0;
@@ -678,9 +695,9 @@ void HistoProducer()
                 }
 
                 // Fill Bgr
-                if(file_no == 2 && MCTrkID > -1 && CCNCFlag[0] == 0 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
+                if(file_no == 2 && CCNCFlag[0] == 0 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
-                    if(PDGTruth[MCTrkID] == -13)
+                    if(MCTrkID > -1 && PDGTruth[MCTrkID] == -13)
                     {
                         nubar++;
                         BgrTrackRange.at(0)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
@@ -699,7 +716,7 @@ void HistoProducer()
                         BgrYVtxPosition.at(0)->Fill(YVertexPosition[VtxID]);
                         BgrZVtxPosition.at(0)->Fill(ZVertexPosition[VtxID]);
                     }
-                    else if(abs(PDGTruth[MCTrkID]) == 11)
+                    else if(MCTrkID > -1 && abs(PDGTruth[MCTrkID]) == 11)
                     {
                         nue++;
                         BgrTrackRange.at(1)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
@@ -718,19 +735,38 @@ void HistoProducer()
                         BgrYVtxPosition.at(1)->Fill(YVertexPosition[VtxID]);
                         BgrZVtxPosition.at(1)->Fill(ZVertexPosition[VtxID]);
                     }
-                    else if(file_no == 2 && TruthMode[0] == 0)
+                    else if(!inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
+                    {
+                        outFV++;
+                        BgrTrackRange.at(2)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+                        BgrTheta.at(2)->Fill(TrackTheta[TrkID]);
+                        BgrCosTheta.at(2)->Fill(cos(TrackTheta[TrkID]));
+                        BgrPhi.at(2)->Fill(TrackPhi[TrkID]);
+                        BgrEnergy.at(2)->Fill(KineticEnergy[TrkID][2]/1000);
+                        BgrMomentum.at(2)->Fill(TrackMomentum[TrkID]);
+                        BgrXTrackStartEnd.at(2)->Fill(XTrackStart[TrkID]);
+                        BgrXTrackStartEnd.at(2)->Fill(XTrackEnd[TrkID]);
+                        BgrYTrackStartEnd.at(2)->Fill(YTrackStart[TrkID]);
+                        BgrYTrackStartEnd.at(2)->Fill(YTrackEnd[TrkID]);
+                        BgrZTrackStartEnd.at(2)->Fill(ZTrackStart[TrkID]);
+                        BgrZTrackStartEnd.at(2)->Fill(ZTrackEnd[TrkID]);
+                        BgrXVtxPosition.at(2)->Fill(XVertexPosition[VtxID]);
+                        BgrYVtxPosition.at(2)->Fill(YVertexPosition[VtxID]);
+                        BgrZVtxPosition.at(2)->Fill(ZVertexPosition[VtxID]);
+                    }
+                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[0] == 0)
                     {
                         nuQE++;
                     }
-                    else if(file_no == 2 && TruthMode[0] == 1)
+                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[0] == 1)
                     {
                         nuRES++;
                     }
-                    else if(file_no == 2 && TruthMode[0] == 2)
+                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[0] == 2)
                     {
                         nuDIS++;
                     }
-                    else if(file_no == 2 && TruthMode[0] == 3)
+                    else if(MCTrkID > -1 && file_no == 2 && TruthMode[0] == 3)
                     {
                         nuCOH++;
                     }
@@ -738,25 +774,6 @@ void HistoProducer()
                 else if(file_no == 2 && CCNCFlag[0] == 1 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] == 1)
                 {
                     NCnu++;
-                    BgrTrackRange.at(2)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
-                    BgrTheta.at(2)->Fill(TrackTheta[TrkID]);
-                    BgrCosTheta.at(2)->Fill(cos(TrackTheta[TrkID]));
-                    BgrPhi.at(2)->Fill(TrackPhi[TrkID]);
-                    BgrEnergy.at(2)->Fill(KineticEnergy[TrkID][2]/1000);
-                    BgrMomentum.at(2)->Fill(TrackMomentum[TrkID]);
-                    BgrXTrackStartEnd.at(2)->Fill(XTrackStart[TrkID]);
-                    BgrXTrackStartEnd.at(2)->Fill(XTrackEnd[TrkID]);
-                    BgrYTrackStartEnd.at(2)->Fill(YTrackStart[TrkID]);
-                    BgrYTrackStartEnd.at(2)->Fill(YTrackEnd[TrkID]);
-                    BgrZTrackStartEnd.at(2)->Fill(ZTrackStart[TrkID]);
-                    BgrZTrackStartEnd.at(2)->Fill(ZTrackEnd[TrkID]);
-                    BgrXVtxPosition.at(2)->Fill(XVertexPosition[VtxID]);
-                    BgrYVtxPosition.at(2)->Fill(YVertexPosition[VtxID]);
-                    BgrZVtxPosition.at(2)->Fill(ZVertexPosition[VtxID]);
-                }
-                else if(file_no == 2 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] != 1)
-                {
-                    Cosmic++;
                     BgrTrackRange.at(3)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
                     BgrTheta.at(3)->Fill(TrackTheta[TrkID]);
                     BgrCosTheta.at(3)->Fill(cos(TrackTheta[TrkID]));
@@ -772,6 +789,25 @@ void HistoProducer()
                     BgrXVtxPosition.at(3)->Fill(XVertexPosition[VtxID]);
                     BgrYVtxPosition.at(3)->Fill(YVertexPosition[VtxID]);
                     BgrZVtxPosition.at(3)->Fill(ZVertexPosition[VtxID]);
+                }
+                else if(file_no == 2 && TrkOrigin[TrkID][TrkBestPlane[TrkID]] != 1)
+                {
+                    Cosmic++;
+                    BgrTrackRange.at(4)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]));
+                    BgrTheta.at(4)->Fill(TrackTheta[TrkID]);
+                    BgrCosTheta.at(4)->Fill(cos(TrackTheta[TrkID]));
+                    BgrPhi.at(4)->Fill(TrackPhi[TrkID]);
+                    BgrEnergy.at(4)->Fill(KineticEnergy[TrkID][2]/1000);
+                    BgrMomentum.at(4)->Fill(TrackMomentum[TrkID]);
+                    BgrXTrackStartEnd.at(4)->Fill(XTrackStart[TrkID]);
+                    BgrXTrackStartEnd.at(4)->Fill(XTrackEnd[TrkID]);
+                    BgrYTrackStartEnd.at(4)->Fill(YTrackStart[TrkID]);
+                    BgrYTrackStartEnd.at(4)->Fill(YTrackEnd[TrkID]);
+                    BgrZTrackStartEnd.at(4)->Fill(ZTrackStart[TrkID]);
+                    BgrZTrackStartEnd.at(4)->Fill(ZTrackEnd[TrkID]);
+                    BgrXVtxPosition.at(4)->Fill(XVertexPosition[VtxID]);
+                    BgrYVtxPosition.at(4)->Fill(YVertexPosition[VtxID]);
+                    BgrZVtxPosition.at(4)->Fill(ZVertexPosition[VtxID]);
 
                     if(TrkOrigin[TrkID][TrkBestPlane[TrkID]] == -1)
                     {
@@ -828,6 +864,7 @@ void HistoProducer()
         SelectionCosTheta.at(file_no)->Sumw2();
         SelectionPhi.at(file_no)->Sumw2();
         SelectionEnergy.at(file_no)->Sumw2();
+        SelectionMomentum.at(file_no)->Sumw2();
         SelXTrackStartEnd.at(file_no)->Sumw2();
         SelYTrackStartEnd.at(file_no)->Sumw2();
         SelZTrackStartEnd.at(file_no)->Sumw2();
@@ -1028,7 +1065,7 @@ void HistoProducer()
     LegendMC->AddEntry( SelectionTrackRange.at(0), (MCLabel.at(0)).c_str(),"lep" );
     LegendMC->AddEntry( SelectionTrackRange.at(1), (MCLabel.at(1)).c_str(),"f" );
     LegendMC->AddEntry( SelectionTrackRange.at(2), (MCLabel.at(2)).c_str(),"f" );
-    for(unsigned int bgrhist_no = 0; bgrhist_no < BgrLabel.size(); bgrhist_no++)
+    for(unsigned int bgrhist_no = BgrLabel.size()-1; bgrhist_no > -1; bgrhist_no--)
     {
         LegendMC->AddEntry( BgrTrackRange.at(bgrhist_no), (BgrLabel.at(bgrhist_no)).c_str(),"f" );
     }
@@ -1037,7 +1074,7 @@ void HistoProducer()
     Canvas11->cd();
     SelectionTrackRange.at(2)->SetMaximum(1.4*SelectionTrackRange.at(2)->GetBinContent(SelectionTrackRange.at(2)->GetMaximumBin()));
     SelectionTrackRange.at(2)->SetMinimum(0.0);
-    SelectionTrackRange.at(2)->SetFillColor(42);
+    SelectionTrackRange.at(2)->SetFillColor(45);
     SelectionTrackRange.at(2)->DrawNormalized("E2");
     SelectionTrackRange.at(1)->SetFillColor(46);
     SelectionTrackRange.at(1)->DrawNormalized("E2SAME");
@@ -1046,13 +1083,13 @@ void HistoProducer()
     SelectionTrackRange.at(0)->SetLineColor(1);
     SelectionTrackRange.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas11->SaveAs(("On-OffBeamSelRange"+SelectionLabel+"."+FileType).c_str());
+    Canvas11->SaveAs(("On-OffBeamSelRange_Sys"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas12 = new TCanvas("OnBeam Minus OffBeam Theta-Angle", "OnBeam Minus OffBeam Theta-Angle", 1400, 1000);
     Canvas12->cd();
     SelectionTheta.at(2)->SetMaximum(1.5*SelectionTheta.at(2)->GetBinContent(SelectionTheta.at(2)->GetMaximumBin()));
     SelectionTheta.at(2)->SetMinimum(0.0);
-    SelectionTheta.at(2)->SetFillColor(42);
+    SelectionTheta.at(2)->SetFillColor(45);
     SelectionTheta.at(2)->DrawNormalized("E2");
     SelectionTheta.at(1)->SetFillColor(46);
     SelectionTheta.at(1)->DrawNormalized("E2SAME");
@@ -1061,7 +1098,7 @@ void HistoProducer()
     SelectionTheta.at(0)->SetLineColor(1);
     SelectionTheta.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas12->SaveAs(("On-OffBeamSelTheta"+SelectionLabel+"."+FileType).c_str());
+    Canvas12->SaveAs(("On-OffBeamSelTheta_Sys"+SelectionLabel+"."+FileType).c_str());
 
 
     for(auto& BgrThetaHist :BgrTheta)
@@ -1085,7 +1122,7 @@ void HistoProducer()
     Canvas12a->cd();
     SelectionTheta.at(2)->SetMaximum(1.5*SelectionTheta.at(2)->GetBinContent(SelectionTheta.at(2)->GetMaximumBin()));
     SelectionTheta.at(2)->SetMinimum(0.0);
-    SelectionTheta.at(2)->SetFillColor(42);
+    SelectionTheta.at(2)->SetFillColor(45);
     SelectionTheta.at(2)->GetYaxis()->SetTitle("Weighted #frac{dn}{d#Omega}");
     SelectionTheta.at(2)->DrawNormalized("E2");
     SelectionTheta.at(1)->SetFillColor(46);
@@ -1095,13 +1132,13 @@ void HistoProducer()
     SelectionTheta.at(0)->SetLineColor(1);
     SelectionTheta.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas12a->SaveAs(("On-OffBeamSelThetaOmega"+SelectionLabel+"."+FileType).c_str());
+    Canvas12a->SaveAs(("On-OffBeamSelThetaOmega_Sys"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas12b = new TCanvas("OnBeam Minus OffBeam Cos Theta-Angle", "OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000);
     Canvas12b->cd();
     SelectionCosTheta.at(2)->SetMaximum(1.5*SelectionCosTheta.at(2)->GetBinContent(SelectionCosTheta.at(2)->GetMaximumBin()));
     SelectionCosTheta.at(2)->SetMinimum(0.0);
-    SelectionCosTheta.at(2)->SetFillColor(42);
+    SelectionCosTheta.at(2)->SetFillColor(45);
     SelectionCosTheta.at(2)->DrawNormalized("E2");
     SelectionCosTheta.at(1)->SetFillColor(46);
     SelectionCosTheta.at(1)->DrawNormalized("E2SAME");
@@ -1110,13 +1147,13 @@ void HistoProducer()
     SelectionCosTheta.at(0)->SetLineColor(1);
     SelectionCosTheta.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas12b->SaveAs(("On-OffBeamSelCosTheta"+SelectionLabel+"."+FileType).c_str());
+    Canvas12b->SaveAs(("On-OffBeamSelCosTheta_Sys"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas13 = new TCanvas("OnBeam Minus OffBeam Phi-Angle", "OnBeam Minus OffBeam Phi-Angle", 1400, 1000);
     Canvas13->cd();
     SelectionPhi.at(2)->SetMaximum(1.9*SelectionPhi.at(2)->GetBinContent(SelectionPhi.at(2)->GetMaximumBin()));
     SelectionPhi.at(2)->SetMinimum(0.0);
-    SelectionPhi.at(2)->SetFillColor(42);
+    SelectionPhi.at(2)->SetFillColor(45);
     SelectionPhi.at(2)->DrawNormalized("E2");
     SelectionPhi.at(1)->SetFillColor(46);
     SelectionPhi.at(1)->DrawNormalized("E2SAME");
@@ -1125,13 +1162,13 @@ void HistoProducer()
     SelectionPhi.at(0)->SetLineColor(1);
     SelectionPhi.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas13->SaveAs(("On-OffBeamSelPhi"+SelectionLabel+"."+FileType).c_str());
+    Canvas13->SaveAs(("On-OffBeamSelPhi_Sys"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas14 = new TCanvas("Energy", "Energy", 1400, 1000);
     Canvas14->cd();
     SelectionEnergy.at(2)->SetMaximum(1.2*SelectionEnergy.at(2)->GetBinContent(SelectionEnergy.at(2)->GetMaximumBin()));
     SelectionEnergy.at(2)->SetMinimum(0.0);
-    SelectionEnergy.at(2)->SetFillColor(42);
+    SelectionEnergy.at(2)->SetFillColor(45);
     SelectionEnergy.at(2)->DrawNormalized("E2");
     SelectionEnergy.at(1)->SetFillColor(46);
     SelectionEnergy.at(1)->DrawNormalized("E2SAME");
@@ -1140,13 +1177,13 @@ void HistoProducer()
     SelectionEnergy.at(0)->SetLineColor(1);
     SelectionEnergy.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas14->SaveAs(("On-OffBeamSelEnergy"+SelectionLabel+"."+FileType).c_str());
+    Canvas14->SaveAs(("On-OffBeamSelEnergy_Sys"+SelectionLabel+"."+FileType).c_str());
     
     TCanvas *Canvas14a = new TCanvas("Momentum", "Momentum", 1400, 1000);
     Canvas14a->cd();
     SelectionMomentum.at(2)->SetMaximum(1.2*SelectionMomentum.back()->GetBinContent(SelectionMomentum.back()->GetMaximumBin()));
     SelectionMomentum.at(2)->SetMinimum(0.0);
-    SelectionMomentum.at(2)->SetFillColor(42);
+    SelectionMomentum.at(2)->SetFillColor(45);
     SelectionMomentum.at(2)->DrawNormalized("E2");
     SelectionMomentum.at(1)->SetFillColor(46);
     SelectionMomentum.at(1)->DrawNormalized("E2SAME");
@@ -1155,13 +1192,13 @@ void HistoProducer()
     SelectionMomentum.at(0)->SetLineColor(1);
     SelectionMomentum.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas14a->SaveAs(("On-OffBeamSelMomentum"+SelectionLabel+"."+FileType).c_str());
+    Canvas14a->SaveAs(("On-OffBeamSelMomentum_Sys"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas15 = new TCanvas("OnBeam Minus OffBeam X Start & End Point ", "OnBeam Minus OffBeam X Start & End Point ", 1400, 1000);
     Canvas15->cd();
     SelXTrackStartEnd.at(2)->SetMaximum(1.5*SelXTrackStartEnd.at(2)->GetBinContent(SelXTrackStartEnd.at(2)->GetMaximumBin()));
     SelXTrackStartEnd.at(2)->SetMinimum(0.0);
-    SelXTrackStartEnd.at(2)->SetFillColor(42);
+    SelXTrackStartEnd.at(2)->SetFillColor(45);
     SelXTrackStartEnd.at(2)->DrawNormalized("E2");
     SelXTrackStartEnd.at(1)->SetFillColor(46);
     SelXTrackStartEnd.at(1)->DrawNormalized("E2SAME");
@@ -1170,13 +1207,13 @@ void HistoProducer()
     SelXTrackStartEnd.at(0)->SetLineColor(1);
     SelXTrackStartEnd.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas15->SaveAs(("On-OffBeamSelXTrack"+SelectionLabel+"."+FileType).c_str());
+    Canvas15->SaveAs(("On-OffBeamSelXTrack_Sys"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas16 = new TCanvas("OnBeam Minus OffBeam Y Start & End Point ", "OnBeam Minus OffBeam Y Start & End Point ", 1400, 1000);
     Canvas16->cd();
     SelYTrackStartEnd.at(2)->SetMaximum(1.8*SelYTrackStartEnd.at(2)->GetBinContent(SelYTrackStartEnd.at(2)->GetMaximumBin()));
     SelYTrackStartEnd.at(2)->SetMinimum(0.0);
-    SelYTrackStartEnd.at(2)->SetFillColor(42);
+    SelYTrackStartEnd.at(2)->SetFillColor(45);
     SelYTrackStartEnd.at(2)->DrawNormalized("E2");
     SelYTrackStartEnd.at(1)->SetFillColor(46);
     SelYTrackStartEnd.at(1)->DrawNormalized("E2SAME");
@@ -1185,13 +1222,13 @@ void HistoProducer()
     SelYTrackStartEnd.at(0)->SetLineColor(1);
     SelYTrackStartEnd.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas16->SaveAs(("On-OffBeamSelYTrack"+SelectionLabel+"."+FileType).c_str());
+    Canvas16->SaveAs(("On-OffBeamSelYTrack_Sys"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas17 = new TCanvas("OnBeam Minus OffBeam Z Start & End Point ", "OnBeam Minus OffBeam Z Start & End Point ", 1400, 1000);
     Canvas17->cd();
     SelZTrackStartEnd.at(2)->SetMaximum(1.5*SelZTrackStartEnd.at(2)->GetBinContent(SelZTrackStartEnd.at(2)->GetMaximumBin()));
     SelZTrackStartEnd.at(2)->SetMinimum(0.0);
-    SelZTrackStartEnd.at(2)->SetFillColor(42);
+    SelZTrackStartEnd.at(2)->SetFillColor(45);
     SelZTrackStartEnd.at(2)->DrawNormalized("E2");
     SelZTrackStartEnd.at(1)->SetFillColor(46);
     SelZTrackStartEnd.at(1)->DrawNormalized("E2SAME");
@@ -1200,13 +1237,13 @@ void HistoProducer()
     SelZTrackStartEnd.at(0)->SetLineColor(1);
     SelZTrackStartEnd.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas17->SaveAs(("On-OffBeamSelZTrack"+SelectionLabel+"."+FileType).c_str());
+    Canvas17->SaveAs(("On-OffBeamSelZTrack_Sys"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas18 = new TCanvas("OnBeam Minus OffBeam X Vertex Postion", "OnBeam Minus OffBeam X Vertex Postion", 1400, 1000);
     Canvas18->cd();
     SelXVtxPosition.at(2)->SetMaximum(1.5*SelXVtxPosition.at(2)->GetBinContent(SelXVtxPosition.at(2)->GetMaximumBin()));
     SelXVtxPosition.at(2)->SetMinimum(0.0);
-    SelXVtxPosition.at(2)->SetFillColor(42);
+    SelXVtxPosition.at(2)->SetFillColor(45);
     SelXVtxPosition.at(2)->DrawNormalized("E2");
     SelXVtxPosition.at(1)->SetFillColor(46);
     SelXVtxPosition.at(1)->DrawNormalized("E2SAME");
@@ -1215,13 +1252,13 @@ void HistoProducer()
     SelXVtxPosition.at(0)->SetLineColor(1);
     SelXVtxPosition.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas18->SaveAs(("On-OffBeamSelXVertex"+SelectionLabel+"."+FileType).c_str());
+    Canvas18->SaveAs(("On-OffBeamSelXVertex_Sys"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas19 = new TCanvas("OnBeam Minus OffBeam Y Vertex Postion", "OnBeam Minus OffBeam Y Vertex Postion", 1400, 1000);
     Canvas19->cd();
     SelYVtxPosition.at(2)->SetMaximum(1.8*SelYVtxPosition.at(2)->GetBinContent(SelYVtxPosition.at(2)->GetMaximumBin()));
     SelYVtxPosition.at(2)->SetMinimum(0.0);
-    SelYVtxPosition.at(2)->SetFillColor(42);
+    SelYVtxPosition.at(2)->SetFillColor(45);
     SelYVtxPosition.at(2)->DrawNormalized("E2");
     SelYVtxPosition.at(1)->SetFillColor(46);
     SelYVtxPosition.at(1)->DrawNormalized("E2SAME");
@@ -1230,13 +1267,13 @@ void HistoProducer()
     SelYVtxPosition.at(0)->SetLineColor(1);
     SelYVtxPosition.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas19->SaveAs(("On-OffBeamSelYVertex"+SelectionLabel+"."+FileType).c_str());
+    Canvas19->SaveAs(("On-OffBeamSelYVertex_Sys"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas20 = new TCanvas("OnBeam Minus OffBeam Z Vertex Postion", "OnBeam Minus OffBeam Z Vertex Postion", 1400, 1000);
     Canvas20->cd();
     SelZVtxPosition.at(2)->SetMaximum(1.5*SelZVtxPosition.at(2)->GetBinContent(SelZVtxPosition.at(2)->GetMaximumBin()));
     SelZVtxPosition.at(2)->SetMinimum(0.0);
-    SelZVtxPosition.at(2)->SetFillColor(42);
+    SelZVtxPosition.at(2)->SetFillColor(45);
     SelZVtxPosition.at(2)->DrawNormalized("E2");
     SelZVtxPosition.at(1)->SetFillColor(46);
     SelZVtxPosition.at(1)->DrawNormalized("E2SAME");
@@ -1245,7 +1282,7 @@ void HistoProducer()
     SelZVtxPosition.at(0)->SetLineColor(1);
     SelZVtxPosition.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
-    Canvas20->SaveAs(("On-OffBeamSelZVertex"+SelectionLabel+"."+FileType).c_str());
+    Canvas20->SaveAs(("On-OffBeamSelZVertex_Sys"+SelectionLabel+"."+FileType).c_str());
 
     TCanvas *Canvas21 = new TCanvas("Phi Vs Theta", "Phi Vs Theta", 1400, 1000);
     Canvas21->cd();
@@ -1443,4 +1480,10 @@ void AdjustSysError(std::vector<TH1F*>& HistVector)
         HistVector.back()->SetBinError( bin_no, HistVector.back()->GetBinContent(bin_no) - HistVector.at(2)->GetBinContent(bin_no) + HistVector.at(2)->GetBinError(bin_no) );
         HistVector.back()->SetBinContent( bin_no, HistVector.at(2)->GetBinContent(bin_no) );
     }
+}
+
+bool inFV(double x, double y, double z) 
+{
+    if(x < (FVx - borderx) && (x > borderx) && (y < (FVy/2. - bordery)) && (y > (-FVy/2. + bordery)) && (z < (FVz - borderz)) && (z > borderz)) return true;
+    else return false;
 }

@@ -38,7 +38,7 @@ std::vector<TSpline5> Systematics();
 void AdjustSysError(std::vector<TH1F*>& HistVector);
 bool inFV(double x, double y, double z);
 
-void HistoProducerModels()
+void HistoProducerMA()
 {
     TGaxis::SetMaxDigits(4);
     
@@ -71,8 +71,8 @@ void HistoProducerModels()
 
     std::vector<float> ScalingFactors;
     ScalingFactors.push_back(1);
+//     ScalingFactors.push_back(1/179041.);
     ScalingFactors.push_back(1.08426);
-    ScalingFactors.push_back(1);
     ScalingFactors.push_back(1);
     ScalingFactors.push_back(1);
 
@@ -146,9 +146,9 @@ void HistoProducerModels()
 
     MCLabel.push_back("On-Beam Minus Off-Beam Sample");
     MCLabel.push_back("Selection on MC BNB+Cosmic with Stat. Error");
-//     MCLabel.push_back("Selection on modified M_{A} MC");
-    MCLabel.push_back("Selection on TEM MC");
-    MCLabel.push_back("Selection on MEC MC");
+    MCLabel.push_back("Selection on modified M_{A} MC");
+//     MCLabel.push_back("Selection on TEM MC");
+//     MCLabel.push_back("Selection on MEC MC");
 //     MCLabel.push_back("MC BNB+Cosmic Sys. Error");
 
     TLegend* FlashLabel = new TLegend(0.7,0.7,0.9,0.9);
@@ -157,9 +157,9 @@ void HistoProducerModels()
     GenLabel.push_back("Data On-Beam BNB");
     GenLabel.push_back("Data Off-Beam BNBEXT");
     GenLabel.push_back("MC Prodgenie BNB Nu Cosmic");
-//     GenLabel.push_back("MC Prodgenie BNB Nu Cosmic M_A");
-    GenLabel.push_back("MC Prodgenie BNB Nu Cosmic TEM");
-    GenLabel.push_back("MC Prodgenie BNB Nu Cosmic MEC");
+    GenLabel.push_back("MC Prodgenie BNB Nu Cosmic M_A");
+//     GenLabel.push_back("MC Prodgenie BNB Nu Cosmic TEM");
+//     GenLabel.push_back("MC Prodgenie BNB Nu Cosmic MEC");
 //     GenLabel.push_back("MC Systematic Errors");
 //     GenLabel.push_back("MC Prodgenie BNB Nu");
 //     GenLabel.push_back("MC Prodcosmic Corsika in-Time");
@@ -185,14 +185,14 @@ void HistoProducerModels()
     ChainVec.push_back(new TChain("anatree"));
     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00"+ SelectionLabel +".root").c_str());
     
+    ChainVec.push_back(new TChain("anatree"));
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_MA_v05_08_00"+ SelectionLabel +".root").c_str());
+    
 //     ChainVec.push_back(new TChain("anatree"));
-//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_MA_v05_08_00"+ SelectionLabel +".root").c_str());
+//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_TEM_v05_08_00"+ SelectionLabel +".root").c_str());
     
-    ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_TEM_v05_08_00"+ SelectionLabel +".root").c_str());
-    
-    ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_MEC_v05_08_00"+ SelectionLabel +".root").c_str());
+//     ChainVec.push_back(new TChain("anatree"));
+//     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_MEC_v05_08_00"+ SelectionLabel +".root").c_str());
 
     for(const auto& Label : GenLabel)
     {
@@ -538,7 +538,7 @@ void HistoProducerModels()
         float ZFVCutValue = 10; //10
         float FlashTrackCut = 80; //80
         
-        HistogramWeight = 1;
+        if(file_no != 3) HistogramWeight = 1;
 
         for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no)->GetEntries(); tree_index++)
         {
@@ -1091,7 +1091,7 @@ void HistoProducerModels()
     LegendMC->AddEntry( SelectionTrackRange.at(1), (MCLabel.at(1)).c_str(),"f" );
 //     LegendMC->AddEntry( SelectionTrackRange.back(), (MCLabel.back()).c_str(),"f" );
     LegendMC->AddEntry( SelectionTrackRange.at(2), (MCLabel.at(2)).c_str(),"lep" );
-    LegendMC->AddEntry( SelectionTrackRange.at(3), (MCLabel.at(3)).c_str(),"lep" );
+//     LegendMC->AddEntry( SelectionTrackRange.at(3), (MCLabel.at(3)).c_str(),"lep" );
 //     LegendMC->AddEntry( SelectionTrackRange.at(4), (MCLabel.at(4)).c_str(),"l" );
     for(unsigned int bgrhist_no = BgrLabel.size()-1; bgrhist_no > -1; bgrhist_no--)
     {
@@ -1105,7 +1105,7 @@ void HistoProducerModels()
     SelectionTrackRange.at(1)->SetFillColor(46);
     SelectionTrackRange.at(1)->DrawNormalized("E2");
     StackBgrTrackRange->Draw("SAME");
-    for(unsigned int iter = 2; iter < 4; iter++)
+    for(unsigned int iter = 2; iter < 3; iter++)
     {
         SelectionTrackRange.at(iter)->SetLineWidth(2);
         SelectionTrackRange.at(iter)->SetLineColor(iter);
@@ -1124,7 +1124,7 @@ void HistoProducerModels()
     SelectionTheta.at(1)->SetFillColor(46);
     SelectionTheta.at(1)->DrawNormalized("E2");
     StackBgrTheta->Draw("SAME");
-    for(unsigned int iter = 2; iter < 4; iter++)
+    for(unsigned int iter = 2; iter < 3; iter++)
     {
         SelectionTheta.at(iter)->SetLineWidth(2);
         SelectionTheta.at(iter)->SetLineColor(iter);
@@ -1161,7 +1161,7 @@ void HistoProducerModels()
     SelectionTheta.at(1)->SetFillColor(46);
     SelectionTheta.at(1)->DrawNormalized("E2");
     StackBgrTheta->Draw("SAME");
-    for(unsigned int iter = 2; iter < 4; iter++)
+    for(unsigned int iter = 2; iter < 3; iter++)
     {
         SelectionTheta.at(iter)->SetLineWidth(2);
         SelectionTheta.at(iter)->SetLineColor(iter);
@@ -1180,7 +1180,7 @@ void HistoProducerModels()
     SelectionCosTheta.at(1)->SetFillColor(46);
     SelectionCosTheta.at(1)->DrawNormalized("E2");
     StackBgrCosTheta->Draw("SAME");
-    for(unsigned int iter = 2; iter < 4; iter++)
+    for(unsigned int iter = 2; iter < 3; iter++)
     {
         SelectionCosTheta.at(iter)->SetLineWidth(2);
         SelectionCosTheta.at(iter)->SetLineColor(iter);
@@ -1199,7 +1199,7 @@ void HistoProducerModels()
     SelectionPhi.at(1)->SetFillColor(46);
     SelectionPhi.at(1)->DrawNormalized("E2");
     StackBgrPhi->Draw("SAME");
-    for(unsigned int iter = 2; iter < 4; iter++)
+    for(unsigned int iter = 2; iter < 3; iter++)
     {
         SelectionPhi.at(iter)->SetLineWidth(2);
         SelectionPhi.at(iter)->SetLineColor(iter);
@@ -1218,7 +1218,7 @@ void HistoProducerModels()
     SelectionEnergy.at(1)->SetFillColor(46);
     SelectionEnergy.at(1)->DrawNormalized("E2");
     StackBgrEnergy->Draw("SAME");
-    for(unsigned int iter = 2; iter < 4; iter++)
+    for(unsigned int iter = 2; iter < 3; iter++)
     {
         SelectionEnergy.at(iter)->SetLineWidth(2);
         SelectionEnergy.at(iter)->SetLineColor(iter);
@@ -1237,7 +1237,7 @@ void HistoProducerModels()
     SelectionMomentum.at(1)->SetFillColor(46);
     SelectionMomentum.at(1)->DrawNormalized("E2");
     StackBgrMomentum->Draw("SAME");
-    for(unsigned int iter = 2; iter < 4; iter++)
+    for(unsigned int iter = 2; iter < 3; iter++)
     {
         SelectionMomentum.at(iter)->SetLineWidth(2);
         SelectionMomentum.at(iter)->SetLineColor(iter);
