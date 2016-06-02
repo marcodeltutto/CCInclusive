@@ -138,9 +138,8 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
 
         std::string FileName;
 
-        while(std::getline(FileNames)) 
+        while(std::getline(FileNames,FileName)) 
         {
-            FileNames >> FileName;
             std::cout << FileName << std::endl;
             treenc -> Add((FileName).c_str());
         }
@@ -152,9 +151,8 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
 
         std::string FileName;
 
-        while(std::getline(FileNames)) 
+        while(std::getline(FileNames,FileName)) 
         {
-            FileNames >> FileName;
             std::cout << FileName << std::endl;
             treenc -> Add((FileName).c_str());
         }
