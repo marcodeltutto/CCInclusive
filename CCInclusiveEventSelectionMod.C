@@ -135,7 +135,7 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
     }
     else
     {
-        treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree_Mod.root").c_str() );
+        treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
     }
 //     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 
