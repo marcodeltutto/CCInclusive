@@ -55,8 +55,8 @@ void HistoProducerMC()
     std::string VertexProdName = "pandoraNu";
 //     std::string VertexProdName = "pmtrack";
 
-//     std::string SelectionLabel = "_Old";
-    std::string SelectionLabel = "_Mod";
+    std::string SelectionLabel = "_Old";
+//     std::string SelectionLabel = "_Mod";
 //     std::string SelectionLabel = "_New";
 
 //     std::string FileType = "png";
@@ -794,8 +794,8 @@ void HistoProducerMC()
 
     TCanvas *Canvas11 = new TCanvas("OnBeam Minus OffBeam Track Range", "OnBeam Minus OffBeam Track Range", 1400, 1000);
     Canvas11->cd();
-//     SelectionTrackRange.at(2)->SetMaximum(1.4*SelectionTrackRange.at(2)->GetBinContent(SelectionTrackRange.at(2)->GetMaximumBin()));
-//     SelectionTrackRange.at(2)->SetMinimum(0.0);
+    SelectionTrackRange.at(1)->SetMaximum(1.4*SelectionTrackRange.at(2)->GetBinContent(SelectionTrackRange.at(2)->GetMaximumBin()));
+    SelectionTrackRange.at(1)->SetMinimum(0.0);
 //     SelectionTrackRange.at(2)->SetFillColor(45);
 //     SelectionTrackRange.at(2)->DrawNormalized("E2");
     SelectionTrackRange.at(1)->SetFillColor(46);
@@ -808,8 +808,8 @@ void HistoProducerMC()
 
     TCanvas *Canvas12 = new TCanvas("OnBeam Minus OffBeam Theta-Angle", "OnBeam Minus OffBeam Theta-Angle", 1400, 1000);
     Canvas12->cd();
-//     SelectionTheta.at(2)->SetMaximum(1.5*SelectionTheta.at(2)->GetBinContent(SelectionTheta.at(2)->GetMaximumBin()));
-//     SelectionTheta.at(2)->SetMinimum(0.0);
+    SelectionTheta.at(1)->SetMaximum(1.5*SelectionTheta.at(2)->GetBinContent(SelectionTheta.at(2)->GetMaximumBin()));
+    SelectionTheta.at(1)->SetMinimum(0.0);
 //     SelectionTheta.at(2)->SetFillColor(45);
 //     SelectionTheta.at(2)->DrawNormalized("E2");
     SelectionTheta.at(1)->SetFillColor(46);
@@ -840,8 +840,8 @@ void HistoProducerMC()
 
     TCanvas *Canvas12a = new TCanvas("OnBeam Minus OffBeam Theta-Angle Omega", "OnBeam Minus OffBeam Theta-Angle Omega", 1400, 1000);
     Canvas12a->cd();
-//     SelectionTheta.at(2)->SetMaximum(1.5*SelectionTheta.at(2)->GetBinContent(SelectionTheta.at(2)->GetMaximumBin()));
-//     SelectionTheta.at(2)->SetMinimum(0.0);
+    SelectionTheta.at(1)->SetMaximum(1.5*SelectionTheta.at(2)->GetBinContent(SelectionTheta.at(2)->GetMaximumBin()));
+    SelectionTheta.at(1)->SetMinimum(0.0);
 //     SelectionTheta.at(2)->SetFillColor(45);
     SelectionTheta.at(1)->GetYaxis()->SetTitle("Shape normalized #frac{dn}{d#Omega}");
 //     SelectionTheta.at(2)->DrawNormalized("E2");
@@ -855,8 +855,8 @@ void HistoProducerMC()
 
     TCanvas *Canvas12b = new TCanvas("OnBeam Minus OffBeam Cos Theta-Angle", "OnBeam Minus OffBeam Cos Theta-Angle", 1400, 1000);
     Canvas12b->cd();
-//     SelectionCosTheta.at(2)->SetMaximum(1.5*SelectionCosTheta.at(2)->GetBinContent(SelectionCosTheta.at(2)->GetMaximumBin()));
-//     SelectionCosTheta.at(2)->SetMinimum(0.0);
+    SelectionCosTheta.at(1)->SetMaximum(1.5*SelectionCosTheta.at(2)->GetBinContent(SelectionCosTheta.at(2)->GetMaximumBin()));
+    SelectionCosTheta.at(1)->SetMinimum(0.0);
 //     SelectionCosTheta.at(2)->SetFillColor(45);
 //     SelectionCosTheta.at(2)->DrawNormalized("E2");
     SelectionCosTheta.at(1)->SetFillColor(46);
@@ -869,8 +869,8 @@ void HistoProducerMC()
 
     TCanvas *Canvas13 = new TCanvas("OnBeam Minus OffBeam Phi-Angle", "OnBeam Minus OffBeam Phi-Angle", 1400, 1000);
     Canvas13->cd();
-//     SelectionPhi.at(2)->SetMaximum(1.9*SelectionPhi.at(2)->GetBinContent(SelectionPhi.at(2)->GetMaximumBin()));
-//     SelectionPhi.at(2)->SetMinimum(0.0);
+    SelectionPhi.at(1)->SetMaximum(1.9*SelectionPhi.at(2)->GetBinContent(SelectionPhi.at(2)->GetMaximumBin()));
+    SelectionPhi.at(1)->SetMinimum(0.0);
 //     SelectionPhi.at(2)->SetFillColor(45);
 //     SelectionPhi.at(2)->DrawNormalized("E2");
     SelectionPhi.at(1)->SetFillColor(46);
@@ -883,8 +883,8 @@ void HistoProducerMC()
     
     TCanvas *Canvas14 = new TCanvas("Energy", "Energy", 1400, 1000);
     Canvas14->cd();
-//     SelectionEnergy.at(2)->SetMaximum(1.2*SelectionEnergy.at(2)->GetBinContent(SelectionEnergy.at(2)->GetMaximumBin()));
-//     SelectionEnergy.at(2)->SetMinimum(0.0);
+    SelectionEnergy.at(1)->SetMaximum(1.2*SelectionEnergy.at(2)->GetBinContent(SelectionEnergy.at(2)->GetMaximumBin()));
+    SelectionEnergy.at(1)->SetMinimum(0.0);
 //     SelectionEnergy.at(2)->SetFillColor(45);
 //     SelectionEnergy.at(2)->DrawNormalized("E2");
     SelectionEnergy.at(1)->SetFillColor(46);
@@ -897,8 +897,8 @@ void HistoProducerMC()
     
     TCanvas *Canvas14a = new TCanvas("Momentum", "Momentum", 1400, 1000);
     Canvas14a->cd();
-//     SelectionMomentum.at(2)->SetMaximum(1.2*SelectionMomentum.back()->GetBinContent(SelectionMomentum.back()->GetMaximumBin()));
-//     SelectionMomentum.at(2)->SetMinimum(0.0);
+    SelectionMomentum.at(1)->SetMaximum(1.2*SelectionMomentum.back()->GetBinContent(SelectionMomentum.back()->GetMaximumBin()));
+    SelectionMomentum.at(1)->SetMinimum(0.0);
 //     SelectionMomentum.at(2)->SetFillColor(45);
 //     SelectionMomentum.at(2)->DrawNormalized("E2");
     SelectionMomentum.at(1)->SetFillColor(46);
@@ -911,8 +911,8 @@ void HistoProducerMC()
 
     TCanvas *Canvas15 = new TCanvas("OnBeam Minus OffBeam X Start & End Point ", "OnBeam Minus OffBeam X Start & End Point ", 1400, 1000);
     Canvas15->cd();
-//     SelXTrackStartEnd.at(2)->SetMaximum(1.5*SelXTrackStartEnd.at(2)->GetBinContent(SelXTrackStartEnd.at(2)->GetMaximumBin()));
-//     SelXTrackStartEnd.at(2)->SetMinimum(0.0);
+    SelXTrackStartEnd.at(1)->SetMaximum(1.5*SelXTrackStartEnd.at(2)->GetBinContent(SelXTrackStartEnd.at(2)->GetMaximumBin()));
+    SelXTrackStartEnd.at(1)->SetMinimum(0.0);
 //     SelXTrackStartEnd.at(2)->SetFillColor(45);
 //     SelXTrackStartEnd.at(2)->DrawNormalized("E2");
     SelXTrackStartEnd.at(1)->SetFillColor(46);
@@ -925,8 +925,8 @@ void HistoProducerMC()
 
     TCanvas *Canvas16 = new TCanvas("OnBeam Minus OffBeam Y Start & End Point ", "OnBeam Minus OffBeam Y Start & End Point ", 1400, 1000);
     Canvas16->cd();
-//     SelYTrackStartEnd.at(2)->SetMaximum(1.8*SelYTrackStartEnd.at(2)->GetBinContent(SelYTrackStartEnd.at(2)->GetMaximumBin()));
-//     SelYTrackStartEnd.at(2)->SetMinimum(0.0);
+    SelYTrackStartEnd.at(1)->SetMaximum(1.8*SelYTrackStartEnd.at(2)->GetBinContent(SelYTrackStartEnd.at(2)->GetMaximumBin()));
+    SelYTrackStartEnd.at(1)->SetMinimum(0.0);
 //     SelYTrackStartEnd.at(2)->SetFillColor(45);
 //     SelYTrackStartEnd.at(2)->DrawNormalized("E2");
     SelYTrackStartEnd.at(1)->SetFillColor(46);
@@ -939,8 +939,8 @@ void HistoProducerMC()
 
     TCanvas *Canvas17 = new TCanvas("OnBeam Minus OffBeam Z Start & End Point ", "OnBeam Minus OffBeam Z Start & End Point ", 1400, 1000);
     Canvas17->cd();
-//     SelZTrackStartEnd.at(2)->SetMaximum(1.5*SelZTrackStartEnd.at(2)->GetBinContent(SelZTrackStartEnd.at(2)->GetMaximumBin()));
-//     SelZTrackStartEnd.at(2)->SetMinimum(0.0);
+    SelZTrackStartEnd.at(1)->SetMaximum(1.5*SelZTrackStartEnd.at(2)->GetBinContent(SelZTrackStartEnd.at(2)->GetMaximumBin()));
+    SelZTrackStartEnd.at(1)->SetMinimum(0.0);
 //     SelZTrackStartEnd.at(2)->SetFillColor(45);
 //     SelZTrackStartEnd.at(2)->DrawNormalized("E2");
     SelZTrackStartEnd.at(1)->SetFillColor(46);
@@ -953,8 +953,8 @@ void HistoProducerMC()
 
     TCanvas *Canvas18 = new TCanvas("OnBeam Minus OffBeam X Vertex Postion", "OnBeam Minus OffBeam X Vertex Postion", 1400, 1000);
     Canvas18->cd();
-//     SelXVtxPosition.at(2)->SetMaximum(1.5*SelXVtxPosition.at(2)->GetBinContent(SelXVtxPosition.at(2)->GetMaximumBin()));
-//     SelXVtxPosition.at(2)->SetMinimum(0.0);
+    SelXVtxPosition.at(1)->SetMaximum(1.5*SelXVtxPosition.at(2)->GetBinContent(SelXVtxPosition.at(2)->GetMaximumBin()));
+    SelXVtxPosition.at(1)->SetMinimum(0.0);
 //     SelXVtxPosition.at(2)->SetFillColor(45);
 //     SelXVtxPosition.at(2)->DrawNormalized("E2");
     SelXVtxPosition.at(1)->SetFillColor(46);
@@ -967,8 +967,8 @@ void HistoProducerMC()
 
     TCanvas *Canvas19 = new TCanvas("OnBeam Minus OffBeam Y Vertex Postion", "OnBeam Minus OffBeam Y Vertex Postion", 1400, 1000);
     Canvas19->cd();
-//     SelYVtxPosition.at(2)->SetMaximum(1.8*SelYVtxPosition.at(2)->GetBinContent(SelYVtxPosition.at(2)->GetMaximumBin()));
-//     SelYVtxPosition.at(2)->SetMinimum(0.0);
+    SelYVtxPosition.at(1)->SetMaximum(1.8*SelYVtxPosition.at(2)->GetBinContent(SelYVtxPosition.at(2)->GetMaximumBin()));
+    SelYVtxPosition.at(1)->SetMinimum(0.0);
 //     SelYVtxPosition.at(2)->SetFillColor(45);
 //     SelYVtxPosition.at(2)->DrawNormalized("E2");
     SelYVtxPosition.at(1)->SetFillColor(46);
@@ -981,8 +981,8 @@ void HistoProducerMC()
 
     TCanvas *Canvas20 = new TCanvas("OnBeam Minus OffBeam Z Vertex Postion", "OnBeam Minus OffBeam Z Vertex Postion", 1400, 1000);
     Canvas20->cd();
-//     SelZVtxPosition.at(2)->SetMaximum(1.5*SelZVtxPosition.at(2)->GetBinContent(SelZVtxPosition.at(2)->GetMaximumBin()));
-//     SelZVtxPosition.at(2)->SetMinimum(0.0);
+    SelZVtxPosition.at(1)->SetMaximum(1.5*SelZVtxPosition.at(2)->GetBinContent(SelZVtxPosition.at(2)->GetMaximumBin()));
+    SelZVtxPosition.at(1)->SetMinimum(0.0);
 //     SelZVtxPosition.at(2)->SetFillColor(45);
 //     SelZVtxPosition.at(2)->DrawNormalized("E2");
     SelZVtxPosition.at(1)->SetFillColor(46);
