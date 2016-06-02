@@ -90,11 +90,31 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
 
     if(GeneratorName == "data_onbeam_bnb")
     {
-        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+//         treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+        std::ifstream FileNames("/pnfs/uboone/persistent/users/aschu/devel/v05_11_01/hadd/GOODBNB/filesana.list");
+
+        std::string FileName;
+
+        while(std::getline(FileNames)) 
+        {
+            FileNames >> FileName;
+            std::cout << FileName << std::endl;
+            treenc -> Add((FileName).c_str());
+        }
     }
     else if(GeneratorName == "data_offbeam_bnbext")
     {
-        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+//         treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+        std::ifstream FileNames("/pnfs/uboone/persistent/users/aschu/devel/v05_11_01/hadd/GOODEXTBNB/filesana.list");
+
+        std::string FileName;
+
+        while(std::getline(FileNames)) 
+        {
+            FileNames >> FileName;
+            std::cout << FileName << std::endl;
+            treenc -> Add((FileName).c_str());
+        }
     }
     else if(GeneratorName == "prodgenie_bnb_nu_cosmic_uboone")
     {
@@ -252,8 +272,20 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
     if(GeneratorName == "data_bnb" || GeneratorName == "data_onbeam_bnb")
     {
         std::cout << "Changed beam gate window for on-beam data" << std::endl;
-        beammin -= 0.36;
-        beammax -= 0.36;
+        beammin = 3.3;
+        beammax = 4.9;
+    }
+    if(GeneratorName == "data_offbeam_bnbext")
+    {
+        std::cout << "Changed beam gate window for off-beam data" << std::endl;
+        beammin = 3.65;
+        beammax = 5.25;
+    }
+    if(GeneratorName == "prodcosmics_corsika_inTime")
+    {
+        std::cout << "Changed beam gate window for Corsika sample" << std::endl;
+        beammin = 3.2;
+        beammax = 4.8;
     }
 
     // Loop over all product names

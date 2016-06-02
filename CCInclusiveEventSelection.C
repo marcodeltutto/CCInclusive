@@ -71,9 +71,9 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
 //     VertexProdNameVec.push_back("pandoraCosmic");
     VertexProdNameVec.push_back("pandoraNu");
 //     VertexProdNameVec.push_back("pmtrack");
-    
+
     std::string FileNumberStr;
-    
+
     if(NumberOfThreads > 1)
     {
         FileNumberStr = "_" + std::to_string(ThreadNumber);
@@ -100,7 +100,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
     SelectionNames.push_back("N_bg_numubar_sel_");
     SelectionNames.push_back("N_bg_nue_sel_");
     SelectionNames.push_back("N_bg_cosmicbnb_sel_");
-    
+
 
     // Initialize table file vector
     std::vector<ofstream*> EventSelectionCuts;
@@ -125,19 +125,39 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
         // Jump to next line
         *EventSelectionCuts.back() << "\n";
     } // Table file loop
-    
+
     std::cout << "Data Sample : " << GeneratorName << std::endl;
 
 
     TChain *treenc = new TChain("analysistree/anatree");
-    
+
     if(GeneratorName == "data_onbeam_bnb")
     {
-        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+//         treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+        std::ifstream FileNames("/pnfs/uboone/persistent/users/aschu/devel/v05_11_01/hadd/GOODBNB/filesana.list");
+
+        std::string FileName;
+
+        while(std::getline(FileNames)) 
+        {
+            FileNames >> FileName;
+            std::cout << FileName << std::endl;
+            treenc -> Add((FileName).c_str());
+        }
     }
     else if(GeneratorName == "data_offbeam_bnbext")
     {
-        treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+//         treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/offbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
+        std::ifstream FileNames("/pnfs/uboone/persistent/users/aschu/devel/v05_11_01/hadd/GOODEXTBNB/filesana.list");
+
+        std::string FileName;
+
+        while(std::getline(FileNames)) 
+        {
+            FileNames >> FileName;
+            std::cout << FileName << std::endl;
+            treenc -> Add((FileName).c_str());
+        }
     }
     else if(GeneratorName == "prodgenie_bnb_nu_cosmic_uboone")
     {
@@ -155,7 +175,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
     {
         treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree_Old.root").c_str() );
     }
-    
+
 //     treenc -> Add( ("/lheppc46/data/uBData/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/media/christoph/200EFBDA63AA160B/anatrees/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
 //     treenc -> Add( ("/pnfs/uboone/persistent/users/aschu/onbeam_data_bnbSWtrigger/"+GeneratorName+"_"+Version+"_anatree.root").c_str() );
@@ -233,7 +253,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
     Float_t	   XMCTrackEnd[maxtracks];
     Float_t	   YMCTrackEnd[maxtracks];
     Float_t	   ZMCTrackEnd[maxtracks];
-    
+
     Int_t          MCTrackID[maxtracks];
 
 
@@ -250,8 +270,20 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
     if(GeneratorName == "data_bnb" || GeneratorName == "data_onbeam_bnb")
     {
         std::cout << "Changed beam gate window for on-beam data" << std::endl;
-        beammin -= 0.36;
-        beammax -= 0.36;
+        beammin = 3.3;
+        beammax = 4.9;
+    }
+    if(GeneratorName == "data_offbeam_bnbext")
+    {
+        std::cout << "Changed beam gate window for off-beam data" << std::endl;
+        beammin = 3.65;
+        beammax = 5.25;
+    }
+    if(GeneratorName == "prodcosmics_corsika_inTime")
+    {
+        std::cout << "Changed beam gate window for Corsika sample" << std::endl;
+        beammin = 3.2;
+        beammax = 4.8;
     }
 
     // Loop over all product names
@@ -307,7 +339,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             treenc -> SetBranchAddress(("trkorigin_"+TrackingName).c_str(),trkorigin);
             treenc -> SetBranchAddress(("trkidtruth_"+TrackingName).c_str(),TrackIDTruth);
             treenc -> SetBranchAddress(("trkpidbestplane_"+TrackingName).c_str(), trkbestplane);
-            
+
             // Program hack to apply for non uniform naming of nuvtx
             if(VertexingName != "nuvtx")
             {
@@ -553,7 +585,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             unsigned int MCEventsTracksInFV = 0;
             unsigned int MCEventsNearVtx = 0;
             unsigned int MCEventsTrackLong = 0;
-            
+
             unsigned int NumberOfSignalTruth = 0;
             unsigned int NumberOfSignalTruthSel = 0;
             unsigned int NumberOfBgrNCTruthSel = 0;
@@ -569,14 +601,14 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             double TotalPOT = 0.0;
 
             int Size = treenc -> GetEntries();
-            
+
 //             if(Size > 20000) Size = 20000;
 //             Size = 200000;
-            
+
             // Set start and end event number for multiple threads
-            unsigned long int StartEvent = Size*(ThreadNumber - 1)/NumberOfThreads; 
+            unsigned long int StartEvent = Size*(ThreadNumber - 1)/NumberOfThreads;
             unsigned long int EndEvent = Size*ThreadNumber/NumberOfThreads;
-            
+
             std::cout << "number of events used is: " << EndEvent-StartEvent << " of " << Size << std::endl;
             //Event Loop
             for(int i = StartEvent; i < EndEvent; i++)
@@ -720,7 +752,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                             EventsTrackNearVertex++;
                                             if(NuMuCCTrackCandidate > -1)
                                                 MCEventsTrackNearVertex++;
-                                            
+
                                             TrackDistanceFlag = false;
                                         }
 
@@ -764,7 +796,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                     EventsFlashMatched++;
                                     if(NuMuCCTrackCandidate > -1)
                                         MCEventsFlashMatched++;
-                                    
+
                                     FlashMatchFlag = false;
                                     // Set track contained flag true, so the other cuts can be applied on this vertex
                                     TrackContainedFlag = true;
@@ -796,11 +828,11 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                         EventsTrackLong++;
                                         if(NuMuCCTrackCandidate > -1)
                                             MCEventsTrackLong++;
-                                        
+
                                         // If the event is a CC interaction and the selected track is of neutrino origin
                                         if(ccnc_truth[0] == 0 && trkorigin[TrackCandidate][trkbestplane[TrackCandidate]] == 1)
                                         {
-                                            // If there is a track candidate 
+                                            // If there is a track candidate
                                             if(MCTrackCandidate > -1 && PDG_truth[MCTrackCandidate] == 13 && inFV(nuvtxx_truth[0],nuvtxy_truth[0],nuvtxz_truth[0]))
                                             {
                                                 NumberOfSignalTruthSel++;
@@ -859,7 +891,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
                                             hTrackStartDist->Fill(TrkEndMCStartDist);
                                             hTrackEndDist->Fill(TrkStartMCEndDist);
                                         }
-                                        
+
                                         // If track end or start are close to montecarlo vertex
 //                                         if(   (TrkStartMCStartDist < TrackToMCDist && TrkEndMCEndDist < TrackToMCDist)
 //                                                 ||(TrkStartMCEndDist < TrackToMCDist && TrkEndMCStartDist < TrackToMCDist)
@@ -996,7 +1028,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             delete hAllXTrackStartEnd;
             delete hAllYTrackStartEnd;
             delete hAllZTrackStartEnd;
-            
+
             delete BrMCTrackCand;
             delete BrTrackCand;
             delete BrVtxCand;
