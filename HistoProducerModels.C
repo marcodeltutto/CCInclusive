@@ -1104,7 +1104,7 @@ void HistoProducerModels()
     SelectionTrackRange.at(1)->SetMinimum(0.0);
     SelectionTrackRange.at(1)->SetFillColor(46);
     SelectionTrackRange.at(1)->DrawNormalized("E2");
-    StackBgrTrackRange->Draw("SAME");
+//     StackBgrTrackRange->Draw("SAME");
     for(unsigned int iter = 2; iter < 4; iter++)
     {
         SelectionTrackRange.at(iter)->SetLineWidth(2);
@@ -1123,7 +1123,7 @@ void HistoProducerModels()
     SelectionTheta.at(1)->SetMinimum(0.0);
     SelectionTheta.at(1)->SetFillColor(46);
     SelectionTheta.at(1)->DrawNormalized("E2");
-    StackBgrTheta->Draw("SAME");
+//     StackBgrTheta->Draw("SAME");
     for(unsigned int iter = 2; iter < 4; iter++)
     {
         SelectionTheta.at(iter)->SetLineWidth(2);
@@ -1160,7 +1160,7 @@ void HistoProducerModels()
     SelectionTheta.at(1)->SetMinimum(0.0);
     SelectionTheta.at(1)->SetFillColor(46);
     SelectionTheta.at(1)->DrawNormalized("E2");
-    StackBgrTheta->Draw("SAME");
+//     StackBgrTheta->Draw("SAME");
     for(unsigned int iter = 2; iter < 4; iter++)
     {
         SelectionTheta.at(iter)->SetLineWidth(2);
@@ -1179,7 +1179,7 @@ void HistoProducerModels()
     SelectionCosTheta.at(1)->SetMinimum(0.0);
     SelectionCosTheta.at(1)->SetFillColor(46);
     SelectionCosTheta.at(1)->DrawNormalized("E2");
-    StackBgrCosTheta->Draw("SAME");
+//     StackBgrCosTheta->Draw("SAME");
     for(unsigned int iter = 2; iter < 4; iter++)
     {
         SelectionCosTheta.at(iter)->SetLineWidth(2);
@@ -1198,7 +1198,7 @@ void HistoProducerModels()
     SelectionPhi.at(1)->SetMinimum(0.0);
     SelectionPhi.at(1)->SetFillColor(46);
     SelectionPhi.at(1)->DrawNormalized("E2");
-    StackBgrPhi->Draw("SAME");
+//     StackBgrPhi->Draw("SAME");
     for(unsigned int iter = 2; iter < 4; iter++)
     {
         SelectionPhi.at(iter)->SetLineWidth(2);
@@ -1217,7 +1217,7 @@ void HistoProducerModels()
     SelectionEnergy.at(1)->SetMinimum(0.0);
     SelectionEnergy.at(1)->SetFillColor(46);
     SelectionEnergy.at(1)->DrawNormalized("E2");
-    StackBgrEnergy->Draw("SAME");
+//     StackBgrEnergy->Draw("SAME");
     for(unsigned int iter = 2; iter < 4; iter++)
     {
         SelectionEnergy.at(iter)->SetLineWidth(2);
@@ -1236,7 +1236,7 @@ void HistoProducerModels()
     SelectionMomentum.at(1)->SetMinimum(0.0);
     SelectionMomentum.at(1)->SetFillColor(46);
     SelectionMomentum.at(1)->DrawNormalized("E2");
-    StackBgrMomentum->Draw("SAME");
+//     StackBgrMomentum->Draw("SAME");
     for(unsigned int iter = 2; iter < 4; iter++)
     {
         SelectionMomentum.at(iter)->SetLineWidth(2);
@@ -1255,7 +1255,7 @@ void HistoProducerModels()
     SelXTrackStartEnd.at(1)->SetMinimum(0.0);
     SelXTrackStartEnd.at(1)->SetFillColor(46);
     SelXTrackStartEnd.at(1)->DrawNormalized("E2");
-    StackBgrXTrackStartEnd->Draw("SAME");
+//     StackBgrXTrackStartEnd->Draw("SAME");
     SelXTrackStartEnd.at(0)->SetLineWidth(2);
     SelXTrackStartEnd.at(0)->SetLineColor(1);
     SelXTrackStartEnd.at(0)->DrawNormalized("SAME");
@@ -1268,7 +1268,7 @@ void HistoProducerModels()
     SelYTrackStartEnd.at(1)->SetMinimum(0.0);
     SelYTrackStartEnd.at(1)->SetFillColor(46);
     SelYTrackStartEnd.at(1)->DrawNormalized("E2");
-    StackBgrYTrackStartEnd->Draw("SAME");
+//     StackBgrYTrackStartEnd->Draw("SAME");
     SelYTrackStartEnd.at(0)->SetLineWidth(2);
     SelYTrackStartEnd.at(0)->SetLineColor(1);
     SelYTrackStartEnd.at(0)->DrawNormalized("SAME");
@@ -1281,7 +1281,7 @@ void HistoProducerModels()
     SelZTrackStartEnd.at(1)->SetMinimum(0.0);
     SelZTrackStartEnd.at(1)->SetFillColor(46);
     SelZTrackStartEnd.at(1)->DrawNormalized("E2");
-    StackBgrZTrackStartEnd->Draw("SAME");
+//     StackBgrZTrackStartEnd->Draw("SAME");
     SelZTrackStartEnd.at(0)->SetLineWidth(2);
     SelZTrackStartEnd.at(0)->SetLineColor(1);
     SelZTrackStartEnd.at(0)->DrawNormalized("SAME");
@@ -1294,7 +1294,7 @@ void HistoProducerModels()
     SelXVtxPosition.at(1)->SetMinimum(0.0);
     SelXVtxPosition.at(1)->SetFillColor(46);
     SelXVtxPosition.at(1)->DrawNormalized("E2");
-    StackBgrXVtxPosition->Draw("SAME");
+//     StackBgrXVtxPosition->Draw("SAME");
     SelXVtxPosition.at(0)->SetLineWidth(2);
     SelXVtxPosition.at(0)->SetLineColor(1);
     SelXVtxPosition.at(0)->DrawNormalized("SAME");
@@ -1307,7 +1307,7 @@ void HistoProducerModels()
     SelYVtxPosition.at(1)->SetMinimum(0.0);
     SelYVtxPosition.at(1)->SetFillColor(42);
     SelYVtxPosition.at(1)->DrawNormalized("E2");
-    StackBgrYVtxPosition->Draw("SAME");
+//     StackBgrYVtxPosition->Draw("SAME");
     SelYVtxPosition.at(0)->SetLineWidth(2);
     SelYVtxPosition.at(0)->SetLineColor(1);
     SelYVtxPosition.at(0)->DrawNormalized("SAME");
@@ -1320,7 +1320,7 @@ void HistoProducerModels()
     SelZVtxPosition.at(1)->SetMinimum(0.0);
     SelZVtxPosition.at(1)->SetFillColor(46);
     SelZVtxPosition.at(1)->DrawNormalized("E2");
-    StackBgrZVtxPosition->Draw("SAME");
+//     StackBgrZVtxPosition->Draw("SAME");
     SelZVtxPosition.at(0)->SetLineWidth(2);
     SelZVtxPosition.at(0)->SetLineColor(1);
     SelZVtxPosition.at(0)->DrawNormalized("SAME");

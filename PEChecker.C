@@ -312,7 +312,7 @@ void PEChecker()
         AddFirstTwoHistograms(SelectionPhi.at(cut_no),-1.);
     }
     
-    for(unsigned int cut_index = 0; cut_index < PECutValueVec.size(); cut_index++)
+    for(unsigned int cut_index = 1; cut_index < PECutValueVec.size(); cut_index++)
     {
         SelectionTrackRange.at(cut_index).at(1)->SetLineColor(cut_index+1);
         SelectionTheta.at(cut_index).at(1)->SetLineColor(cut_index+1);
