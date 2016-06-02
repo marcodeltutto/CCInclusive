@@ -8,6 +8,7 @@
 
 #include <TChain.h>
 #include <TCanvas.h>
+#include <TEfficiency.h>
 #include <TFile.h>
 #include <TH1.h>
 #include <TH2.h>
@@ -97,19 +98,19 @@ void PEChecker()
     std::vector<unsigned int> ColorMap = {28,42,30,38};
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1.root").c_str());
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1_Old.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2_Old.root").c_str());
 //     ChainVec.back() -> Add(("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1.root").c_str());
 //     ChainVec.back() -> Add(("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2.root").c_str());
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1.root").c_str());
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1_Old.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/old/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2_Old.root").c_str());
 //     ChainVec.back() -> Add(("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1.root").c_str());
 //     ChainVec.back() -> Add(("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2.root").c_str());
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str());
+    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00_Old.root").c_str());
 //     ChainVec.back() -> Add(("/media/christoph/200EFBDA63AA160B/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00.root").c_str());
 
     for(const auto& CutValue : PECutValueVec)
@@ -300,7 +301,81 @@ void PEChecker()
         }
         ChainVec.at(file_no)->ResetBranchAddresses();
     }
+    
 
+//     std::cout << DataLabel.size() << " " << SelectionTrackRange.size() << " " << PECutValueVec.size() << std::endl;
+
+    for(unsigned int cut_no = 0; cut_no < SelectionTrackRange.size(); cut_no++)
+    {
+        AddFirstTwoHistograms(SelectionTrackRange.at(cut_no),-1.);
+        AddFirstTwoHistograms(SelectionTheta.at(cut_no),-1.);
+        AddFirstTwoHistograms(SelectionPhi.at(cut_no),-1.);
+    }
+    
+    for(unsigned int cut_index = 0; cut_index < PECutValueVec.size(); cut_index++)
+    {
+        SelectionTrackRange.at(cut_index).at(1)->SetLineColor(cut_index+1);
+        SelectionTheta.at(cut_index).at(1)->SetLineColor(cut_index+1);
+        SelectionPhi.at(cut_index).at(1)->SetLineColor(cut_index+1);
+    }
+
+    for(unsigned int hist_no = 0; hist_no < DataLabel.size(); hist_no++)
+    {
+        LegendData->AddEntry( SelectionTrackRange.at(hist_no).at(1), (DataLabel.at(hist_no)).c_str(),"l" );
+    }
+    
+    std::vector<TEfficiency*> EffTrackRange;
+    std::vector<TEfficiency*> EffTrackTheta;
+    std::vector<TEfficiency*> EffTrackPhi;
+    
+    
+    for(unsigned int cut_index = 1; cut_index < PECutValueVec.size(); cut_index++)
+    {
+        EffTrackRange.push_back(new TEfficiency(*SelectionTrackRange.at(cut_index).at(1),*SelectionTrackRange.at(0).at(1)));
+        EffTrackTheta.push_back(new TEfficiency(*SelectionTheta.at(cut_index).at(1),*SelectionTheta.at(0).at(1)));
+        EffTrackPhi.push_back(new TEfficiency(*SelectionPhi.at(cut_index).at(1),*SelectionPhi.at(0).at(1)));
+    }
+
+
+    TCanvas *Canvas10 = new TCanvas("Track Range of Selected Track Ratio", "Track Range of Selected Track Ratio", 1400, 1000);
+    Canvas10->cd();
+//     EffTrackRange.at(0)->GetYaxis()->SetTitle("Ratio of PE Cuts [ ]");
+    EffTrackRange.back()->Draw();
+//     EffTrackRange.at(0)->SetLineColor(2);
+    for(unsigned int cut_index = 0; cut_index < EffTrackRange.size()-1; cut_index++)
+    {
+        EffTrackRange.at(cut_index)->SetLineColor(cut_index+1);
+        EffTrackRange.at(cut_index)->Draw("SAME");
+    }
+    Canvas10->SaveAs("MCRangeByPERatio.pdf");
+    
+    TCanvas *Canvas11 = new TCanvas("Track Theta of Selected Track Ratio", "Track Theta of Selected Track Ratio", 1400, 1000);
+    Canvas11->cd();
+//     EffTrackTheta.at(0)->SetMinimum(0.5);
+//     EffTrackTheta.at(0)->GetYaxis()->SetTitle("Ratio of PE Cuts [ ]");
+    EffTrackTheta.back()->Draw();
+//     EffTrackTheta.at(0)->SetLineColor(2);
+    for(unsigned int cut_index = 0; cut_index < EffTrackTheta.size()-1; cut_index++)
+    {
+//         EffTrackTheta.at(cut_index)->SetLineColor(cut_index+1);
+        EffTrackTheta.at(cut_index)->Draw("SAME");
+    }
+    Canvas11->SaveAs("MCThetaByPERatio.pdf");
+    
+    TCanvas *Canvas12 = new TCanvas("Track Phi of Selected Track Ratio", "Track Phi of Selected Track Ratio", 1400, 1000);
+    Canvas12->cd();
+//     EffTrackPhi.at(0)->SetMinimum(0.8);
+//     EffTrackPhi.at(0)->GetYaxis()->SetTitle("Ratio of PE Cuts [ ]");
+    EffTrackPhi.back()->Draw();
+//     EffTrackPhi.at(0)->SetLineColor(2);
+    for(unsigned int cut_index = 0; cut_index < EffTrackPhi.size()-1; cut_index++)
+    {
+//         EffTrackPhi.at(cut_index)->SetLineColor(cut_index+1);
+        EffTrackPhi.at(cut_index)->Draw("SAME");
+    }
+    Canvas12->SaveAs("MCPhiByPERatio.pdf");
+    
+    
     for(unsigned int cut_index = 0; cut_index < PECutValueVec.size(); cut_index++)
     {
 
@@ -321,21 +396,8 @@ void PEChecker()
             SelectionPhi.at(cut_index).at(file_no)->Scale(ScalingFactors.at(file_no));
         }
     }
-
-//     std::cout << DataLabel.size() << " " << SelectionTrackRange.size() << " " << PECutValueVec.size() << std::endl;
-
-    for(unsigned int cut_no = 0; cut_no < SelectionTrackRange.size(); cut_no++)
-    {
-        AddFirstTwoHistograms(SelectionTrackRange.at(cut_no),-1.);
-        AddFirstTwoHistograms(SelectionTheta.at(cut_no),-1.);
-        AddFirstTwoHistograms(SelectionPhi.at(cut_no),-1.);
-    }
-
-    for(unsigned int hist_no = 0; hist_no < DataLabel.size(); hist_no++)
-    {
-        LegendData->AddEntry( SelectionTrackRange.at(hist_no).at(1), (DataLabel.at(hist_no)).c_str(),"l" );
-    }
-
+    
+    
     TCanvas *Canvas1 = new TCanvas("Track Range of Selected Track", "Track Range of Selected Track", 1400, 1000);
     Canvas1->cd();
     SelectionTrackRange.at(0).at(1)->SetMinimum(0.0);
@@ -374,53 +436,6 @@ void PEChecker()
     }
     LegendData->Draw();
     Canvas3->SaveAs("MCPhiByPE.pdf");
-
-
-    for(unsigned int cut_index = PECutValueVec.size()-1; cut_index > 0; cut_index--)
-    {
-        SelectionTrackRange.at(cut_index).at(1)->Divide(SelectionTrackRange.at(0).at(1));
-        SelectionTheta.at(cut_index).at(1)->Divide(SelectionTheta.at(0).at(1));
-        SelectionPhi.at(cut_index).at(1)->Divide(SelectionPhi.at(0).at(1));
-    }
-
-
-    TCanvas *Canvas10 = new TCanvas("Track Range of Selected Track Ratio", "Track Range of Selected Track Ratio", 1400, 1000);
-    Canvas10->cd();
-    SelectionTrackRange.at(1).at(1)->GetYaxis()->SetTitle("Ratio of PE Cuts [ ]");
-    SelectionTrackRange.at(1).at(1)->Draw();
-    SelectionTrackRange.at(1).at(1)->SetLineColor(2);
-    for(unsigned int cut_index = 2; cut_index < PECutValueVec.size(); cut_index++)
-    {
-        SelectionTrackRange.at(cut_index).at(1)->SetLineColor(cut_index+1);
-        SelectionTrackRange.at(cut_index).at(1)->Draw("SAME");
-    }
-    Canvas10->SaveAs("MCRangeByPERatio.pdf");
-    
-    TCanvas *Canvas11 = new TCanvas("Track Theta of Selected Track Ratio", "Track Theta of Selected Track Ratio", 1400, 1000);
-    Canvas11->cd();
-    SelectionTheta.at(1).at(1)->SetMinimum(0.5);
-    SelectionTheta.at(1).at(1)->GetYaxis()->SetTitle("Ratio of PE Cuts [ ]");
-    SelectionTheta.at(1).at(1)->Draw();
-    SelectionTheta.at(1).at(1)->SetLineColor(2);
-    for(unsigned int cut_index = 2; cut_index < PECutValueVec.size(); cut_index++)
-    {
-        SelectionTheta.at(cut_index).at(1)->SetLineColor(cut_index+1);
-        SelectionTheta.at(cut_index).at(1)->Draw("SAME");
-    }
-    Canvas11->SaveAs("MCThetaByPERatio.pdf");
-    
-    TCanvas *Canvas12 = new TCanvas("Track Phi of Selected Track Ratio", "Track Phi of Selected Track Ratio", 1400, 1000);
-    Canvas12->cd();
-    SelectionPhi.at(1).at(1)->SetMinimum(0.8);
-    SelectionPhi.at(1).at(1)->GetYaxis()->SetTitle("Ratio of PE Cuts [ ]");
-    SelectionPhi.at(1).at(1)->Draw();
-    SelectionPhi.at(1).at(1)->SetLineColor(2);
-    for(unsigned int cut_index = 2; cut_index < PECutValueVec.size(); cut_index++)
-    {
-        SelectionPhi.at(cut_index).at(1)->SetLineColor(cut_index+1);
-        SelectionPhi.at(cut_index).at(1)->Draw("SAME");
-    }
-    Canvas12->SaveAs("MCPhiByPERatio.pdf");
 
 //     LegendMC->AddEntry( SelectionTrackRange.at(0), (MCLabel.at(0)).c_str(),"lep" );
 //     LegendMC->AddEntry( SelectionTrackRange.at(1), (MCLabel.at(1)).c_str(),"f" );

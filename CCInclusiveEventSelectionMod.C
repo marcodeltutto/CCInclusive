@@ -684,7 +684,8 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                 }
 
                 // If there is a POT entry or we are not looking at beam data
-                if(potbnb > 0.0 || (GeneratorName != "data_bnb" && GeneratorName !="data_onbeam_bnb"))
+//                 if(potbnb > 0.0 || (GeneratorName != "data_bnb" && GeneratorName !="data_onbeam_bnb"))
+                if(true)
                 {
                     // If the flash tag is ture and we have POT
                     if(flashtag)
