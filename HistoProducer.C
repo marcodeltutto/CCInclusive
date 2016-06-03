@@ -817,7 +817,7 @@ void HistoProducer()
             }
 
         }
-        std::cout << Signal << " " << nubar << " " << nue << " " << NCnu << " " << Cosmic << " " << UnknownOrigin << std::endl;
+        std::cout << Signal << " " << nubar << " " << nue << " " << outFV << " " << NCnu << " " << Cosmic << " " << UnknownOrigin << std::endl;
         std::cout << nuQE << " " << nuRES << " " << nuDIS << " " << nuCOH << std::endl;
 
         std::cout << "Number of negative phi in " << GenLabel.at(file_no) << " : " << negPhi << std::endl;

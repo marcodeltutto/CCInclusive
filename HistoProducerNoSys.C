@@ -158,7 +158,7 @@ void HistoProducerNoSys()
 
     BgrLabel.push_back("Bgr #bar{#nu}_{#mu} Events MC BNB+Cosmic");
     BgrLabel.push_back("Bgr #nu_{e} Events MC BNB+Cosmic");
-    BgrLabel.push_back("Bgr #nu_{#mu} CC Out of FV, MC BNB+Cosmic");
+    BgrLabel.push_back("Bgr #nu_{#mu} CC Out of FV MC BNB+Cosmic");
     BgrLabel.push_back("Bgr NC Events MC BNB+Cosmic");
     BgrLabel.push_back("Bgr Cosmic Events MC BNB+Cosmic");
 
@@ -815,7 +815,7 @@ void HistoProducerNoSys()
             }
 
         }
-        std::cout << Signal << " " << nubar << " " << nue << " " << NCnu << " " << Cosmic << " " << UnknownOrigin << std::endl;
+        std::cout << Signal << " " << nubar << " " << nue << " " << outFV << " " << NCnu << " " << Cosmic << " " << UnknownOrigin << std::endl;
         std::cout << nuQE << " " << nuRES << " " << nuDIS << " " << nuCOH << std::endl;
 
         std::cout << "Number of negative phi in " << GenLabel.at(file_no) << " : " << negPhi << std::endl;
@@ -1062,7 +1062,7 @@ void HistoProducerNoSys()
 
     LegendMC->AddEntry( SelectionTrackRange.at(0), (MCLabel.at(0)).c_str(),"lep" );
     LegendMC->AddEntry( SelectionTrackRange.at(1), (MCLabel.at(1)).c_str(),"f" );
-    for(unsigned int bgrhist_no = 0; bgrhist_no < BgrLabel.size(); bgrhist_no--)
+    for(unsigned int bgrhist_no = BgrLabel.size()-1; bgrhist_no > -1 ; bgrhist_no--)
     {
         LegendMC->AddEntry( BgrTrackRange.at(bgrhist_no), (BgrLabel.at(bgrhist_no)).c_str(),"f" );
     }
