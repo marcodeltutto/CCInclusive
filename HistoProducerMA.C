@@ -72,7 +72,7 @@ void HistoProducerMA()
     std::vector<float> ScalingFactors;
     ScalingFactors.push_back(1);
 //     ScalingFactors.push_back(1/179041.);
-    ScalingFactors.push_back(1.08426);
+    ScalingFactors.push_back(1.28711);
     ScalingFactors.push_back(1);
     ScalingFactors.push_back(1);
 
@@ -371,7 +371,7 @@ void HistoProducerMA()
         BgrYTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
         BgrYTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        BgrZTrackStartEnd.push_back(new TH1F(("ZTrack"+Label).c_str(),"Z Track Start & End Positions",NumberOfBins,0,1000));
+        BgrZTrackStartEnd.push_back(new TH1F(("ZTrack"+Label).c_str(),"Z Track Start & End Positions",NumberOfBins,0,1036.8));
         BgrZTrackStartEnd.back()->SetStats(0);
         BgrZTrackStartEnd.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrZTrackStartEnd.back()->GetXaxis()->SetTitle("z [cm]");
@@ -392,7 +392,7 @@ void HistoProducerMA()
         BgrYVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
         BgrYVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        BgrZVtxPosition.push_back(new TH1F(("ZVertex"+Label).c_str(),"Z Vertex Position",NumberOfBins,0,1000));
+        BgrZVtxPosition.push_back(new TH1F(("ZVertex"+Label).c_str(),"Z Vertex Position",NumberOfBins,0,1036.8));
         BgrZVtxPosition.back()->SetStats(0);
         BgrZVtxPosition.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrZVtxPosition.back()->GetXaxis()->SetTitle("z [cm]");
@@ -1093,7 +1093,7 @@ void HistoProducerMA()
     LegendMC->AddEntry( SelectionTrackRange.at(2), (MCLabel.at(2)).c_str(),"lep" );
 //     LegendMC->AddEntry( SelectionTrackRange.at(3), (MCLabel.at(3)).c_str(),"lep" );
 //     LegendMC->AddEntry( SelectionTrackRange.at(4), (MCLabel.at(4)).c_str(),"l" );
-    for(unsigned int bgrhist_no = BgrLabel.size()-1; bgrhist_no > -1; bgrhist_no--)
+    for(int bgrhist_no = BgrLabel.size()-1; bgrhist_no > -1; bgrhist_no--)
     {
 //         LegendMC->AddEntry( BgrTrackRange.at(bgrhist_no), (BgrLabel.at(bgrhist_no)).c_str(),"f" );
     }
@@ -1108,7 +1108,7 @@ void HistoProducerMA()
     for(unsigned int iter = 2; iter < 3; iter++)
     {
         SelectionTrackRange.at(iter)->SetLineWidth(2);
-        SelectionTrackRange.at(iter)->SetLineColor(iter);
+        SelectionTrackRange.at(iter)->SetLineColor(iter+2);
         SelectionTrackRange.at(iter)->DrawNormalized("SAME");
     }
     SelectionTrackRange.at(0)->SetLineWidth(2);
@@ -1127,7 +1127,7 @@ void HistoProducerMA()
     for(unsigned int iter = 2; iter < 3; iter++)
     {
         SelectionTheta.at(iter)->SetLineWidth(2);
-        SelectionTheta.at(iter)->SetLineColor(iter);
+        SelectionTheta.at(iter)->SetLineColor(iter+2);
         SelectionTheta.at(iter)->DrawNormalized("SAME");
     }
     SelectionTheta.at(0)->SetLineWidth(2);
@@ -1164,7 +1164,7 @@ void HistoProducerMA()
     for(unsigned int iter = 2; iter < 3; iter++)
     {
         SelectionTheta.at(iter)->SetLineWidth(2);
-        SelectionTheta.at(iter)->SetLineColor(iter);
+        SelectionTheta.at(iter)->SetLineColor(iter+2);
         SelectionTheta.at(iter)->DrawNormalized("SAME");
     }
     SelectionTheta.at(0)->SetLineWidth(2);
@@ -1183,7 +1183,7 @@ void HistoProducerMA()
     for(unsigned int iter = 2; iter < 3; iter++)
     {
         SelectionCosTheta.at(iter)->SetLineWidth(2);
-        SelectionCosTheta.at(iter)->SetLineColor(iter);
+        SelectionCosTheta.at(iter)->SetLineColor(iter+2);
         SelectionCosTheta.at(iter)->DrawNormalized("SAME");
     }
     SelectionCosTheta.at(0)->SetLineWidth(2);
@@ -1202,7 +1202,7 @@ void HistoProducerMA()
     for(unsigned int iter = 2; iter < 3; iter++)
     {
         SelectionPhi.at(iter)->SetLineWidth(2);
-        SelectionPhi.at(iter)->SetLineColor(iter);
+        SelectionPhi.at(iter)->SetLineColor(iter+2);
         SelectionPhi.at(iter)->DrawNormalized("SAME");
     }
     SelectionPhi.at(0)->SetLineWidth(2);
@@ -1221,7 +1221,7 @@ void HistoProducerMA()
     for(unsigned int iter = 2; iter < 3; iter++)
     {
         SelectionEnergy.at(iter)->SetLineWidth(2);
-        SelectionEnergy.at(iter)->SetLineColor(iter);
+        SelectionEnergy.at(iter)->SetLineColor(iter+2);
         SelectionEnergy.at(iter)->DrawNormalized("SAME");
     }
     SelectionEnergy.at(0)->SetLineWidth(2);
@@ -1240,7 +1240,7 @@ void HistoProducerMA()
     for(unsigned int iter = 2; iter < 3; iter++)
     {
         SelectionMomentum.at(iter)->SetLineWidth(2);
-        SelectionMomentum.at(iter)->SetLineColor(iter);
+        SelectionMomentum.at(iter)->SetLineColor(iter+2);
         SelectionMomentum.at(iter)->DrawNormalized("SAME");
     }
     SelectionMomentum.at(0)->SetLineWidth(2);

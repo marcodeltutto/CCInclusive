@@ -72,7 +72,7 @@ void HistoProducerModelsAll()
     std::vector<float> ScalingFactors;
     ScalingFactors.push_back(1);
 //     ScalingFactors.push_back(1/179041.);
-    ScalingFactors.push_back(1.08426);
+    ScalingFactors.push_back(1.28711);
     ScalingFactors.push_back(1);
     ScalingFactors.push_back(1);
 
@@ -371,7 +371,7 @@ void HistoProducerModelsAll()
         BgrYTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
         BgrYTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        BgrZTrackStartEnd.push_back(new TH1F(("ZTrack"+Label).c_str(),"Z Track Start & End Positions",NumberOfBins,0,1000));
+        BgrZTrackStartEnd.push_back(new TH1F(("ZTrack"+Label).c_str(),"Z Track Start & End Positions",NumberOfBins,0,1036.8));
         BgrZTrackStartEnd.back()->SetStats(0);
         BgrZTrackStartEnd.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrZTrackStartEnd.back()->GetXaxis()->SetTitle("z [cm]");
@@ -392,7 +392,7 @@ void HistoProducerModelsAll()
         BgrYVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
         BgrYVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        BgrZVtxPosition.push_back(new TH1F(("ZVertex"+Label).c_str(),"Z Vertex Position",NumberOfBins,0,1000));
+        BgrZVtxPosition.push_back(new TH1F(("ZVertex"+Label).c_str(),"Z Vertex Position",NumberOfBins,0,1036.8));
         BgrZVtxPosition.back()->SetStats(0);
         BgrZVtxPosition.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrZVtxPosition.back()->GetXaxis()->SetTitle("z [cm]");
@@ -1093,7 +1093,7 @@ void HistoProducerModelsAll()
     LegendMC->AddEntry( SelectionTrackRange.at(2), (MCLabel.at(2)).c_str(),"l" );
     LegendMC->AddEntry( SelectionTrackRange.at(3), (MCLabel.at(3)).c_str(),"l" );
     LegendMC->AddEntry( SelectionTrackRange.at(4), (MCLabel.at(4)).c_str(),"l" );
-    for(unsigned int bgrhist_no = BgrLabel.size()-1; bgrhist_no > -1; bgrhist_no--)
+    for(int bgrhist_no = BgrLabel.size()-1; bgrhist_no > -1; bgrhist_no--)
     {
         LegendMC->AddEntry( BgrTrackRange.at(bgrhist_no), (BgrLabel.at(bgrhist_no)).c_str(),"f" );
     }

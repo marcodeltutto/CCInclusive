@@ -39,7 +39,7 @@ void PEChecker()
     std::vector<float> ScalingFactors;
     ScalingFactors.push_back(1/383519.);
     ScalingFactors.push_back(1/400675.);
-    ScalingFactors.push_back(1/550000.);
+    ScalingFactors.push_back(1/192000.);
 
 
 
@@ -123,18 +123,18 @@ void PEChecker()
             SelectionTrackRange.back().push_back(new TH1F(("Track Range"+Label+std::to_string(CutValue)).c_str(),"Track Range of Selected Track",20,0,1000));
             SelectionTrackRange.back().back()->SetStats(0);
             SelectionTrackRange.back().back()->GetXaxis()->SetTitle("Track Range [cm]");
-            SelectionTrackRange.back().back()->GetYaxis()->SetTitle("Proportional to Number of Events [ ]");
+            SelectionTrackRange.back().back()->GetYaxis()->SetTitle("Ratio of PE Cuts [ ]");
 
             SelectionTheta.back().push_back(new TH1F(("#theta-Angle"+Label+std::to_string(CutValue)).c_str(),"#theta-Angle of Selected Track",20,0,3.142));
             SelectionTheta.back().back()->SetStats(0);
             SelectionTheta.back().back()->GetXaxis()->SetTitle("#theta [rad]");
-            SelectionTheta.back().back()->GetYaxis()->SetTitle("Proportional to Number of Events [ ]");
+            SelectionTheta.back().back()->GetYaxis()->SetTitle("Ratio of PE Cuts [ ]");
             SelectionTheta.back().back()->GetYaxis()->SetTitleOffset(1.3);
 
             SelectionPhi.back().push_back(new TH1F(("#phi-Angle"+Label+std::to_string(CutValue)).c_str(),"#phi-Angle of Selected Track",20,-3.142,3.142));
             SelectionPhi.back().back()->SetStats(0);
             SelectionPhi.back().back()->GetXaxis()->SetTitle("#phi angle [rad]");
-            SelectionPhi.back().back()->GetYaxis()->SetTitle("Proportional to Number of Events [ ]");
+            SelectionPhi.back().back()->GetYaxis()->SetTitle("Ratio of PE Cuts [ ]");
             SelectionPhi.back().back()->GetYaxis()->SetTitleOffset(1.3);
         }
 
@@ -339,44 +339,39 @@ void PEChecker()
 
     TCanvas *Canvas10 = new TCanvas("Track Range of Selected Track Ratio", "Track Range of Selected Track Ratio", 1400, 1000);
     Canvas10->cd();
-//     EffTrackRange.at(0)->GetYaxis()->SetTitle("Ratio of PE Cuts [ ]");
+    EffTrackRange.back()->SetLineColor(4);
     EffTrackRange.back()->Draw();
-//     EffTrackRange.at(0)->SetLineColor(2);
     for(unsigned int cut_index = 0; cut_index < EffTrackRange.size()-1; cut_index++)
     {
-        EffTrackRange.at(cut_index)->SetLineColor(cut_index+1);
+        EffTrackRange.at(cut_index)->SetLineColor(cut_index+2);
         EffTrackRange.at(cut_index)->Draw("SAME");
     }
-    Canvas10->SaveAs("MCRangeByPERatio.pdf");
+    Canvas10->SaveAs("MCRangeByPERatio.png");
     
     TCanvas *Canvas11 = new TCanvas("Track Theta of Selected Track Ratio", "Track Theta of Selected Track Ratio", 1400, 1000);
     Canvas11->cd();
-//     EffTrackTheta.at(0)->SetMinimum(0.5);
-//     EffTrackTheta.at(0)->GetYaxis()->SetTitle("Ratio of PE Cuts [ ]");
+    EffTrackTheta.back()->SetLineColor(4);
     EffTrackTheta.back()->Draw();
-//     EffTrackTheta.at(0)->SetLineColor(2);
     for(unsigned int cut_index = 0; cut_index < EffTrackTheta.size()-1; cut_index++)
     {
-//         EffTrackTheta.at(cut_index)->SetLineColor(cut_index+1);
+        EffTrackTheta.at(cut_index)->SetLineColor(cut_index+2);
         EffTrackTheta.at(cut_index)->Draw("SAME");
     }
-    Canvas11->SaveAs("MCThetaByPERatio.pdf");
+    Canvas11->SaveAs("MCThetaByPERatio.png");
     
     TCanvas *Canvas12 = new TCanvas("Track Phi of Selected Track Ratio", "Track Phi of Selected Track Ratio", 1400, 1000);
     Canvas12->cd();
-//     EffTrackPhi.at(0)->SetMinimum(0.8);
-//     EffTrackPhi.at(0)->GetYaxis()->SetTitle("Ratio of PE Cuts [ ]");
+    EffTrackPhi.back()->SetLineColor(4);
     EffTrackPhi.back()->Draw();
-//     EffTrackPhi.at(0)->SetLineColor(2);
     for(unsigned int cut_index = 0; cut_index < EffTrackPhi.size()-1; cut_index++)
     {
-//         EffTrackPhi.at(cut_index)->SetLineColor(cut_index+1);
+        EffTrackPhi.at(cut_index)->SetLineColor(cut_index+2);
         EffTrackPhi.at(cut_index)->Draw("SAME");
     }
-    Canvas12->SaveAs("MCPhiByPERatio.pdf");
+    Canvas12->SaveAs("MCPhiByPERatio.png");
     
     
-    for(unsigned int cut_index = 0; cut_index < PECutValueVec.size(); cut_index++)
+    for(unsigned int cut_index = 0; cut_index < SelectionTrackRange.size(); cut_index++)
     {
 
 //         for(unsigned int bgrhist_no = 0; bgrhist_no < BgrLabel.size(); bgrhist_no++)
@@ -385,7 +380,7 @@ void PEChecker()
 //             StackBgrTrackRange->Add(BgrTrackRange.at(bgrhist_no));
 //         }
 
-        for(unsigned int file_no = 0; file_no < ScalingFactors.size(); file_no++)
+        for(unsigned int file_no = 0; file_no < PECutValueVec.size(); file_no++)
         {
             SelectionTrackRange.at(cut_index).at(file_no)->Sumw2();
             SelectionTheta.at(cut_index).at(file_no)->Sumw2();
@@ -403,39 +398,42 @@ void PEChecker()
     SelectionTrackRange.at(0).at(1)->SetMinimum(0.0);
     SelectionTrackRange.at(0).at(1)->Draw();
     SelectionTrackRange.at(0).at(1)->SetLineColor(1);
+    SelectionTrackRange.at(0).at(1)->GetYaxis()->SetTitle("Proportional to Number of Events [ ]");
     for(unsigned int cut_index = 1; cut_index < PECutValueVec.size(); cut_index++)
     {
         SelectionTrackRange.at(cut_index).at(1)->SetLineColor(cut_index+1);
         SelectionTrackRange.at(cut_index).at(1)->Draw("SAME");
     }
     LegendData->Draw();
-    Canvas1->SaveAs("MCRangeByPE.pdf");
+    Canvas1->SaveAs("MCRangeByPE.png");
     
     TCanvas *Canvas2 = new TCanvas("Track Theta of Selected Track", "Track Theta of Selected Track", 1400, 1000);
     Canvas2->cd();
     SelectionTheta.at(0).at(1)->SetMinimum(0.0);
     SelectionTheta.at(0).at(1)->Draw();
     SelectionTheta.at(0).at(1)->SetLineColor(1);
+    SelectionTheta.at(0).at(1)->GetYaxis()->SetTitle("Proportional to Number of Events [ ]");
     for(unsigned int cut_index = 1; cut_index < PECutValueVec.size(); cut_index++)
     {
         SelectionTheta.at(cut_index).at(1)->SetLineColor(cut_index+1);
         SelectionTheta.at(cut_index).at(1)->Draw("SAME");
     }
     LegendData->Draw();
-    Canvas2->SaveAs("MCThetaByPE.pdf");
+    Canvas2->SaveAs("MCThetaByPE.png");
     
     TCanvas *Canvas3 = new TCanvas("Track Phi of Selected Track", "Track Phi of Selected Track", 1400, 1000);
     Canvas3->cd();
     SelectionPhi.at(0).at(1)->SetMinimum(0.0);
     SelectionPhi.at(0).at(1)->Draw();
     SelectionPhi.at(0).at(1)->SetLineColor(1);
+    SelectionPhi.at(0).at(1)->GetYaxis()->SetTitle("Proportional to Number of Events [ ]");
     for(unsigned int cut_index = 1; cut_index < PECutValueVec.size(); cut_index++)
     {
         SelectionPhi.at(cut_index).at(1)->SetLineColor(cut_index+1);
         SelectionPhi.at(cut_index).at(1)->Draw("SAME");
     }
     LegendData->Draw();
-    Canvas3->SaveAs("MCPhiByPE.pdf");
+    Canvas3->SaveAs("MCPhiByPE.png");
 
 //     LegendMC->AddEntry( SelectionTrackRange.at(0), (MCLabel.at(0)).c_str(),"lep" );
 //     LegendMC->AddEntry( SelectionTrackRange.at(1), (MCLabel.at(1)).c_str(),"f" );
@@ -455,7 +453,7 @@ void PEChecker()
 //     SelectionTrackRange.at(0)->SetLineColor(1);
 //     SelectionTrackRange.at(0)->DrawNormalized("SAME");
 //     LegendMC->Draw();
-//     Canvas11->SaveAs("On-OffBeamSelRange.pdf");
+//     Canvas11->SaveAs("On-OffBeamSelRange.png");
 }
 
 float GetMaximum(const std::vector<TH1F*>& HistVector)

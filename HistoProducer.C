@@ -71,10 +71,9 @@ void HistoProducer()
 
     std::vector<float> ScalingFactors;
     ScalingFactors.push_back(1);
-//     ScalingFactors.push_back(1/179041.);
-    ScalingFactors.push_back(1.08426);
-    ScalingFactors.push_back(1/*/550000.*/);
-    ScalingFactors.push_back(1/*/550000.*/);
+    ScalingFactors.push_back(1.28711);
+    ScalingFactors.push_back(1);
+    ScalingFactors.push_back(1);
 
     // Binning
     unsigned int NumberOfBins = 20;
@@ -163,6 +162,8 @@ void HistoProducer()
     BgrLabel.push_back("Bgr #nu_{#mu} CC Out of FV, MC BNB+Cosmic");
     BgrLabel.push_back("Bgr NC Events MC BNB+Cosmic");
     BgrLabel.push_back("Bgr Cosmic Events MC BNB+Cosmic");
+    
+    std::cout << BgrLabel.size() << std::endl;
 
     std::vector<TSpline5> SystematicErrors = Systematics();
 
@@ -356,7 +357,7 @@ void HistoProducer()
         BgrYTrackStartEnd.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
         BgrYTrackStartEnd.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        BgrZTrackStartEnd.push_back(new TH1F(("ZTrack"+Label).c_str(),"Z Track Start & End Positions",NumberOfBins,0,1000));
+        BgrZTrackStartEnd.push_back(new TH1F(("ZTrack"+Label).c_str(),"Z Track Start & End Positions",NumberOfBins,0,1036.8));
         BgrZTrackStartEnd.back()->SetStats(0);
         BgrZTrackStartEnd.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrZTrackStartEnd.back()->GetXaxis()->SetTitle("z [cm]");
@@ -377,7 +378,7 @@ void HistoProducer()
         BgrYVtxPosition.back()->GetYaxis()->SetTitle("Weighted #frac{dn}{dy}");
         BgrYVtxPosition.back()->GetYaxis()->SetTitleOffset(1.3);
 
-        BgrZVtxPosition.push_back(new TH1F(("ZVertex"+Label).c_str(),"Z Vertex Position",NumberOfBins,0,1000));
+        BgrZVtxPosition.push_back(new TH1F(("ZVertex"+Label).c_str(),"Z Vertex Position",NumberOfBins,0,1036.8));
         BgrZVtxPosition.back()->SetStats(0);
         BgrZVtxPosition.back()->SetFillColor(ColorMap.at(BgrCount));
         BgrZVtxPosition.back()->GetXaxis()->SetTitle("z [cm]");
@@ -827,6 +828,8 @@ void HistoProducer()
     }
 
     DataToLookAt.close();
+    
+    std::cout << SelectionTrackRange.at(2)->Integral() << " " << BgrTrackRange.at(4)->Integral() << std::endl;
 
     for(unsigned int bgrhist_no = 0; bgrhist_no < BgrLabel.size(); bgrhist_no++)
     {
@@ -938,7 +941,7 @@ void HistoProducer()
 
     TCanvas *Canvas2a = new TCanvas("Cos Theta-Angle of Selected Track", "Cos Theta-Angle of Selected Track", 1400, 1000);
     Canvas2a->cd();
-    SelectionCosTheta.at(0)->SetMaximum(1.1*GetMaximum(SelectionCosTheta));
+    SelectionCosTheta.at(0)->SetMaximum(1.3*GetMaximum(SelectionCosTheta));
     SelectionCosTheta.at(0)->Draw();
     SelectionCosTheta.at(1)->SetLineColor(2);
     SelectionCosTheta.at(1)->Draw("SAME");
@@ -948,6 +951,7 @@ void HistoProducer()
     TCanvas *Canvas3 = new TCanvas("Phi-Angle of Selected Track", "Phi-Angle of Selected Track", 1400, 1000);
     Canvas3->cd();
     SelectionPhi.at(0)->SetMaximum(1.1*GetMaximum(SelectionPhi));
+    SelectionPhi.at(0)->SetMinimum(0);
     SelectionPhi.at(0)->Draw();
     SelectionPhi.at(1)->SetLineColor(2);
     SelectionPhi.at(1)->Draw("SAME");
@@ -974,7 +978,8 @@ void HistoProducer()
 
     TCanvas *Canvas5 = new TCanvas("X Start & End Point Selected Track", "X Start & End Point Selected Track", 1400, 1000);
     Canvas5->cd();
-    SelXTrackStartEnd.at(0)->SetMaximum(1.1*GetMaximum(SelXTrackStartEnd));
+    SelXTrackStartEnd.at(0)->SetMaximum(1.3*GetMaximum(SelXTrackStartEnd));
+    SelXTrackStartEnd.at(0)->SetMinimum(0);
     SelXTrackStartEnd.at(0)->Draw();
     SelXTrackStartEnd.at(1)->SetLineColor(2);
     SelXTrackStartEnd.at(1)->Draw("SAME");
@@ -983,7 +988,8 @@ void HistoProducer()
 
     TCanvas *Canvas6 = new TCanvas("Y Start & End Point Selected Track", "Y Start & End Point Selected Track", 1400, 1000);
     Canvas6->cd();
-    SelYTrackStartEnd.at(0)->SetMaximum(1.1*GetMaximum(SelYTrackStartEnd));
+    SelYTrackStartEnd.at(0)->SetMaximum(1.3*GetMaximum(SelYTrackStartEnd));
+    SelYTrackStartEnd.at(0)->SetMinimum(0);
     SelYTrackStartEnd.at(0)->Draw();
     SelYTrackStartEnd.at(1)->SetLineColor(2);
     SelYTrackStartEnd.at(1)->Draw("SAME");
@@ -992,7 +998,8 @@ void HistoProducer()
 
     TCanvas *Canvas7 = new TCanvas("Z Start & End Point Selected Track", "Z Start & End Point Selected Track", 1400, 1000);
     Canvas7->cd();
-    SelZTrackStartEnd.at(0)->SetMaximum(1.1*GetMaximum(SelZTrackStartEnd));
+    SelZTrackStartEnd.at(0)->SetMaximum(1.2*GetMaximum(SelZTrackStartEnd));
+    SelZTrackStartEnd.at(0)->SetMinimum(0);
     SelZTrackStartEnd.at(0)->Draw();
     SelZTrackStartEnd.at(1)->SetLineColor(2);
     SelZTrackStartEnd.at(1)->Draw("SAME");
@@ -1001,7 +1008,8 @@ void HistoProducer()
 
     TCanvas *Canvas8 = new TCanvas("X Vertex Postion", "X Vertex Postion", 1400, 1000);
     Canvas8->cd();
-    SelXVtxPosition.at(0)->SetMaximum(1.1*GetMaximum(SelXVtxPosition));
+    SelXVtxPosition.at(0)->SetMaximum(1.3*GetMaximum(SelXVtxPosition));
+    SelXVtxPosition.at(0)->SetMinimum(0);
     SelXVtxPosition.at(0)->Draw();
     SelXVtxPosition.at(1)->SetLineColor(2);
     SelXVtxPosition.at(1)->Draw("SAME");
@@ -1010,7 +1018,8 @@ void HistoProducer()
 
     TCanvas *Canvas9 = new TCanvas("Y Vertex Postion", "Y Vertex Postion", 1400, 1000);
     Canvas9->cd();
-    SelYVtxPosition.at(0)->SetMaximum(1.1*GetMaximum(SelYVtxPosition));
+    SelYVtxPosition.at(0)->SetMaximum(1.3*GetMaximum(SelYVtxPosition));
+    SelYVtxPosition.at(0)->SetMinimum(0);
     SelYVtxPosition.at(0)->Draw();
     SelYVtxPosition.at(1)->SetLineColor(2);
     SelYVtxPosition.at(1)->Draw("SAME");
@@ -1019,7 +1028,8 @@ void HistoProducer()
 
     TCanvas *Canvas10 = new TCanvas("Z Vertex Postion", "Z Vertex Postion", 1400, 1000);
     Canvas10->cd();
-    SelZVtxPosition.at(0)->SetMaximum(1.1*GetMaximum(SelZVtxPosition));
+    SelZVtxPosition.at(0)->SetMaximum(1.3*GetMaximum(SelZVtxPosition));
+    SelZVtxPosition.at(0)->SetMinimum(0);
     SelZVtxPosition.at(0)->Draw();
     SelZVtxPosition.at(1)->SetLineColor(2);
     SelZVtxPosition.at(1)->Draw("SAME");
@@ -1065,7 +1075,7 @@ void HistoProducer()
     LegendMC->AddEntry( SelectionTrackRange.at(0), (MCLabel.at(0)).c_str(),"lep" );
     LegendMC->AddEntry( SelectionTrackRange.at(1), (MCLabel.at(1)).c_str(),"f" );
     LegendMC->AddEntry( SelectionTrackRange.at(2), (MCLabel.at(2)).c_str(),"f" );
-    for(unsigned int bgrhist_no = BgrLabel.size()-1; bgrhist_no > -1; bgrhist_no--)
+    for(int bgrhist_no = BgrLabel.size()-1; bgrhist_no > -1; bgrhist_no--)
     {
         LegendMC->AddEntry( BgrTrackRange.at(bgrhist_no), (BgrLabel.at(bgrhist_no)).c_str(),"f" );
     }
@@ -1196,7 +1206,7 @@ void HistoProducer()
 
     TCanvas *Canvas15 = new TCanvas("OnBeam Minus OffBeam X Start & End Point ", "OnBeam Minus OffBeam X Start & End Point ", 1400, 1000);
     Canvas15->cd();
-    SelXTrackStartEnd.at(2)->SetMaximum(1.5*SelXTrackStartEnd.at(2)->GetBinContent(SelXTrackStartEnd.at(2)->GetMaximumBin()));
+    SelXTrackStartEnd.at(2)->SetMaximum(1.7*SelXTrackStartEnd.at(2)->GetBinContent(SelXTrackStartEnd.at(2)->GetMaximumBin()));
     SelXTrackStartEnd.at(2)->SetMinimum(0.0);
     SelXTrackStartEnd.at(2)->SetFillColor(45);
     SelXTrackStartEnd.at(2)->DrawNormalized("E2");
@@ -1211,7 +1221,7 @@ void HistoProducer()
 
     TCanvas *Canvas16 = new TCanvas("OnBeam Minus OffBeam Y Start & End Point ", "OnBeam Minus OffBeam Y Start & End Point ", 1400, 1000);
     Canvas16->cd();
-    SelYTrackStartEnd.at(2)->SetMaximum(1.8*SelYTrackStartEnd.at(2)->GetBinContent(SelYTrackStartEnd.at(2)->GetMaximumBin()));
+    SelYTrackStartEnd.at(2)->SetMaximum(1.7*SelYTrackStartEnd.at(2)->GetBinContent(SelYTrackStartEnd.at(2)->GetMaximumBin()));
     SelYTrackStartEnd.at(2)->SetMinimum(0.0);
     SelYTrackStartEnd.at(2)->SetFillColor(45);
     SelYTrackStartEnd.at(2)->DrawNormalized("E2");
@@ -1241,7 +1251,7 @@ void HistoProducer()
 
     TCanvas *Canvas18 = new TCanvas("OnBeam Minus OffBeam X Vertex Postion", "OnBeam Minus OffBeam X Vertex Postion", 1400, 1000);
     Canvas18->cd();
-    SelXVtxPosition.at(2)->SetMaximum(1.5*SelXVtxPosition.at(2)->GetBinContent(SelXVtxPosition.at(2)->GetMaximumBin()));
+    SelXVtxPosition.at(2)->SetMaximum(1.7*SelXVtxPosition.at(2)->GetBinContent(SelXVtxPosition.at(2)->GetMaximumBin()));
     SelXVtxPosition.at(2)->SetMinimum(0.0);
     SelXVtxPosition.at(2)->SetFillColor(45);
     SelXVtxPosition.at(2)->DrawNormalized("E2");
@@ -1256,7 +1266,7 @@ void HistoProducer()
 
     TCanvas *Canvas19 = new TCanvas("OnBeam Minus OffBeam Y Vertex Postion", "OnBeam Minus OffBeam Y Vertex Postion", 1400, 1000);
     Canvas19->cd();
-    SelYVtxPosition.at(2)->SetMaximum(1.8*SelYVtxPosition.at(2)->GetBinContent(SelYVtxPosition.at(2)->GetMaximumBin()));
+    SelYVtxPosition.at(2)->SetMaximum(1.7*SelYVtxPosition.at(2)->GetBinContent(SelYVtxPosition.at(2)->GetMaximumBin()));
     SelYVtxPosition.at(2)->SetMinimum(0.0);
     SelYVtxPosition.at(2)->SetFillColor(45);
     SelYVtxPosition.at(2)->DrawNormalized("E2");
@@ -1271,7 +1281,7 @@ void HistoProducer()
 
     TCanvas *Canvas20 = new TCanvas("OnBeam Minus OffBeam Z Vertex Postion", "OnBeam Minus OffBeam Z Vertex Postion", 1400, 1000);
     Canvas20->cd();
-    SelZVtxPosition.at(2)->SetMaximum(1.5*SelZVtxPosition.at(2)->GetBinContent(SelZVtxPosition.at(2)->GetMaximumBin()));
+    SelZVtxPosition.at(2)->SetMaximum(1.7*SelZVtxPosition.at(2)->GetBinContent(SelZVtxPosition.at(2)->GetMaximumBin()));
     SelZVtxPosition.at(2)->SetMinimum(0.0);
     SelZVtxPosition.at(2)->SetFillColor(45);
     SelZVtxPosition.at(2)->DrawNormalized("E2");
@@ -1477,7 +1487,7 @@ void AdjustSysError(std::vector<TH1F*>& HistVector)
 {
     for(unsigned int bin_no = 1; bin_no < HistVector.back()->GetNbinsX()+1; bin_no++)
     {
-        HistVector.back()->SetBinError( bin_no, HistVector.back()->GetBinContent(bin_no) - HistVector.at(2)->GetBinContent(bin_no) + HistVector.at(2)->GetBinError(bin_no) );
+        HistVector.back()->SetBinError( bin_no, sqrt( pow(HistVector.back()->GetBinContent(bin_no) - HistVector.at(2)->GetBinContent(bin_no),2) + pow(HistVector.at(2)->GetBinError(bin_no),2) ) );
         HistVector.back()->SetBinContent( bin_no, HistVector.at(2)->GetBinContent(bin_no) );
     }
 }
