@@ -355,6 +355,7 @@ int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumb
             treenc -> ResetBranchAddresses();
 
         } // Loop over all vertexing data products
+    } // Loop over all tracking data products
 
     return 0;
 
