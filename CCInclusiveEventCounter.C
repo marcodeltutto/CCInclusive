@@ -41,7 +41,7 @@ double FlashTrackDist(double flash, double start, double end) {
 }
 
 // Main function
-int CCInclusiveEventSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned int NumberOfThreads)
+int CCInclusiveEventCounter(std::string GeneratorName, unsigned int ThreadNumber, unsigned int NumberOfThreads)
 {
 
     string Version = "v05_08_00";
