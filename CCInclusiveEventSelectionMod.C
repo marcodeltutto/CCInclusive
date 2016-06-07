@@ -772,9 +772,10 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                             // Loop over all associated track IDs of this vertex
                             for(auto const& TrackID : VtxTrack.second)
                             {
+                                TrackRange = sqrt(pow(trkstartx[TrackID] - trkendx[TrackID],2) + pow(trkstarty[TrackID] - trkendy[TrackID],2) + pow(trkstartz[TrackID] - trkendz[TrackID],2));
                                 // Add up numbers
-                                NormFactor += trklen[TrackID];
-                                WeightedCosTheta += trklen[TrackID]*cos(trktheta[TrackID]);
+                                NormFactor += TrackRange;
+                                WeightedCosTheta += TrackRange*cos(trktheta[TrackID]);
                             }// track loop
 
                             // Make average
@@ -812,11 +813,12 @@ int CCInclusiveEventSelectionMod(std::string GeneratorName, unsigned int ThreadN
                             // Looping over track IDs of tracks associated with the vertex candidate
                             for(auto const& TrackID : VertexTrackCollection.find(VertexCandidate)->second)
                             {
+                                TrackRange = sqrt(pow(trkstartx[TrackID] - trkendx[TrackID],2) + pow(trkstarty[TrackID] - trkendy[TrackID],2) + pow(trkstartz[TrackID] - trkendz[TrackID],2));
                                 // Check for if track is longer
-                                if(trklen[TrackID] > TrackCandLength)
+                                if(TrackRange > TrackCandLength)
                                 {
                                     TrackCandidate = TrackID;
-                                    TrackCandLength = trklen[TrackID];
+                                    TrackCandLength = TrackRange;
                                 }
                             }
 

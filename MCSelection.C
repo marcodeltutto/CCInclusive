@@ -232,7 +232,7 @@ int MCSelection(std::string GeneratorName, unsigned int ThreadNumber, unsigned i
 //     std::cout << "number of events with contained tracks : " << EventsTracksInFV << " " << MCEventsTracksInFV << std::endl;
 //     std::cout << "number of events with longest track > 75cm : " << EventsTrackLong << " " << MCEventsTrackLong << std::endl;
 //     std::cout << "number of events with track start end within 5cm to mc-vtx : " << EventsTruelyReco << std::endl;
-//     std::cout << "number of events with contained MC tracks : " << NumberOfSignalTruth << std::endl;
+    std::cout << "number of events with true MC tracks : " << NumberOfSignalTruth << std::endl;
 //     std::cout << "number of well selected events : " << NumberOfSignalTruthSel << std::endl;
 //     std::cout << "number of NC events selected : " << NumberOfBgrNCTruthSel << std::endl;
 //     std::cout << "number of anti-Neutrino events selected : " << NumberOfBgrNumuBarTruthSel << std::endl;
