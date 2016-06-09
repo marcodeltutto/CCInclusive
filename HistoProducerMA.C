@@ -41,7 +41,9 @@ bool inFV(double x, double y, double z);
 void HistoProducerMA()
 {
     TGaxis::SetMaxDigits(4);
-    
+
+    // Avoid root to dislay the canvases
+    gROOT->SetBatch(kTRUE);        
     
     //     std::string TrackProdName="pandoraNuKHit";
 //     std::string TrackProdName = "pandoraCosmic";
@@ -175,18 +177,19 @@ void HistoProducerMA()
     std::vector<unsigned int> ColorMap = {13,28,42,30,38};
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1"+ SelectionLabel +".root").c_str());
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2"+ SelectionLabel +".root").c_str());
+    ChainVec.back() -> Add(("/pnfs/uboone/persistent/users/crohr/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_1"+ SelectionLabel +".root").c_str());
+    ChainVec.back() -> Add(("/pnfs/uboone/persistent/users/crohr/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_2"+ SelectionLabel +".root").c_str());
+    ChainVec.back() -> Add(("/pnfs/uboone/persistent/users/crohr/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_onbeam_bnb_v05_08_00_3"+ SelectionLabel +".root").c_str());
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1"+ SelectionLabel +".root").c_str());
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2"+ SelectionLabel +".root").c_str());
+    ChainVec.back() -> Add(("/pnfs/uboone/persistent/users/crohr/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_1"+ SelectionLabel +".root").c_str());
+    ChainVec.back() -> Add(("/pnfs/uboone/persistent/users/crohr/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_data_offbeam_bnbext_v05_08_00_2"+ SelectionLabel +".root").c_str());
 
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00"+ SelectionLabel +".root").c_str());
+    ChainVec.back() -> Add(("/pnfs/uboone/persistent/users/crohr/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_prodgenie_bnb_nu_cosmic_uboone_v05_08_00"+ SelectionLabel +".root").c_str());
     
     ChainVec.push_back(new TChain("anatree"));
-    ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_MA_v05_08_00"+ SelectionLabel +".root").c_str());
+    ChainVec.back() -> Add(("/pnfs/uboone/persistent/users/crohr/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_MA_v05_08_00"+ SelectionLabel +".root").c_str());
     
 //     ChainVec.push_back(new TChain("anatree"));
 //     ChainVec.back() -> Add(("/lheppc46/data/uBData/anatrees/Hist_Track_"+ TrackProdName +"_Vertex_"+ VertexProdName +"_TEM_v05_08_00"+ SelectionLabel +".root").c_str());
@@ -1098,21 +1101,27 @@ void HistoProducerMA()
 //         LegendMC->AddEntry( BgrTrackRange.at(bgrhist_no), (BgrLabel.at(bgrhist_no)).c_str(),"f" );
     }
 
+    // Opening a new file that will contain the histograms for the plots for the public note
+    TFile *file1 = new TFile("histograms_MA_trkrange_costheta_phi.root", "RECREATE");
+
     TCanvas *Canvas11 = new TCanvas("OnBeam Minus OffBeam Track Range", "OnBeam Minus OffBeam Track Range", 1400, 1000);
     Canvas11->cd();
     SelectionTrackRange.at(1)->SetMaximum(1.4*SelectionTrackRange.at(1)->GetBinContent(SelectionTrackRange.at(1)->GetMaximumBin()));
     SelectionTrackRange.at(1)->SetMinimum(0.0);
     SelectionTrackRange.at(1)->SetFillColor(46);
+    SelectionTrackRange.at(1)->Write();
     SelectionTrackRange.at(1)->DrawNormalized("E2");
 //     StackBgrTrackRange->Draw("SAME");
     for(unsigned int iter = 2; iter < 3; iter++)
     {
         SelectionTrackRange.at(iter)->SetLineWidth(2);
         SelectionTrackRange.at(iter)->SetLineColor(iter+2);
+        SelectionTrackRange.at(iter)->Write();
         SelectionTrackRange.at(iter)->DrawNormalized("SAME");
     }
     SelectionTrackRange.at(0)->SetLineWidth(2);
     SelectionTrackRange.at(0)->SetLineColor(1);
+    SelectionTrackRange.at(0)->Write();
     SelectionTrackRange.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas11->SaveAs(("On-OffBeamSelRange_MA"+SelectionLabel+"."+FileType).c_str());
@@ -1178,16 +1187,19 @@ void HistoProducerMA()
     SelectionCosTheta.at(1)->SetMaximum(1.4*SelectionCosTheta.at(1)->GetBinContent(SelectionCosTheta.at(1)->GetMaximumBin()));
     SelectionCosTheta.at(1)->SetMinimum(0.0);
     SelectionCosTheta.at(1)->SetFillColor(46);
+    SelectionCosTheta.at(1)->Write();
     SelectionCosTheta.at(1)->DrawNormalized("E2");
 //     StackBgrCosTheta->Draw("SAME");
     for(unsigned int iter = 2; iter < 3; iter++)
     {
         SelectionCosTheta.at(iter)->SetLineWidth(2);
         SelectionCosTheta.at(iter)->SetLineColor(iter+2);
+        SelectionCosTheta.at(iter)->Write();
         SelectionCosTheta.at(iter)->DrawNormalized("SAME");
     }
     SelectionCosTheta.at(0)->SetLineWidth(2);
     SelectionCosTheta.at(0)->SetLineColor(1);
+    SelectionCosTheta.at(0)->Write();
     SelectionCosTheta.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas12b->SaveAs(("On-OffBeamSelCosTheta_MA"+SelectionLabel+"."+FileType).c_str());
@@ -1197,19 +1209,24 @@ void HistoProducerMA()
     SelectionPhi.at(1)->SetMaximum(1.9*SelectionPhi.at(1)->GetBinContent(SelectionPhi.at(1)->GetMaximumBin()));
     SelectionPhi.at(1)->SetMinimum(0.0);
     SelectionPhi.at(1)->SetFillColor(46);
+    SelectionPhi.at(1)->Write();
     SelectionPhi.at(1)->DrawNormalized("E2");
 //     StackBgrPhi->Draw("SAME");
     for(unsigned int iter = 2; iter < 3; iter++)
     {
         SelectionPhi.at(iter)->SetLineWidth(2);
         SelectionPhi.at(iter)->SetLineColor(iter+2);
+        SelectionPhi.at(iter)->Write();
         SelectionPhi.at(iter)->DrawNormalized("SAME");
     }
     SelectionPhi.at(0)->SetLineWidth(2);
     SelectionPhi.at(0)->SetLineColor(1);
+    SelectionPhi.at(0)->Write();
     SelectionPhi.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas13->SaveAs(("On-OffBeamSelPhi_MA"+SelectionLabel+"."+FileType).c_str());
+
+    file1->Close();
 
     TCanvas *Canvas14 = new TCanvas("Energy", "Energy", 1400, 1000);
     Canvas14->cd();
