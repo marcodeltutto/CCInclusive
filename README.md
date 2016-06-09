@@ -3,6 +3,8 @@ CCInclusive studies anatree
 
 ## How to produce plots for the CC inclusive public note for Neutrino2016
 
+### Model variations
+
 On a Femilab gpvm machine (root6 is needed):
 
 ```
