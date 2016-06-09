@@ -10,7 +10,8 @@ On a Femilab gpvm machine (root6 is needed):
 ```
 source /nusoft/app/alt/setup
 setup root v6_04_06 -q e9:nu:prof
-root -l HistoProducerModels.C
+root -l HistoProducerModels.C        # for MEC && ESF+TEM
+root -l HistoProducerMA.C            # for 
 ```
 
-A file called histograms_TEM_MEC_trkrange_costheta_phi.root will be generated. This file contains the histograms to make the plots.
+A file called `histograms_TEM_MEC_trkrange_costheta_phi.root` will be generated for MEC && ESF+TEM and one called `histograms_MA_trkrange_costheta_phi.root` for Ma CCQE. This files contain the histograms to make the plots.
