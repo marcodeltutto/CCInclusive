@@ -543,6 +543,19 @@ void HistoProducerModels()
         
         HistogramWeight = 1;
 
+       cout << "Before the loop over the entries there are:" << SelectionTrackRange.at(file_no)->GetEntries() << endl;
+       cout << "file_no is " << file_no<< endl;
+       cout << " title is " << SelectionTrackRange.at(file_no)->GetTitle() << endl;
+
+if (file_no==4) {
+       SelectionTrackRange.at(file_no)->Reset();
+       SelectionCosTheta.at(file_no)->Reset();
+       SelectionPhi.at(file_no)->Reset();
+       cout << "Before the loop over the entries there are:" << SelectionTrackRange.at(file_no)->GetEntries() << endl;
+       cout << "file_no is " << file_no<< endl;
+       cout << " title is " << SelectionTrackRange.at(file_no)->GetTitle() << endl;
+}
+
         for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no)->GetEntries(); tree_index++)
         {
             if(!(tree_index % 100)) std::cout << "Event\t" << tree_index << "\t of \t" << ChainVec.at(file_no)->GetEntries() << std::endl;
@@ -583,7 +596,7 @@ void HistoProducerModels()
                 }
                 
                 
-                
+               //cout << "HistogramWeight is " << HistogramWeight << endl;
                 SelectionTrackRange.at(file_no)->Fill(CalcLength(XTrackStart[TrkID],YTrackStart[TrkID],ZTrackStart[TrkID],XTrackEnd[TrkID],YTrackEnd[TrkID],ZTrackEnd[TrkID]),HistogramWeight);
                 SelectionTheta.at(file_no)->Fill(TrackTheta[TrkID],HistogramWeight);
                 SelectionCosTheta.at(file_no)->Fill(cos(TrackTheta[TrkID]),HistogramWeight);
@@ -844,7 +857,11 @@ void HistoProducerModels()
                 }
             }
 
-        }
+        } // end loop over entries
+
+       cout << SelectionTrackRange.at(file_no)->GetEntries() << endl;
+       cout << SelectionTrackRange.at(file_no)->Integral() << endl;
+
         std::cout << Signal << " " << nubar << " " << nue << " " << NCnu << " " << Cosmic << " " << UnknownOrigin << std::endl;
         std::cout << nuQE << " " << nuRES << " " << nuDIS << " " << nuCOH << std::endl;
 
@@ -852,7 +869,7 @@ void HistoProducerModels()
         std::cout << "Number of positive phi in " << GenLabel.at(file_no) << " : " << posPhi << std::endl;
 
         ChainVec.at(file_no)->ResetBranchAddresses();
-    }
+    } // end loop over file_no
 
     DataToLookAt.close();
 
@@ -926,7 +943,9 @@ void HistoProducerModels()
         RangeVsPE.at(file_no)->Scale(ScalingFactors.at(file_no));
         RangeVsYPos.at(file_no)->Scale(ScalingFactors.at(file_no));
         PhiVsFlashTrackDist.at(file_no)->Scale(ScalingFactors.at(file_no));
-    }
+    } // endl loop over file_no
+
+    cout <<"SelectionTrackRange.at(4)->GetEntries()" <<  SelectionTrackRange.at(4)->GetEntries() << endl;
 
 //     AdjustSysError(SelectionTrackRange);
 //     AdjustSysError(SelectionTheta);
@@ -1087,6 +1106,9 @@ void HistoProducerModels()
     AddFirstTwoHistograms2D(RangeVsYPos,-1);
     AddFirstTwoHistograms2D(PhiVsFlashTrackDist,-1);
 
+    //cout << "SelectionTrackRange.at(4)->GetEntries()" << SelectionTrackRange.at(4)->GetEntries() << endl;
+    cout << "SelectionTrackRange.at(3)->GetEntries()" << SelectionTrackRange.at(3)->GetEntries() << endl;
+
     std::cout << "Theta KS significance: " << SelectionTheta.at(1)->KolmogorovTest(SelectionTheta.at(0)) << std::endl;
     std::cout << "Phi KS significance: " << SelectionPhi.at(1)->KolmogorovTest(SelectionPhi.at(0)) << std::endl;
 
@@ -1101,9 +1123,12 @@ void HistoProducerModels()
 //         LegendMC->AddEntry( BgrTrackRange.at(bgrhist_no), (BgrLabel.at(bgrhist_no)).c_str(),"f" );
     }
 
+    cout << "SelectionTrackRange.at(3)->GetEntries()" << SelectionTrackRange.at(3)->GetEntries() << endl;
+
 
     // Opening a new file that will contain the histograms for the plots for the public note
     TFile *file1 = new TFile("histograms_TEM_MEC_trkrange_costheta_phi.root", "RECREATE");
+    cout << "SelectionTrackRange.at(3)->GetEntries()" << SelectionTrackRange.at(3)->GetEntries() << endl;
 
     TCanvas *Canvas11 = new TCanvas("OnBeam Minus OffBeam Track Range", "OnBeam Minus OffBeam Track Range", 1400, 1000);
     Canvas11->cd();
@@ -1126,6 +1151,9 @@ void HistoProducerModels()
     SelectionTrackRange.at(0)->DrawNormalized("SAME");
     LegendMC->Draw();
     Canvas11->SaveAs(("On-OffBeamSelRange_Models"+SelectionLabel+"."+FileType).c_str());
+
+    cout << "SelectionTrackRange.at(3)->GetEntries()" << SelectionTrackRange.at(3)->GetEntries() << endl;
+
 
     TCanvas *Canvas12 = new TCanvas("OnBeam Minus OffBeam Theta-Angle", "OnBeam Minus OffBeam Theta-Angle", 1400, 1000);
     Canvas12->cd();
@@ -1228,6 +1256,7 @@ void HistoProducerModels()
     Canvas13->SaveAs(("On-OffBeamSelPhi_Models"+SelectionLabel+"."+FileType).c_str());
 
     file1->Close();
+    cout << "SelectionTrackRange.at(3)->GetEntries()" << SelectionTrackRange.at(3)->GetEntries() << endl;
 
     TCanvas *Canvas14 = new TCanvas("Energy", "Energy", 1400, 1000);
     Canvas14->cd();
