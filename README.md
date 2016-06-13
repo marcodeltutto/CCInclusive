@@ -22,3 +22,14 @@ Open `calculatePOT.py` and change the name of the file, then run:
 ```
 python calculatePOT.py
 ```
+
+### How to produce the plots
+
+Run:
+```
+root -l "draw_MA.C(selection,variable)"
+root -l "draw_TEM_MEC.C(selection,variable)"
+```
+where selection = 1 is Christoph selection and selection = 2 is Xiao selection. Variable is the quantity you want on the x axis: 0 = track length, 1 = cos(theta), 2 = phi.
+It may require the rootlogon.C file in `/nashome/m/mdeltutt/rootlogon.C`.
+
