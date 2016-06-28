@@ -15,6 +15,7 @@ root -l HistoProducerMA.C            # for Ma CCQE
 ```
 
 A file called `histograms_TEM_MEC_trkrange_costheta_phi.root` will be generated for MEC && ESF+TEM and one called `histograms_MA_trkrange_costheta_phi.root` for Ma CCQE. This files contain the histograms to make the plots.
+Or you can avoid re-generating them and use the ones in this repository.
 
 ### How to calculate the simulated POT
 
