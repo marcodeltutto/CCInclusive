@@ -543,6 +543,16 @@ void HistoProducerMA()
         
         if(file_no != 3) HistogramWeight = 1;
 
+if (file_no==3) {
+       SelectionTrackRange.at(file_no)->Reset();
+       SelectionCosTheta.at(file_no)->Reset();
+       SelectionPhi.at(file_no)->Reset();
+       cout << "Before the loop over the entries there are:" << SelectionTrackRange.at(file_no)->GetEntries() << endl;
+       cout << "file_no is " << file_no<< endl;
+       cout << " title is " << SelectionTrackRange.at(file_no)->GetTitle() << endl;
+}
+
+
         for(unsigned int tree_index = 0; tree_index < ChainVec.at(file_no)->GetEntries(); tree_index++)
         {
             if(!(tree_index % 100)) std::cout << "Event\t" << tree_index << "\t of \t" << ChainVec.at(file_no)->GetEntries() << std::endl;
