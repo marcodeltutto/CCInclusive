@@ -1,6 +1,6 @@
 #include "TFile.h"
 
-void draw_MA(int selection = 1, int choice = 0, double normalised = false) {
+void draw_MA(int selection = 1, int choice = 0, bool poster = false, double normalised = false) {
   
   // choice = 0    Track Range
   // choice = 1    CosTheta
@@ -11,9 +11,10 @@ void draw_MA(int selection = 1, int choice = 0, double normalised = false) {
   
   
   const double BASELINE_POT = 2.300468e+20;
-  const double MA_POT      = 2.000320e+20;
+  double MA_POT       = 2.000320e+20; // Ma selection I
+  if (selection == 2) MA_POT       = 2.252332e+20;   // Ma selection II
   
-  const double NOMINAL_POT = 6.6e20;
+  const double NOMINAL_POT = 2.2e20; // changed to 2.2e20  from 6.6e20
   
   
   // Define colours...but I am not using them...
@@ -30,11 +31,11 @@ void draw_MA(int selection = 1, int choice = 0, double normalised = false) {
   
   // for Selection I
   TFile* file = new TFile("./histograms_MA_trkrange_costheta_phi.root");
-
+  
   // for Selection II
-  TFile* fileOriginal = new TFile("./MCOriginal.root");
-  TFile* fileM_A = new TFile("./MCM_A.root");
-
+  TFile* fileOriginal = new TFile("./MCOriginalnew.root");
+  TFile* fileM_A = new TFile("./MCM_Anew.root");
+  
   TH1F *histoPmu, *histoPmu_MA;
   
   if (selection == 1) {
@@ -52,17 +53,20 @@ void draw_MA(int selection = 1, int choice = 0, double normalised = false) {
   } else if (selection == 2) {
     if (choice == 0) {
       fileOriginal->GetObject("SelectedFinalTrackLengthAll",     histoPmu);
-      fileM_A->GetObject("SelectedFinalTrackLengthAll", histoPmu_MA);
+      fileM_A->GetObject("SelectedFinalTrackLengthAllWeighted", histoPmu_MA);
     } else if (choice == 1) {
       fileOriginal->GetObject("SelectedFinalTrackCorrectedCosZAll",     histoPmu);
-      fileM_A->GetObject("SelectedFinalTrackCorrectedCosZAll", histoPmu_MA);
+      fileM_A->GetObject("SelectedFinalTrackCorrectedCosZAllWeighted", histoPmu_MA);
     } else if (choice == 2) {
       fileOriginal->GetObject("SelectedFinalTrackCorrectedPhiAll",     histoPmu);
-      fileM_A->GetObject("SelectedFinalTrackCorrectedPhiAll", histoPmu_MA);
+      fileM_A->GetObject("SelectedFinalTrackCorrectedPhiAllWeighted", histoPmu_MA);
     } else
       cout << "Not a valid choice." << endl;
   } else
     cout << "Not a valid choice." << endl;
+  
+  cout << "histoPmu integral: " << histoPmu->Integral() << endl;
+  cout << "histoPmu_MA integral: " << histoPmu_MA->Integral() << endl;
   
   
   histoPmu->Sumw2();     // just to be sure
@@ -101,7 +105,10 @@ void draw_MA(int selection = 1, int choice = 0, double normalised = false) {
   
   
   // Define the Canvas
-  TCanvas *c = new TCanvas("c", "canvas", 800, 800);
+  TCanvas *c;
+  if (!poster) c = new TCanvas("c", "canvas", 800, 800);
+  if (poster && choice == 0)  c = new TCanvas("c", "canvas", 0,45,1164,907);
+  if (poster && choice == 1)  c = new TCanvas("c", "canvas", 0,45,800,907);
   //c->SetFillStyle(4000);      // Transparent
   //c->SetFrameFillStyle(4000); // Transparent
   
@@ -122,15 +129,15 @@ void draw_MA(int selection = 1, int choice = 0, double normalised = false) {
   
   // Define plots range based on the quantity plotted
   if (choice == 0) histoPmu_MA->GetXaxis()->SetRangeUser(0., 700.);
-  if (choice == 1 && selection == 1) histoPmu_MA->GetXaxis()->SetRangeUser(-1., 1.);
-  if (choice == 1 && selection == 2) histoPmu_MA->GetXaxis()->SetRangeUser(-1., 1.);
+  if (choice == 1 && selection == 1) histoPmu_MA->GetXaxis()->SetRangeUser(0., 1.);
+  if (choice == 1 && selection == 2) histoPmu_MA->GetXaxis()->SetRangeUser(0., 1.);
   if (choice == 2 && selection == 1) histoPmu_MA->GetXaxis()->SetRangeUser(-TMath::Pi(), TMath::Pi());
   if (choice == 2 && selection == 2) histoPmu_MA->GetXaxis()->SetRangeUser(-3., 3.);
-  if (choice == 1 && selection == 1) histoPmu_MA->GetYaxis()->SetRangeUser(0.0001, 13000.);
-  if (choice == 1 && selection == 2) histoPmu_MA->GetYaxis()->SetRangeUser(0.0001, 15000.);
-  if (choice == 2 && selection == 1) histoPmu_MA->GetYaxis()->SetRangeUser(700., 1800.);
-  if (choice == 2 && selection == 2) histoPmu_MA->GetYaxis()->SetRangeUser(1000.1, 4500.);
-
+  if (choice == 1 && selection == 1) histoPmu_MA->GetYaxis()->SetRangeUser(0.0001, 4500.);
+  if (choice == 1 && selection == 2) histoPmu_MA->GetYaxis()->SetRangeUser(0.0001, 5000.);
+  if (choice == 2 && selection == 1) histoPmu_MA->GetYaxis()->SetRangeUser(240, 650.);
+  if (choice == 2 && selection == 2) histoPmu_MA->GetYaxis()->SetRangeUser(300, 1500.);
+  
   
   
   // Draw!
@@ -143,35 +150,35 @@ void draw_MA(int selection = 1, int choice = 0, double normalised = false) {
   TH1F * test = (TH1F*)histoPmu->Clone("test");
   test->Draw("same histo");
   test->SetLineColor(kTotalMCColor);                       // Draw the histo line now
-
+  
   
   // Change titles
   histoPmu_MA->GetYaxis()->SetTitle("Selected Events");
   histoPmu_MA->SetTitle("");
   if (choice == 1 && selection == 1) histoPmu_MA->GetXaxis()->SetTitle("cos#theta");
   if (choice == 2 && selection == 1) histoPmu_MA->GetXaxis()->SetTitle("#phi angle [rad]");
-  if (choice == 0 && selection == 2) histoPmu_MA->GetXaxis()->SetTitle("Track Range [cm]");
+  if (choice == 0 && selection == 2) histoPmu_MA->GetXaxis()->SetTitle("Track Length [cm]");
   if (choice == 1 && selection == 2) histoPmu_MA->GetXaxis()->SetTitle("cos#theta");
   if (choice == 2 && selection == 2) histoPmu_MA->GetXaxis()->SetTitle("#phi angle [rad]");
-
+  
   uBooNESimulation_2();  // Simulation tag, this is defined in /nashome/m/mdeltutt/rootlogon.C
   
-  if (normalised) {
-    // TLatex
-    double x = 0.87;
-    double y = 0.52;
-    double size = 28;
-    int color = 1;
-    int font = 43;
-    int align = 32;
-    TLatex *latex = new TLatex( x, y, "Area Normalised" );
-    latex->SetNDC();
-    latex->SetTextSize(size);
-    latex->SetTextColor(color);
-    latex->SetTextFont(font);
-    latex->SetTextAlign(align);
-    latex->Draw();
-  }
+  // TLatex
+  double x = 0.84;//0.839599,0.52
+  double y = 0.52;
+  double size = 25;
+  int color = 1;
+  int font = 43;
+  int align = 32;
+  TLatex *latex;
+  if(selection == 1) latex = new TLatex(x, y, "#splitline{All events passing}{Selection I}");
+  if(selection == 2) latex = new TLatex(x, y, "#splitline{All events passing}{Selection II}");
+  latex->SetNDC();
+  latex->SetTextSize(size);
+  latex->SetTextColor(color);
+  latex->SetTextFont(font);
+  latex->SetTextAlign(align);
+  latex->Draw();
   
   
   
@@ -189,7 +196,7 @@ void draw_MA(int selection = 1, int choice = 0, double normalised = false) {
   leg->SetBorderSize(0);
   //leg->SetFillStyle(0);  // Transparent
   //leg->SetHeader("");
-  leg->AddEntry(histoPmu,    "Baseline");
+  leg->AddEntry(histoPmu,    "M_{A}^{CCQE} = 0.99 GeV");
   leg->AddEntry(histoPmu_MA, "M_{A}^{CCQE} = 1.35 GeV");
   leg->Draw();
   
@@ -207,6 +214,7 @@ void draw_MA(int selection = 1, int choice = 0, double normalised = false) {
   //pad2->SetFillStyle(4000);         // Transparent
   pad2->SetTopMargin(0);
   pad2->SetBottomMargin(0.3);         // Leave some space for the X axis title
+  if (poster)   pad2->SetBottomMargin(0.4);         // Leave some space for the X axis title
   pad2->SetRightMargin(0.05);
   pad2->SetGridx();                   // vertical grid
   pad2->Draw();
@@ -222,10 +230,10 @@ void draw_MA(int selection = 1, int choice = 0, double normalised = false) {
   ratio_MA->SetLineWidth(2);
   ratio_MA->SetLineColor(kGreen+2);
   if (choice == 0) ratio_MA->GetXaxis()->SetRangeUser(0., 700.);
-  if (choice == 1) ratio_MA->GetXaxis()->SetRangeUser(-1., 1.);
+  if (choice == 1) ratio_MA->GetXaxis()->SetRangeUser(0., 1.);
   if (choice == 2 && selection == 1) ratio_MA->GetXaxis()->SetRangeUser(-TMath::Pi(), TMath::Pi());
   if (choice == 2 && selection == 2) ratio_MA->GetXaxis()->SetRangeUser(-3., 3.);
-
+  
   // Draw!
   ratio_MA->Draw("E2");                              // Draw error bars only
   TH1F * test4 = (TH1F*)ratio_MA->Clone("test4");
@@ -256,9 +264,9 @@ void draw_MA(int selection = 1, int choice = 0, double normalised = false) {
   histoPmu_MA->SetLineWidth(2);
   histoPmu_MA->SetFillColor(29);
   histoPmu_MA->GetYaxis()->CenterTitle();
-  histoPmu_MA->GetYaxis()->SetTitleSize(25);
+  histoPmu_MA->GetYaxis()->SetTitleSize(35);
   histoPmu_MA->GetYaxis()->SetTitleFont(43);
-  histoPmu_MA->GetYaxis()->SetTitleOffset(1.55);
+  histoPmu_MA->GetYaxis()->SetTitleOffset(1.14);
   
   
   // Ratio plot (ratio_MA) settings
@@ -269,17 +277,17 @@ void draw_MA(int selection = 1, int choice = 0, double normalised = false) {
   ratio_MA->GetYaxis()->SetTitle("Ratio");
   ratio_MA->GetYaxis()->CenterTitle();
   ratio_MA->GetYaxis()->SetNdivisions(505);
-  ratio_MA->GetYaxis()->SetTitleSize(25);
+  ratio_MA->GetYaxis()->SetTitleSize(35);
   ratio_MA->GetYaxis()->SetTitleFont(43);
-  ratio_MA->GetYaxis()->SetTitleOffset(1.0);
+  ratio_MA->GetYaxis()->SetTitleOffset(.75);
   ratio_MA->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
   ratio_MA->GetYaxis()->SetLabelSize(15);
   
   // X axis ratio plot settings
   ratio_MA->GetXaxis()->CenterTitle();
-  ratio_MA->GetXaxis()->SetTitleSize(25);
+  ratio_MA->GetXaxis()->SetTitleSize(35);
   ratio_MA->GetXaxis()->SetTitleFont(43);
-  ratio_MA->GetXaxis()->SetTitleOffset(3.5);
+  ratio_MA->GetXaxis()->SetTitleOffset(3.0);
   ratio_MA->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
   ratio_MA->GetXaxis()->SetLabelSize(20);
   
@@ -290,7 +298,7 @@ void draw_MA(int selection = 1, int choice = 0, double normalised = false) {
   TLine *line;
   if (choice == 0 && selection == 1) line = new TLine(0,1,726,1);
   if (choice == 0 && selection == 2) line = new TLine(0,1,700,1);
-  if (choice == 1) line = new TLine(-1,1,1,1);
+  if (choice == 1) line = new TLine(0,1,1,1);
   if (choice == 2) line = new TLine(-TMath::Pi(),1,TMath::Pi(),1);
   if (choice == 2 && selection == 2) line = new TLine(-TMath::Pi(),1,TMath::Pi(),1);
   line->SetLineColor(kBlack);
@@ -299,6 +307,6 @@ void draw_MA(int selection = 1, int choice = 0, double normalised = false) {
   
   
   
-
+  
   
 }

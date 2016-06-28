@@ -1,6 +1,6 @@
 #include "TFile.h"
 
-void draw_TEM_MEC(int selection = 1, int choice = 0, double normalised = false) {
+void draw_TEM_MEC(int selection = 1, int choice = 0, bool poster = false, double normalised = false) {
   
   // choice = 0    Track Range
   // choice = 1    CosTheta
@@ -11,7 +11,7 @@ void draw_TEM_MEC(int selection = 1, int choice = 0, double normalised = false) 
   const double MEC_POT      = 2.075599e+20;
   const double TEM_POT      = 2.317981e+20;
   
-  const double NOMINAL_POT = 6.6e20;
+  const double NOMINAL_POT = 2.2e20;
   
   
   const Color_t kTotalMCColor = kRed;
@@ -29,9 +29,9 @@ void draw_TEM_MEC(int selection = 1, int choice = 0, double normalised = false) 
   TFile* file = new TFile("./histograms_TEM_MEC_trkrange_costheta_phi.root");
   
   // for Selection II
-  TFile* fileOriginal = new TFile("./MCOriginal.root");
-  TFile* fileTEM = new TFile("./MCTEM.root");
-  TFile* fileMEC = new TFile("./MCMEC.root");
+  TFile* fileOriginal = new TFile("./MCOriginalnew.root");
+  TFile* fileTEM = new TFile("./MCTEMnew.root");
+  TFile* fileMEC = new TFile("./MCMECnew.root");
   
   TH1F *histoPmu, *histoPmu_TEM, *histoPmu_MEC;
   
@@ -118,7 +118,9 @@ void draw_TEM_MEC(int selection = 1, int choice = 0, double normalised = false) 
   
   
   // Define the Canvas
-  TCanvas *c = new TCanvas("c", "canvas", 800, 800);
+  TCanvas *c;
+  if (!poster) c = new TCanvas("c", "canvas", 800, 800);
+  if (poster)  c = new TCanvas("c", "canvas", 0,45,1200,690);
   //c->SetFillStyle(4000);      // Transparent
   //c->SetFrameFillStyle(4000); // Transparent
   
@@ -140,15 +142,15 @@ void draw_TEM_MEC(int selection = 1, int choice = 0, double normalised = false) 
   histoPmu_MEC->SetStats(0);        // No statistics on upper plot
   histoPmu->SetStats(0);            // No statistics on upper plot
   if (choice == 0) histoPmu_TEM->GetXaxis()->SetRangeUser(0., 700.);
-  if (choice == 0 && selection == 2) histoPmu_TEM->GetYaxis()->SetRangeUser(0.0001, 16000.);
-  if (choice == 1) histoPmu_TEM->GetXaxis()->SetRangeUser(-1., 1.);
+  if (choice == 0 && selection == 2) histoPmu_TEM->GetYaxis()->SetRangeUser(0.0001, 5500);
+  if (choice == 1) histoPmu_TEM->GetXaxis()->SetRangeUser(0., 1.);
   //if (choice == 1 && selection == 2) histoPmu_TEM->GetXaxis()->SetRangeUser(-1., 1.);
-  if (choice == 1) histoPmu_TEM->GetYaxis()->SetRangeUser(0.0001, 14000.);
-  if (choice == 1 && selection == 2) histoPmu_TEM->GetYaxis()->SetRangeUser(0.0001, 17000.);
+  if (choice == 1 && selection == 1) histoPmu_TEM->GetYaxis()->SetRangeUser(0.0001, 4500.);
+  if (choice == 1 && selection == 2) histoPmu_TEM->GetYaxis()->SetRangeUser(0.0001, 5500.);
   if (choice == 2 && selection == 1) histoPmu_TEM->GetXaxis()->SetRangeUser(-TMath::Pi(), TMath::Pi());
   if (choice == 2 && selection == 2) histoPmu_TEM->GetXaxis()->SetRangeUser(-3., 3.);
-  if (choice == 2 && selection == 1) histoPmu_TEM->GetYaxis()->SetRangeUser(700., 1800.);
-  if (choice == 2 && selection == 2) histoPmu_TEM->GetYaxis()->SetRangeUser(1000.1, 4500.);
+  if (choice == 2 && selection == 1) histoPmu_TEM->GetYaxis()->SetRangeUser(240, 650.);
+  if (choice == 2 && selection == 2) histoPmu_TEM->GetYaxis()->SetRangeUser(300, 1500.);
 
   
   histoPmu_TEM->Draw("E2");         // Draw h1
@@ -176,33 +178,29 @@ void draw_TEM_MEC(int selection = 1, int choice = 0, double normalised = false) 
   
   if (choice == 1 && selection == 1) histoPmu_TEM->GetXaxis()->SetTitle("cos#theta");
   
-  if (choice == 0 && selection == 2) histoPmu_TEM->GetXaxis()->SetTitle("Track Range [cm]");
+  if (choice == 0 && selection == 2) histoPmu_TEM->GetXaxis()->SetTitle("Track Length [cm]");
   if (choice == 1 && selection == 2) histoPmu_TEM->GetXaxis()->SetTitle("cos#theta");
   if (choice == 2 && selection == 2) histoPmu_TEM->GetXaxis()->SetTitle("#phi angle [rad]");
   
   uBooNESimulation_2();
   
-  if (normalised) {
-    // TLatex
-    double x = 0.87;
-    double y = 0.52;
-    double size = 28;
-    int color = 1;
-    int font = 43;
-    int align = 32;
-    TLatex *latex = new TLatex( x, y, "Area Normalised" );
-    latex->SetNDC();
-    latex->SetTextSize(size);
-    latex->SetTextColor(color);
-    latex->SetTextFont(font);
-    latex->SetTextAlign(align);
-    
-    latex->Draw();
-    
-  }
-  
-  
-  
+  // TLatex
+  double x = 0.89;//0.839599,0.52
+  double y = 0.47;
+  double size = 25;
+  int color = 1;
+  int font = 43;
+  int align = 32;
+  TLatex *latex;
+  if(selection == 1) latex = new TLatex(x, y, "#splitline{All events passing}{Selection I}");
+  if(selection == 2) latex = new TLatex(x, y, "#splitline{All events passing}{Selection II}");
+  latex->SetNDC();
+  latex->SetTextSize(size);
+  latex->SetTextColor(color);
+  latex->SetTextFont(font);
+  latex->SetTextAlign(align);
+  latex->Draw();
+
   
   // Do not draw the Y axis label on the upper plot and redraw a small
   // axis instead, in order to avoid the first label (0) to be clipped.
@@ -250,6 +248,7 @@ void draw_TEM_MEC(int selection = 1, int choice = 0, double normalised = false) 
   //pad2->SetFillStyle(4000); // Transparent
   pad2->SetTopMargin(0);
   pad2->SetBottomMargin(0.3);
+  if (poster)   pad2->SetBottomMargin(0.4);         // Leave some space for the X axis title
   pad2->SetRightMargin(0.05);
   pad2->SetGridx(); // vertical grid
   //pad2->SetGridy(); // orizontal grid
@@ -266,7 +265,7 @@ void draw_TEM_MEC(int selection = 1, int choice = 0, double normalised = false) 
   ratio_TEM->SetLineWidth(2);
   ratio_TEM->SetLineColor(kBlue);
   if (choice == 0) ratio_TEM->GetXaxis()->SetRangeUser(0., 700.);
-  if (choice == 1) ratio_TEM->GetXaxis()->SetRangeUser(-1., 1.);
+  if (choice == 1) ratio_TEM->GetXaxis()->SetRangeUser(0., 1.);
   //if (choice == 1 && selection == 2) ratio_TEM->GetXaxis()->SetRangeUser(-1., 1.);
   if (choice == 2 && selection == 1) ratio_TEM->GetXaxis()->SetRangeUser(-TMath::Pi(), TMath::Pi());
   if (choice == 2 && selection == 2) ratio_TEM->GetXaxis()->SetRangeUser(-3., 3.);
@@ -316,18 +315,18 @@ void draw_TEM_MEC(int selection = 1, int choice = 0, double normalised = false) 
   
   // Y axis h1 plot settings
   histoPmu_MEC->GetYaxis()->CenterTitle();
-  histoPmu_MEC->GetYaxis()->SetTitleSize(25);
+  histoPmu_MEC->GetYaxis()->SetTitleSize(35);
   histoPmu_MEC->GetYaxis()->SetTitleFont(43);
-  histoPmu_MEC->GetYaxis()->SetTitleOffset(1.55);
+  histoPmu_MEC->GetYaxis()->SetTitleOffset(1.14);
   
   // h2 settings
   histoPmu_TEM->SetLineColor(kBlue);
   histoPmu_TEM->SetLineWidth(2);
   histoPmu_TEM->SetFillColor(38);
   histoPmu_TEM->GetYaxis()->CenterTitle();
-  histoPmu_TEM->GetYaxis()->SetTitleSize(25);
+  histoPmu_TEM->GetYaxis()->SetTitleSize(35);
   histoPmu_TEM->GetYaxis()->SetTitleFont(43);
-  histoPmu_TEM->GetYaxis()->SetTitleOffset(1.55);
+  histoPmu_TEM->GetYaxis()->SetTitleOffset(1.14);
   //histoPmu_TEM->SetFillStyle(3001);
   
   
@@ -345,17 +344,17 @@ void draw_TEM_MEC(int selection = 1, int choice = 0, double normalised = false) 
   ratio_TEM->GetYaxis()->SetTitle("Ratio");
   ratio_TEM->GetYaxis()->CenterTitle();
   ratio_TEM->GetYaxis()->SetNdivisions(505);
-  ratio_TEM->GetYaxis()->SetTitleSize(25);
+  ratio_TEM->GetYaxis()->SetTitleSize(35);
   ratio_TEM->GetYaxis()->SetTitleFont(43);
-  ratio_TEM->GetYaxis()->SetTitleOffset(1.0);
+  ratio_TEM->GetYaxis()->SetTitleOffset(.75);
   ratio_TEM->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
   ratio_TEM->GetYaxis()->SetLabelSize(15);
   
   // X axis ratio plot settings
   ratio_TEM->GetXaxis()->CenterTitle();
-  ratio_TEM->GetXaxis()->SetTitleSize(25);
+  ratio_TEM->GetXaxis()->SetTitleSize(35);
   ratio_TEM->GetXaxis()->SetTitleFont(43);
-  ratio_TEM->GetXaxis()->SetTitleOffset(3.5);
+  ratio_TEM->GetXaxis()->SetTitleOffset(3.0);
   ratio_TEM->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
   ratio_TEM->GetXaxis()->SetLabelSize(20);
   
@@ -366,7 +365,7 @@ void draw_TEM_MEC(int selection = 1, int choice = 0, double normalised = false) 
   TLine *line;
   if (choice == 0 && selection == 1) line = new TLine(0,1,726,1);
   if (choice == 0 && selection == 2) line = new TLine(0,1,700,1);
-  if (choice == 1) line = new TLine(-1,1,1,1);
+  if (choice == 1) line = new TLine(0,1,1,1);
   if (choice == 2) line = new TLine(-TMath::Pi(),1,TMath::Pi(),1);
   if (choice == 2 && selection == 2) line = new TLine(-TMath::Pi(),1,TMath::Pi(),1);
   line->SetLineColor(kBlack);
