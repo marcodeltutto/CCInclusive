@@ -120,7 +120,7 @@ void draw_TEM_MEC(int selection = 1, int choice = 0, bool poster = false, double
   // Define the Canvas
   TCanvas *c;
   if (!poster) c = new TCanvas("c", "canvas", 800, 800);
-  if (poster)  c = new TCanvas("c", "canvas", 0,45,1200,690);
+  if (poster)  c = new TCanvas("c", "canvas", 0,45,1164,907);//("c", "canvas", 0,45,1200,690); the commented one was used for Neutrino2016, the non-commented one for the STFC Summer School
   //c->SetFillStyle(4000);      // Transparent
   //c->SetFrameFillStyle(4000); // Transparent
   
